@@ -1,0 +1,32 @@
+//TABS
+itemGroup.tools_tab=Miner's Prosperity Tools
+itemGroup.armour_tab=Miner's Prosperity Armor
+itemGroup.items_tab=Miner's Prosperity Items
+itemGroup.blocks_tab=Miner's Prosperity Blocks
+
+//TOOLS
+item.emerald_sword.name=Emerald Sword
+item.emerald_pickaxe.name=Emerald Pickaxe
+item.emerald_axe.name=Emerald Axe
+item.emerald_shovel.name=Emerald Shovel
+
+//ARMOUR
+item.emerald_hoe.name=Emerald Hoe
+item.emerald_helmet.name=Emerald Helmet
+item.emerald_chestplate.name=Emerald Chestplate
+item.emerald_leggings.name=Emerald Leggings
+item.emerald_boots.name=Emerald Boots
+
+//ITEMS
+item.backpack.name=Backpack
+item.iron_backpack.name=Iron Backpack
+
+//BLOCKS
+tile.crusher.name=Crusher
+
+//CONTAINERS
+container.crusher=Crusher
+
+//KEYBINDS
+key.categories.backpacks=Backpacks
+key.toggle_auto-collect=Backpack - Toggle Auto-Collect

@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		" B ",
+		" B "
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"item": "minecraft:emerald"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "stickWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:emerald_pickaxe",
+		"count": 1
+	}
+}

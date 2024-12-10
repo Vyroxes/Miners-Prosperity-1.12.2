@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"A A"
+	],
+	"key": {
+		"A": {
+			"item": "minecraft:emerald"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:emerald_helmet",
+		"count": 1
+	}
+}

@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "leather"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "chestWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:backpack",
+		"count": 1
+	}
+}

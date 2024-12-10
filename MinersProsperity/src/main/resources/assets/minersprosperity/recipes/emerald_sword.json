@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"A",
+		"A",
+		"B"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"item": "minecraft:emerald"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "stickWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:emerald_sword",
+		"count": 1
+	}
+}
