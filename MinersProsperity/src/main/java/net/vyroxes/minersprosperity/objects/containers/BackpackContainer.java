@@ -6,6 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.SlotItemHandler;
 import net.vyroxes.minersprosperity.objects.guis.BackpackGui;
 import net.vyroxes.minersprosperity.objects.items.Backpack;
 import net.vyroxes.minersprosperity.objects.items.BackpackInventory;
@@ -24,7 +25,7 @@ public class BackpackContainer extends Container
         {
             for (int col = 0; col < 9; col++)
             {
-                this.addSlotToContainer(new Slot(backpackInventory, col + row * 9, 8 + col * 18, 17 + row * 18));
+                this.addSlotToContainer(new SlotItemHandler(backpackInventory, col + row * 9, 8 + col * 18, 17 + row * 18));
             }
         }
 

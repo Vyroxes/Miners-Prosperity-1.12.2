@@ -58,9 +58,9 @@ public class Backpack extends ItemBase
     public static void saveBackpackInventory(ItemStack itemStack, BackpackInventory backpackInventory)
     {
         NBTTagCompound compound = itemStack.hasTagCompound() ? itemStack.getTagCompound() : new NBTTagCompound();
-        NBTTagCompound backpackTag = new NBTTagCompound();
-        backpackInventory.writeToNBT(backpackTag);
-        compound.setTag("BackpackInventory", backpackTag);
+        NBTTagCompound backpackInv = new NBTTagCompound();
+        backpackInventory.writeToNBT(backpackInv);
+        compound.setTag("BackpackInventory", backpackInv);
         
         NBTTagCompound backpackData = new NBTTagCompound();
         backpackData.setBoolean("AutoCollect", backpackInventory.getAutoCollectState());

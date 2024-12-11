@@ -9,6 +9,8 @@ import net.minecraft.inventory.SlotFurnaceFuel;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
@@ -43,7 +45,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     	return this.buttonState;
     }
     
-    public int addButtonState()
+    public void addButtonState()
     {
     	if (this.buttonState < 2)
     	{
@@ -55,7 +57,6 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     	}
     	this.markDirty();
     	System.out.println("Set buttonState: " + this.buttonState);
-    	return this.buttonState;
     }
     
     @Override
@@ -91,6 +92,26 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     }
     
     @Override
+    public NBTTagCompound getUpdateTag()
+    {
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        NBTTagCompound nbtTag = new NBTTagCompound();
+        this.writeToNBT(nbtTag);
+        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
+    {
+        this.readFromNBT(packet.getNbtCompound());
+    }
+    
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
@@ -109,7 +130,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         }
         return compound;
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound compound)
     {

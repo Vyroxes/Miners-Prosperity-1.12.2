@@ -41,7 +41,7 @@ public class KeyInputHandler
                 if (!itemStack.isEmpty() && itemStack.getItem() instanceof Backpack) 
                 {
                     boolean newState = toggleAutoCollect(itemStack);
-
+                    
                     String statusMessage = TextFormatting.GRAY + "Auto-Collect: " + (newState ? TextFormatting.GREEN + "On" : TextFormatting.RED + "Off");
                     client.player.sendMessage(new TextComponentString(statusMessage));
                 }

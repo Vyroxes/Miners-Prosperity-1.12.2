@@ -1,7 +1,6 @@
 package net.vyroxes.minersprosperity;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -16,7 +15,6 @@ import net.vyroxes.minersprosperity.objects.tabs.ItemsTab;
 import net.vyroxes.minersprosperity.objects.tabs.ToolsTab;
 import net.vyroxes.minersprosperity.proxy.ServerProxy;
 import net.vyroxes.minersprosperity.util.handlers.RegistryHandler;
-import net.vyroxes.minersprosperity.util.handlers.TooltipHandler;
 
 @Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION)
 public class MinersProsperity
@@ -42,7 +40,6 @@ public class MinersProsperity
 	public static void init(FMLInitializationEvent event)
 	{
 		RegistryHandler.initRegistries(event);
-		MinecraftForge.EVENT_BUS.register(TooltipHandler.class);
 	}
 	
 	@EventHandler

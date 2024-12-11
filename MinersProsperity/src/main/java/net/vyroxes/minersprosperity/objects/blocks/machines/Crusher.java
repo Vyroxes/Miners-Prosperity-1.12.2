@@ -2,6 +2,7 @@ package net.vyroxes.minersprosperity.objects.blocks.machines;
 
 import java.util.Random;
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -36,7 +37,7 @@ import net.vyroxes.minersprosperity.objects.containers.CrusherContainer;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 
-public class Crusher extends BlockBase
+public class Crusher extends BlockBase implements ITileEntityProvider
 {	
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
@@ -192,7 +193,7 @@ public class Crusher extends BlockBase
 	}
 	
 	@Override
-	public TileEntity createTileEntity(World world, IBlockState state) 
+	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TileEntityCrusher();
 	}

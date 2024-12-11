@@ -46,13 +46,15 @@ public class PickupHandler
     {
         BackpackInventory backpackInventory = Backpack.getBackpackInventory(backpack);
 
-        for (int i = 0; i < backpackInventory.getSizeInventory(); i++) 
+        //for (int i = 0; i < backpackInventory.getSizeInventory(); i++) 
+        for (int i = 0; i < backpackInventory.getSlots(); i++) 
         {
             ItemStack slotStack = backpackInventory.getStackInSlot(i);
 
             if (slotStack.isEmpty()) 
             {
-                backpackInventory.setInventorySlotContents(i, itemStackToAdd.copy());
+                //backpackInventory.setInventorySlotContents(i, itemStackToAdd.copy());
+                backpackInventory.setStackInSlot(i, itemStackToAdd.copy());
                 itemStackToAdd.setCount(0);
                 Backpack.saveBackpackInventory(backpack, backpackInventory);
                 return true;
