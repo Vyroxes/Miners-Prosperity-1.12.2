@@ -28,6 +28,7 @@ import net.vyroxes.minersprosperity.Reference;
 import net.vyroxes.minersprosperity.objects.blocks.machines.Crusher;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.CrusherRecipes;
 import net.vyroxes.minersprosperity.objects.containers.CrusherContainer;
+import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 public class TileEntityCrusher extends TileEntity implements ITickable
 {
@@ -38,7 +39,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     private int cookTime;
     private int totalCookTime;
     private String customName;
-    private int buttonState;
+    public int buttonState;
 
     public int getButtonState()
     {
@@ -47,7 +48,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     
     public void addButtonState()
     {
-    	if (this.buttonState < 2)
+		if (this.buttonState < 2)
     	{
     		++this.buttonState;
     	}
@@ -55,8 +56,10 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     	{
     		this.buttonState = 0;
     	}
-    	this.markDirty();
-    	System.out.println("Set buttonState: " + this.buttonState);
+		
+		this.markDirty();
+		
+		NetworkHandler.sendButtonStateUpdate(this.buttonState, this.pos);
     }
     
     @Override
@@ -92,23 +95,25 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     }
     
     @Override
-    public NBTTagCompound getUpdateTag()
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) 
     {
-        return writeToNBT(new NBTTagCompound());
+        this.readFromNBT(pkt.getNbtCompound());
     }
-
+    
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
+    public SPacketUpdateTileEntity getUpdatePacket() 
     {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
-        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
+        NBTTagCompound tag = new NBTTagCompound();
+        this.writeToNBT(tag);
+        return new SPacketUpdateTileEntity(this.pos, 1, tag);
     }
-
+    
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet)
+    public NBTTagCompound getUpdateTag() 
     {
-        this.readFromNBT(packet.getNbtCompound());
+        NBTTagCompound tag = super.writeToNBT(new NBTTagCompound());
+        tag.setInteger("ButtonState", this.buttonState);
+        return tag;
     }
     
     @Override
@@ -121,8 +126,6 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         compound.setInteger("TotalCookTime", this.totalCookTime);
         compound.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
         compound.setInteger("ButtonState", this.buttonState);
-        
-        System.out.println("Saving buttonState: " + this.buttonState);
         
         if (this.hasCustomName()) 
         {
@@ -141,8 +144,6 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         this.totalCookTime = compound.getInteger("TotalCookTime");
         this.currentItemBurnTime = compound.getInteger("CurrentItemBurnTime");
         this.buttonState = compound.getInteger("ButtonState");
-        
-        System.out.println("Loaded buttonState: " + this.buttonState);
         
         if (compound.hasKey("CustomName", 8)) 
         {
@@ -187,21 +188,35 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         	--this.crusherBurnTime;
         	this.markDirty();
         }
-        else
-        {
-//        	if (Crusher.getState(world, pos))
-//            {
-//        		Crusher.setState(false, world, pos);
-//            }
-        }
 
         if (!this.world.isRemote)
         {
+        	boolean hasRedstoneSignal = this.world.isBlockPowered(this.pos);
+            boolean canBurn = false;
+
+            switch (this.buttonState)
+            {
+                case 0:
+                    canBurn = true;
+                    break;
+                case 1:
+                    canBurn = !hasRedstoneSignal;
+                    break;
+                case 2:
+                    canBurn = hasRedstoneSignal;
+                    break;
+            }
+        	
             ItemStack input1 = crusherItemStacks.getStackInSlot(0);
             ItemStack input2 = crusherItemStacks.getStackInSlot(1);
             ItemStack fuel = crusherItemStacks.getStackInSlot(2);
 
-            if (this.isActive() || (!fuel.isEmpty() && (!input1.isEmpty() || !input2.isEmpty())))
+            if (!canBurn && this.cookTime > 0)
+            {
+            	this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
+            }
+            
+            if (canBurn && (this.isActive() || (!fuel.isEmpty() && (!input1.isEmpty() || !input2.isEmpty()))))
             {
                 if (!this.isActive() && this.canSmelt())
                 {
@@ -247,7 +262,8 @@ public class TileEntityCrusher extends TileEntity implements ITickable
                 }
                 else
                 {
-                    this.cookTime = 0;
+                    //this.cookTime = 0;
+                    this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
                 }
             }
             else if (!this.isActive() && this.cookTime > 0)

@@ -1,11 +1,14 @@
 package net.vyroxes.minersprosperity.objects.guis;
 
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.vyroxes.minersprosperity.objects.containers.CrusherContainer;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 
@@ -34,15 +37,15 @@ public class CrusherGui extends GuiContainer
 	    
 	    if (buttonState == 0)
 	    {
-		    this.addButton(new RedstoneControlButton(0, guiLeft + 8, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31));
+		    this.addButton(new RedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, buttonState));
 	    }
 	    else if (buttonState == 1)
 	    {
-		    this.addButton(new RedstoneControlButton(0, guiLeft + 8, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 198, 31));
+		    this.addButton(new RedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 198, 31, buttonState));
 	    }
 	    else if (buttonState == 2)
 	    {
-		    this.addButton(new RedstoneControlButton(0, guiLeft + 8, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31));
+		    this.addButton(new RedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31, buttonState));
 	    }
 	}
 	
@@ -54,12 +57,26 @@ public class CrusherGui extends GuiContainer
 	    this.initGui();
 	}
 	
-	public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        this.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
-    }
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) 
+	{
+	    this.drawDefaultBackground();
+	    super.drawScreen(mouseX, mouseY, partialTicks);
+
+	    for (GuiButton button : this.buttonList) 
+	    {
+	        if (button instanceof RedstoneControlButton) 
+	        {
+	            List<String> tooltip = ((RedstoneControlButton) button).getCurrentTooltip();
+	            if (tooltip != null) 
+	            {
+	                GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+	            }
+	        }
+	    }
+	    
+	    this.renderHoveredToolTip(mouseX, mouseY);
+	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 

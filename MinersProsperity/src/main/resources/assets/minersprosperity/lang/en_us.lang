@@ -21,6 +21,15 @@ item.emerald_boots.name=Emerald Boots
 item.backpack.name=Backpack
 item.iron_backpack.name=Iron Backpack
 
+item.diamond_nugget.name=Diamond Nugget
+item.emerald_nugget.name=Emerald Nugget
+item.coal_dust.name=Coal Dust
+item.charcoal_dust.name=Charcoal Dust
+item.iron_dust.name=Iron Dust
+item.gold_dust.name=Gold Dust
+item.diamond_dust.name=Diamond Dust
+item.emerald_dust.name=Emerald Dust
+
 //BLOCKS
 tile.crusher.name=Crusher
 

@@ -14,6 +14,6 @@ public class ItemsTab extends CreativeTabs
 	@Override
 	public ItemStack createIcon()
 	{
-		return new ItemStack(ItemInit.BACKPACK);
+		return new ItemStack(ItemInit.DIAMOND_DUST);
 	}
 }

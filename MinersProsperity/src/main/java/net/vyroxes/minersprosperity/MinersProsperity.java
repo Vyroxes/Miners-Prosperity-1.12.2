@@ -14,6 +14,7 @@ import net.vyroxes.minersprosperity.objects.tabs.BlocksTab;
 import net.vyroxes.minersprosperity.objects.tabs.ItemsTab;
 import net.vyroxes.minersprosperity.objects.tabs.ToolsTab;
 import net.vyroxes.minersprosperity.proxy.ServerProxy;
+import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.RegistryHandler;
 
 @Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION)
@@ -40,6 +41,7 @@ public class MinersProsperity
 	public static void init(FMLInitializationEvent event)
 	{
 		RegistryHandler.initRegistries(event);
+		NetworkHandler.init(event);
 	}
 	
 	@EventHandler
