@@ -40,22 +40,22 @@ public class Backpack extends ItemBase
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
     }
 
-    public static BackpackInventory getBackpackInventory(ItemStack itemStack)
+    public static InventoryBackpack getBackpackInventory(ItemStack itemStack)
     {
         NBTTagCompound compound = itemStack.getTagCompound();
         if (compound != null && compound.hasKey("BackpackInventory"))
         {
-            BackpackInventory inventory = new BackpackInventory(27);
+            InventoryBackpack inventory = new InventoryBackpack(27);
             inventory.readFromNBT(compound.getCompoundTag("BackpackInventory"));
             return inventory;
         }
         else
         {
-            return new BackpackInventory(27);
+            return new InventoryBackpack(27);
         }
     }
 
-    public static void saveBackpackInventory(ItemStack itemStack, BackpackInventory backpackInventory)
+    public static void saveBackpackInventory(ItemStack itemStack, InventoryBackpack backpackInventory)
     {
         NBTTagCompound compound = itemStack.hasTagCompound() ? itemStack.getTagCompound() : new NBTTagCompound();
         NBTTagCompound backpackInv = new NBTTagCompound();

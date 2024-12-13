@@ -6,25 +6,26 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.vyroxes.minersprosperity.objects.guis.IronBackpackGui;
-import net.vyroxes.minersprosperity.objects.items.IronBackpack;
-import net.vyroxes.minersprosperity.objects.items.IronBackpackInventory;
+import net.minecraftforge.items.SlotItemHandler;
+import net.vyroxes.minersprosperity.objects.guis.GuiBackpack;
+import net.vyroxes.minersprosperity.objects.items.Backpack;
+import net.vyroxes.minersprosperity.objects.items.InventoryBackpack;
 
-public class IronBackpackContainer extends Container
+public class ContainerBackpack extends Container
 {
-    private final IronBackpackInventory ironBackpackInventory;
-    private final ItemStack ironBackpackItemStack;
+    private final InventoryBackpack backpackInventory;
+    private final ItemStack backpackItemStack;
 
-    public IronBackpackContainer(InventoryPlayer playerInventory, ItemStack ironBackpackItemStack)
+    public ContainerBackpack(InventoryPlayer playerInventory, ItemStack backpackItemStack)
     {
-        this.ironBackpackItemStack = ironBackpackItemStack;
-        this.ironBackpackInventory = IronBackpack.getBackpackInventory(ironBackpackItemStack);
+        this.backpackItemStack = backpackItemStack;
+        this.backpackInventory = Backpack.getBackpackInventory(backpackItemStack);
 
-        for (int row = 0; row < 6; row++)
+        for (int row = 0; row < 3; row++)
         {
             for (int col = 0; col < 9; col++)
             {
-                this.addSlotToContainer(new Slot(ironBackpackInventory, col + row * 9, 8 + col * 18, 17 + row * 18));
+                this.addSlotToContainer(new SlotItemHandler(backpackInventory, col + row * 9, 8 + col * 18, 17 + row * 18));
             }
         }
 
@@ -32,23 +33,23 @@ public class IronBackpackContainer extends Container
         {
             for (int col = 0; col < 9; col++)
             {
-                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 138 + row * 18));
+                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
             }
         }
 
         for (int i = 0; i < 9; i++)
         {
             final int index = i;
-            this.addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 196)
+            this.addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142)
             {
                 @Override
                 public boolean canTakeStack(EntityPlayer playerIn)
                 {
                     ItemStack stackInSlot = playerInventory.getStackInSlot(index);
-                    if (!stackInSlot.isEmpty() && stackInSlot.getItem() == ironBackpackItemStack.getItem())
+                    if (!stackInSlot.isEmpty() && stackInSlot.getItem() == backpackItemStack.getItem())
                     {
                         NBTTagCompound tag = stackInSlot.getTagCompound();
-                        NBTTagCompound guiNBT = ironBackpackItemStack.getTagCompound();
+                        NBTTagCompound guiNBT = backpackItemStack.getTagCompound();
 
                         if (tag != null && guiNBT != null && tag.equals(guiNBT))
                         {
@@ -59,6 +60,7 @@ public class IronBackpackContainer extends Container
                 }
             });
         }
+
     }
 
     @Override
@@ -72,16 +74,16 @@ public class IronBackpackContainer extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
             
-            if (index < 54)
+            if (index < 27)
             {
-                if (!this.mergeItemStack(itemstack1, 54, 90, true))
+                if (!this.mergeItemStack(itemstack1, 27, 63, true))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (index >= 54 && index < 90)
+            else if (index >= 27 && index < 63)
             {
-                if (!this.mergeItemStack(itemstack1, 0, 54, false))
+                if (!this.mergeItemStack(itemstack1, 0, 27, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -117,7 +119,7 @@ public class IronBackpackContainer extends Container
     public void onContainerClosed(EntityPlayer playerIn)
     {
         super.onContainerClosed(playerIn);
-        IronBackpack.saveBackpackInventory(ironBackpackItemStack, ironBackpackInventory);
-        IronBackpackGui.playBackpackOpenSound();
+        Backpack.saveBackpackInventory(backpackItemStack, backpackInventory);
+        GuiBackpack.playBackpackOpenSound();
     }
 }

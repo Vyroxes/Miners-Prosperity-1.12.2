@@ -9,19 +9,19 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.vyroxes.minersprosperity.objects.containers.IronBackpackContainer;
+import net.vyroxes.minersprosperity.objects.containers.ContainerBackpack;
 
-public class IronBackpackGui extends GuiContainer
+public class GuiBackpack extends GuiContainer
 {
-    private static final ResourceLocation IRON_BACKPACK_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/iron_backpack.png");
+    private static final ResourceLocation BACKPACK_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/backpack.png");
 
-    public IronBackpackGui(IronBackpackContainer container)
+    public GuiBackpack(ContainerBackpack container)
     {
         super(container);
         this.xSize = 176;
-        this.ySize = 221;
+        this.ySize = 166;
         
-        IronBackpackGui.playBackpackOpenSound();
+        GuiBackpack.playBackpackOpenSound();
     }
 
     public static void playBackpackOpenSound()
@@ -45,14 +45,14 @@ public class IronBackpackGui extends GuiContainer
     {
         String title = this.mc.player.getHeldItemMainhand().getDisplayName();
         this.fontRenderer.drawString(title, 8, 5, 4210752);
-        this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 127, 4210752);
+        this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 73, 4210752);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
-    {   	 
-    	GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(IRON_BACKPACK_TEXTURE);
+    {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(BACKPACK_TEXTURE);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop - 1, 0, 0, this.xSize, this.ySize);
     }
 

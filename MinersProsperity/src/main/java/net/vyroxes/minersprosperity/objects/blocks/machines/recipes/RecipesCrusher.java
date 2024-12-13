@@ -8,9 +8,9 @@ import com.google.common.collect.Table;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
-public class CrusherRecipes
+public class RecipesCrusher
 {
-	private static final CrusherRecipes INSTANCE = new CrusherRecipes();
+	private static final RecipesCrusher INSTANCE = new RecipesCrusher();
 	
 	private final Table<ItemStack, ItemStack, RecipeData> smeltingList = HashBasedTable.create();
 	private final Map<ItemStack, Float> experienceList = Maps.newHashMap();
@@ -37,12 +37,12 @@ public class CrusherRecipes
 		}
 	}
 	
-	public static CrusherRecipes getInstance()
+	public static RecipesCrusher getInstance()
 	{
 		return INSTANCE;
 	}
 	
-	private CrusherRecipes() 
+	private RecipesCrusher() 
 	{
 		addCrusherRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 5.0F, 100);
 	}

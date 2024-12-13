@@ -33,7 +33,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.init.BlockInit;
 import net.vyroxes.minersprosperity.objects.blocks.BlockBase;
-import net.vyroxes.minersprosperity.objects.containers.CrusherContainer;
+import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 
@@ -146,7 +146,7 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	{
 	    if (!worldIn.isRemote)
 	    {
-	        if (playerIn.openContainer != null && playerIn.openContainer instanceof CrusherContainer)
+	        if (playerIn.openContainer != null && playerIn.openContainer instanceof ContainerCrusher)
 	        {
 	        	return false;
 	        }

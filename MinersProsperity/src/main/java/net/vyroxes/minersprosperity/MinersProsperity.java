@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.vyroxes.minersprosperity.init.ItemInit;
 import net.vyroxes.minersprosperity.objects.tabs.ArmourTab;
 import net.vyroxes.minersprosperity.objects.tabs.BlocksTab;
 import net.vyroxes.minersprosperity.objects.tabs.ItemsTab;
@@ -40,6 +41,7 @@ public class MinersProsperity
 	@EventHandler
 	public static void init(FMLInitializationEvent event)
 	{
+		ItemInit.registerOreDictionary();
 		RegistryHandler.initRegistries(event);
 		NetworkHandler.init(event);
 	}

@@ -26,8 +26,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.vyroxes.minersprosperity.Reference;
 import net.vyroxes.minersprosperity.objects.blocks.machines.Crusher;
-import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.CrusherRecipes;
-import net.vyroxes.minersprosperity.objects.containers.CrusherContainer;
+import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesCrusher;
+import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 public class TileEntityCrusher extends TileEntity implements ITickable
@@ -168,7 +168,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
 
     public static int getCookTime(ItemStack input1, ItemStack input2)
     {
-        int cookTime = CrusherRecipes.getInstance().getCookTime(input1, input2);
+        int cookTime = RecipesCrusher.getInstance().getCookTime(input1, input2);
 
         return cookTime;
     }
@@ -246,7 +246,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
                 {
                     if (cookTime == 0)
                     {
-                        totalCookTime = CrusherRecipes.getInstance().getCookTime(input1, input2);
+                        totalCookTime = RecipesCrusher.getInstance().getCookTime(input1, input2);
                     }
 
                     ++this.cookTime;
@@ -295,11 +295,11 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         }
         else
         {
-            ItemStack result = CrusherRecipes.getInstance().getCrusherResult(input1, input2);
+            ItemStack result = RecipesCrusher.getInstance().getCrusherResult(input1, input2);
             
             if (result.isEmpty())
             {
-                result = CrusherRecipes.getInstance().getCrusherResult(input2, input1);
+                result = RecipesCrusher.getInstance().getCrusherResult(input2, input1);
             }
 
             if (result.isEmpty())
@@ -332,7 +332,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
 
         if (this.canSmelt())
         {
-            ItemStack result = CrusherRecipes.getInstance().getCrusherResult(input1, input2);
+            ItemStack result = RecipesCrusher.getInstance().getCrusherResult(input1, input2);
             ItemStack output = crusherItemStacks.getStackInSlot(3);
 
             if (output.isEmpty())
@@ -422,7 +422,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
 
     public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
     {
-        return new CrusherContainer(playerInventory, this);
+        return new ContainerCrusher(playerInventory, this);
     }
     
     public int getField(int id)

@@ -9,7 +9,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.vyroxes.minersprosperity.objects.items.Backpack;
-import net.vyroxes.minersprosperity.objects.items.BackpackInventory;
+import net.vyroxes.minersprosperity.objects.items.InventoryBackpack;
 
 public class PickupHandler 
 {
@@ -44,7 +44,7 @@ public class PickupHandler
 
     private boolean addToBackpack(EntityPlayer player, ItemStack backpack, ItemStack itemStackToAdd) 
     {
-        BackpackInventory backpackInventory = Backpack.getBackpackInventory(backpack);
+        InventoryBackpack backpackInventory = Backpack.getBackpackInventory(backpack);
 
         //for (int i = 0; i < backpackInventory.getSizeInventory(); i++) 
         for (int i = 0; i < backpackInventory.getSlots(); i++) 

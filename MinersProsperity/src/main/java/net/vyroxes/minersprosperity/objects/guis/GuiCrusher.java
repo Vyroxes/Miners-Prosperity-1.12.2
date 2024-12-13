@@ -9,18 +9,18 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.vyroxes.minersprosperity.objects.containers.CrusherContainer;
+import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 
 
-public class CrusherGui extends GuiContainer
+public class GuiCrusher extends GuiContainer
 {
 	private static final ResourceLocation CRUSHER_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/crusher.png");
 	private final TileEntityCrusher tileentity;
 	
-	public CrusherGui(InventoryPlayer player, TileEntityCrusher tileentity) 
+	public GuiCrusher(InventoryPlayer player, TileEntityCrusher tileentity) 
 	{
-		super(new CrusherContainer(player, tileentity));
+		super(new ContainerCrusher(player, tileentity));
 		this.tileentity = tileentity;
 	}
 	
@@ -37,15 +37,15 @@ public class CrusherGui extends GuiContainer
 	    
 	    if (buttonState == 0)
 	    {
-		    this.addButton(new RedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, buttonState));
+		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, buttonState));
 	    }
 	    else if (buttonState == 1)
 	    {
-		    this.addButton(new RedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 198, 31, buttonState));
+		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 198, 31, buttonState));
 	    }
 	    else if (buttonState == 2)
 	    {
-		    this.addButton(new RedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31, buttonState));
+		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31, buttonState));
 	    }
 	}
 	
@@ -65,9 +65,9 @@ public class CrusherGui extends GuiContainer
 
 	    for (GuiButton button : this.buttonList) 
 	    {
-	        if (button instanceof RedstoneControlButton) 
+	        if (button instanceof GuiRedstoneControlButton) 
 	        {
-	            List<String> tooltip = ((RedstoneControlButton) button).getCurrentTooltip();
+	            List<String> tooltip = ((GuiRedstoneControlButton) button).getCurrentTooltip();
 	            if (tooltip != null) 
 	            {
 	                GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);

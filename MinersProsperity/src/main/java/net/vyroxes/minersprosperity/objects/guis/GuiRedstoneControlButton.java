@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
-public class RedstoneControlButton extends GuiButton
+public class GuiRedstoneControlButton extends GuiButton
 {
 	private final ResourceLocation texture;
 	private final int textureX;
@@ -15,7 +15,7 @@ public class RedstoneControlButton extends GuiButton
 	private final int buttonState;
 	private List<String> currentTooltip = null;
 	
-	public RedstoneControlButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, int buttonState) 
+	public GuiRedstoneControlButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, int buttonState) 
     {
         super(buttonId, x, y, width, height, "");
         this.texture = texture;

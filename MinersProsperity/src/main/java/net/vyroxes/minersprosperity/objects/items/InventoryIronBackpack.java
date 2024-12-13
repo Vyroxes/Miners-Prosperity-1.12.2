@@ -10,20 +10,20 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-public class IronBackpackInventory implements IInventory
+public class InventoryIronBackpack implements IInventory
 {
     private final NonNullList<ItemStack> backpackContents;
     private final int size;
     private final String name;
 
-    public IronBackpackInventory(int size)
+    public InventoryIronBackpack(int size)
     {
         this.size = size;
         this.backpackContents = NonNullList.withSize(size, ItemStack.EMPTY);
         this.name = "Iron Backpack";
     }
 
-    public IronBackpackInventory(int size, String name)
+    public InventoryIronBackpack(int size, String name)
     {
         this.size = size;
         this.backpackContents = NonNullList.withSize(size, ItemStack.EMPTY);

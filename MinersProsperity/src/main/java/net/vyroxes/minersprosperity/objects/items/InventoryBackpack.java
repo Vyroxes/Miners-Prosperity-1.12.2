@@ -9,20 +9,20 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BackpackInventory extends ItemStackHandler implements ICapabilityProvider
+public class InventoryBackpack extends ItemStackHandler implements ICapabilityProvider
 {
     private final String name;
 
-    @CapabilityInject(BackpackInventory.class)
-    public static final Capability<BackpackInventory> BACKPACK_CAPABILITY = null;
+    @CapabilityInject(InventoryBackpack.class)
+    public static final Capability<InventoryBackpack> BACKPACK_CAPABILITY = null;
 
-    public BackpackInventory(int size)
+    public InventoryBackpack(int size)
     {
         super(size);
         this.name = "Backpack";
     }
 
-    public BackpackInventory(int size, String name)
+    public InventoryBackpack(int size, String name)
     {
         super(size);
         this.name = name;

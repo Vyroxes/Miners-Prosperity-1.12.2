@@ -11,10 +11,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.CrusherRecipes;
+import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesCrusher;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 
-public class CrusherContainer extends Container
+public class ContainerCrusher extends Container
 {
     private final TileEntityCrusher tileCrusher;
     private int cookTime;
@@ -22,7 +22,7 @@ public class CrusherContainer extends Container
     private int crusherBurnTime;
     private int currentItemBurnTime;
     
-    public CrusherContainer(InventoryPlayer playerInventory, TileEntityCrusher tileEntityCrusher) 
+    public ContainerCrusher(InventoryPlayer playerInventory, TileEntityCrusher tileEntityCrusher) 
     {
         this.tileCrusher = tileEntityCrusher;
         IItemHandler handler = tileEntityCrusher.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
@@ -130,7 +130,7 @@ public class CrusherContainer extends Container
             }
             else if (index != 2 && index != 1 && index != 0) 
             {        
-                if (CrusherRecipes.getInstance().isInputInAnyRecipe(itemstack1))
+                if (RecipesCrusher.getInstance().isInputInAnyRecipe(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 2, false)) 
                     {

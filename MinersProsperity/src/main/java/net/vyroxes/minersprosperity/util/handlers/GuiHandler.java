@@ -3,12 +3,12 @@ package net.vyroxes.minersprosperity.util.handlers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-import net.vyroxes.minersprosperity.objects.containers.BackpackContainer;
-import net.vyroxes.minersprosperity.objects.containers.CrusherContainer;
-import net.vyroxes.minersprosperity.objects.containers.IronBackpackContainer;
-import net.vyroxes.minersprosperity.objects.guis.BackpackGui;
-import net.vyroxes.minersprosperity.objects.guis.CrusherGui;
-import net.vyroxes.minersprosperity.objects.guis.IronBackpackGui;
+import net.vyroxes.minersprosperity.objects.containers.ContainerBackpack;
+import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
+import net.vyroxes.minersprosperity.objects.containers.ContainerIronBackpack;
+import net.vyroxes.minersprosperity.objects.guis.GuiBackpack;
+import net.vyroxes.minersprosperity.objects.guis.GuiCrusher;
+import net.vyroxes.minersprosperity.objects.guis.GuiIronBackpack;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -24,17 +24,17 @@ public class GuiHandler implements IGuiHandler
     {
     	if (ID == CRUSHER_GUI)
     	{
-    		return new CrusherContainer(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
+    		return new ContainerCrusher(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
     	}
         if (ID == BACKPACK_GUI)
         {
             ItemStack backpackItemStack = player.getHeldItemMainhand();
-            return new BackpackContainer(player.inventory, backpackItemStack);
+            return new ContainerBackpack(player.inventory, backpackItemStack);
         }
         if (ID == IRON_BACKPACK_GUI)
         {
             ItemStack IronBackpackItemStack = player.getHeldItemMainhand();
-            return new IronBackpackContainer(player.inventory, IronBackpackItemStack);
+            return new ContainerIronBackpack(player.inventory, IronBackpackItemStack);
         }
         return null;
     }
@@ -44,18 +44,18 @@ public class GuiHandler implements IGuiHandler
     {
     	if (ID == CRUSHER_GUI)
     	{
-    		return new CrusherGui(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
+    		return new GuiCrusher(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
 
     	}
         if (ID == BACKPACK_GUI)
         {
             ItemStack backpackItemStack = player.getHeldItemMainhand();
-            return new BackpackGui(new BackpackContainer(player.inventory, backpackItemStack));
+            return new GuiBackpack(new ContainerBackpack(player.inventory, backpackItemStack));
         }
         if (ID == IRON_BACKPACK_GUI)
         {
             ItemStack IronBackpackItemStack = player.getHeldItemMainhand();
-            return new IronBackpackGui(new IronBackpackContainer(player.inventory, IronBackpackItemStack));
+            return new GuiIronBackpack(new ContainerIronBackpack(player.inventory, IronBackpackItemStack));
         }
         return null;
     }

@@ -1,14 +1,16 @@
 package net.vyroxes.minersprosperity.objects.tools;
 
-import net.minecraft.item.ItemSpade;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemPickaxe;
+import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.init.ItemInit;
 import net.vyroxes.minersprosperity.util.interfaces.IHasModel;
 
-public class ToolShovel extends ItemSpade implements IHasModel
+public class PickaxeEmerald extends ItemPickaxe implements IHasModel
 {
 
-	public ToolShovel(String name, ToolMaterial material)
+	public PickaxeEmerald(String name, ToolMaterial material)
 	{
 		super(material);
 		setTranslationKey(name);
@@ -16,6 +18,12 @@ public class ToolShovel extends ItemSpade implements IHasModel
 		setCreativeTab(MinersProsperity.tools_tab);
 		
 		ItemInit.ITEMS.add(this);
+	}
+	
+	@Override
+	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+	{
+        return repair.getItem() == Items.EMERALD || super.getIsRepairable(toRepair, repair);
 	}
 	
 	@Override
