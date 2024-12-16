@@ -12,10 +12,13 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.init.BlockInit;
 import net.vyroxes.minersprosperity.init.ItemInit;
+import net.vyroxes.minersprosperity.util.compat.OreDictionaryCompat;
 import net.vyroxes.minersprosperity.util.interfaces.IHasModel;
+import net.vyroxes.minersprosperity.world.gen.WorldGenCustomOres;
 
 @EventBusSubscriber
 public class RegistryHandler
@@ -52,30 +55,39 @@ public class RegistryHandler
 			}
 		}
 	}
-	
+
+	public static void otherRegistries()
+	{
+		GameRegistry.registerWorldGenerator(new WorldGenCustomOres(), 0);
+	}
+
 	public static void preInitRegistries(FMLPreInitializationEvent event)
 	{
 		MinecraftForge.EVENT_BUS.register(MinersProsperity.instance);
+		
+	    MinecraftForge.EVENT_BUS.register(new TooltipHandler());
+		
 	    MinecraftForge.EVENT_BUS.register(new CraftingHandler());
 	    
 		KeyInputHandler.registerKeyBindings();
 		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+		
+		ConfigHandler.registerConfig(event);
+		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
 	}
 	
 	public static void initRegistries(FMLInitializationEvent event)
 	{
-		NetworkRegistry.INSTANCE.registerGuiHandler(MinersProsperity.instance, new GuiHandler());
+		OreDictionaryCompat.registerOreDictionary();
 		
+		NetworkHandler.init(event);
+		
+		NetworkRegistry.INSTANCE.registerGuiHandler(MinersProsperity.instance, new GuiHandler());
+
 		MinecraftForge.EVENT_BUS.register(new PickupHandler());
 	}
 	
-	public static void postInitRegistries(FMLPostInitializationEvent event)
-	{
-
-	}
+	public static void postInitRegistries(FMLPostInitializationEvent event) {}
 	
-	public static void serverRegistries(FMLServerStartingEvent event)
-	{
-		
-	}
+	public static void serverRegistries(FMLServerStartingEvent event) {}
 }

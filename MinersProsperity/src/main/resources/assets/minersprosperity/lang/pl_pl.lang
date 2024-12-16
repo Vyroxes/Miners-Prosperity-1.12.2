@@ -18,11 +18,14 @@ item.emerald_leggings.name=Emerald Leggings
 item.emerald_boots.name=Emerald Boots
 
 //ITEMS
+item.chain.name=Chain
 item.backpack.name=Plecak
 item.iron_backpack.name=Iron Backpack
 
 //BLOCKS
 tile.crusher.name=Crusher
+
+tile.charcoal_block.name=Block of Charcoal
 
 //CONTAINERS
 container.crusher=Crusher

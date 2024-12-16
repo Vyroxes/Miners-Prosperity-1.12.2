@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"A"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotSilver"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:silver_nugget",
+		"count": 9
+	}
+}

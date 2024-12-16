@@ -12,7 +12,7 @@ public class AxeEmerald extends ItemAxe implements IHasModel
 
 	public AxeEmerald(String name, ToolMaterial material)
 	{
-		super(material, 9, -2.9F);
+		super(material, 8, -2.9F);
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(MinersProsperity.tools_tab);

@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"AAA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "nuggetTin"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:tin_ingot",
+		"count": 1
+	}
+}

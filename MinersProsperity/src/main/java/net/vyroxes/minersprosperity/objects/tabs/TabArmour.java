@@ -4,9 +4,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.init.ItemInit;
 
-public class ArmourTab extends CreativeTabs
+public class TabArmour extends CreativeTabs
 {
-	public ArmourTab(String label)
+	public TabArmour(String label)
 	{
 		super("armour_tab");
 	}

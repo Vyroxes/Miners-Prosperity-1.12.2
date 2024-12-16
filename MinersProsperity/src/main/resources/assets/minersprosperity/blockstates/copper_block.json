@@ -1,0 +1,15 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+			"model": "minersprosperity:copper_block"
+	},
+	"variants": {
+		"inventory": [{}],
+		"normal": {
+			"model": "minersprosperity:copper_block",
+			"textures": {
+				"all": "minersprosperity:blocks/copper_block"
+			}
+		}
+	}
+}

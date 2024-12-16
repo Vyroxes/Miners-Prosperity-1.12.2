@@ -11,7 +11,8 @@
 	{
 		"A":
 		{
-			"item": "minecraft:emerald"
+			"type": "forge:ore_dict",
+			"ore": "gemEmerald"
 		}
 	},
 	

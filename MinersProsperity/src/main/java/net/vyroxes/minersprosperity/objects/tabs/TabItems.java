@@ -4,16 +4,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.init.ItemInit;
 
-public class ToolsTab extends CreativeTabs
+public class TabItems extends CreativeTabs
 {
-	public ToolsTab(String label)
+	public TabItems(String label)
 	{
-		super("tools_tab");
+		super("items_tab");
 	}
 
 	@Override
 	public ItemStack createIcon()
 	{
-		return new ItemStack(ItemInit.EMERALD_PICKAXE);
+		return new ItemStack(ItemInit.DIAMOND_DUST);
 	}
 }

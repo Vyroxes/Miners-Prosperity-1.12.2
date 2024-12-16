@@ -9,19 +9,21 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 
 
 public class GuiCrusher extends GuiContainer
 {
 	private static final ResourceLocation CRUSHER_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/crusher.png");
-	private final TileEntityCrusher tileentity;
+	private final TileEntityCrusher tileEntity;
 	
-	public GuiCrusher(InventoryPlayer player, TileEntityCrusher tileentity) 
+	public GuiCrusher(InventoryPlayer player, TileEntityCrusher tileEntity)
 	{
-		super(new ContainerCrusher(player, tileentity));
-		this.tileentity = tileentity;
+		super(new ContainerCrusher(player, tileEntity));
+		this.tileEntity = tileEntity;
 	}
 	
 	@Override
@@ -33,7 +35,7 @@ public class GuiCrusher extends GuiContainer
 	    
 	    this.buttonList.clear();
 	    
-	    int buttonState = this.tileentity.getButtonState();
+	    int buttonState = this.tileEntity.getButtonState();
 	    
 	    if (buttonState == 0)
 	    {
@@ -47,14 +49,24 @@ public class GuiCrusher extends GuiContainer
 	    {
 		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31, buttonState));
 	    }
+
+		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 38, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 71));
 	}
-	
+
 	@Override
 	public void actionPerformed(GuiButton guiButton)
 	{
-		this.tileentity.addButtonState();
-	    
-	    this.initGui();
+		if (guiButton.id == 0)
+		{
+			this.tileEntity.addButtonState();
+			this.initGui();
+		}
+		if (guiButton.id == 1)
+		{
+			this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION);
+
+			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+		}
 	}
 	
 	@Override
@@ -67,21 +79,29 @@ public class GuiCrusher extends GuiContainer
 	    {
 	        if (button instanceof GuiRedstoneControlButton) 
 	        {
-	            List<String> tooltip = ((GuiRedstoneControlButton) button).getCurrentTooltip();
-	            if (tooltip != null) 
+	            List<String> redstoneControlButtonTooltip = ((GuiRedstoneControlButton) button).getCurrentTooltip();
+	            if (redstoneControlButtonTooltip != null)
 	            {
-	                GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+	                GuiUtils.drawHoveringText(redstoneControlButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 	            }
 	        }
+			if (button instanceof GuiSlotsConfigurationButton)
+			{
+				List<String> slotsConfigurationButtonTooltip = ((GuiSlotsConfigurationButton) button).getCurrentTooltip();
+				if (slotsConfigurationButtonTooltip != null)
+				{
+					GuiUtils.drawHoveringText(slotsConfigurationButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+				}
+			}
 	    }
-	    
+
 	    this.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
-		String title = this.tileentity.getDisplayName().getUnformattedText();
+		String title = this.tileEntity.getDisplayName().getUnformattedText();
 		this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 73, 4210752);
 	}
@@ -95,7 +115,7 @@ public class GuiCrusher extends GuiContainer
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 		 
-		if (TileEntityCrusher.isActive(tileentity))
+		if (TileEntityCrusher.isActive(tileEntity))
 		{
 			int k = this.getBurnLeftScaled(13);
 			this.drawTexturedModalRect(i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
@@ -107,20 +127,20 @@ public class GuiCrusher extends GuiContainer
 	
 	private int getCookProgressScaled(int pixels)
 	{
-		int i = this.tileentity.getField(2);
-		int j = this.tileentity.getField(3);
+		int i = this.tileEntity.getField(2);
+		int j = this.tileEntity.getField(3);
 		return j != 0 && i != 0 ? i * pixels / j : 0;
 	}
 	
 	private int getBurnLeftScaled(int pixels)
 	{
-		int i = this.tileentity.getField(1);
+		int i = this.tileEntity.getField(1);
 
         if (i == 0)
         {
             i = 200;
         }
 
-        return this.tileentity.getField(0) * pixels / i;
+        return this.tileEntity.getField(0) * pixels / i;
 	}
 }

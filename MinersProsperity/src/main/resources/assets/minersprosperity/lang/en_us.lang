@@ -9,29 +9,99 @@ item.emerald_sword.name=Emerald Sword
 item.emerald_pickaxe.name=Emerald Pickaxe
 item.emerald_axe.name=Emerald Axe
 item.emerald_shovel.name=Emerald Shovel
+item.emerald_hoe.name=Emerald Hoe
 
 //ARMOUR
-item.emerald_hoe.name=Emerald Hoe
+item.wood_helmet.name=Wood Helmet
+item.wood_chestplate.name=Wood Chestplate
+item.wood_leggings.name=Wood Leggings
+item.wood_boots.name=Wood Boots
+item.stone_helmet.name=Stone Helmet
+item.stone_chestplate.name=Stone Chestplate
+item.stone_leggings.name=Stone Leggings
+item.stone_boots.name=Stone Boots
 item.emerald_helmet.name=Emerald Helmet
 item.emerald_chestplate.name=Emerald Chestplate
 item.emerald_leggings.name=Emerald Leggings
 item.emerald_boots.name=Emerald Boots
 
 //ITEMS
+item.chain.name=Chain
+
+//BACKPACKS
 item.backpack.name=Backpack
 item.iron_backpack.name=Iron Backpack
 
+//INGOTS
+item.copper_ingot.name=Copper Ingot
+item.tin_ingot.name=Tin Ingot
+item.lead_ingot.name=Lead Ingot
+item.silver_ingot.name=Silver Ingot
+
+//NUGGETS
+item.copper_nugget.name=Copper Nugget
+item.tin_nugget.name=Tin Nugget
+item.lead_nugget.name=Lead Nugget
+item.silver_nugget.name=Silver Nugget
 item.diamond_nugget.name=Diamond Nugget
 item.emerald_nugget.name=Emerald Nugget
+
+//DUSTS
 item.coal_dust.name=Coal Dust
 item.charcoal_dust.name=Charcoal Dust
+item.copper_dust.name=Copper Dust
+item.tin_dust.name=Tin Dust
+item.lead_dust.name=Lead Dust
+item.silver_dust.name=Silver Dust
 item.iron_dust.name=Iron Dust
 item.gold_dust.name=Gold Dust
 item.diamond_dust.name=Diamond Dust
 item.emerald_dust.name=Emerald Dust
 
+//GEARS
+item.coal_gear.name=Coal Gear
+item.charcoal_gear.name=Charcoal Gear
+item.copper_gear.name=Copper Gear
+item.tin_gear.name=Tin Gear
+item.lead_gear.name=Lead Gear
+item.silver_gear.name=Silver Gear
+item.iron_gear.name=Iron Gear
+item.gold_gear.name=Gold Gear
+item.diamond_gear.name=Diamond Gear
+item.emerald_gear.name=Emerald Gear
+item.redstone_gear.name=Redstone Gear
+item.lapis_lazuli_gear.name=Lapis Lazuli Gear
+
+//PLATES
+item.coal_plate.name=Coal Plate
+item.charcoal_plate.name=Charcoal Plate
+item.copper_plate.name=Copper Plate
+item.tin_plate.name=Tin Plate
+item.lead_plate.name=Lead Plate
+item.silver_plate.name=Silver Plate
+item.iron_plate.name=Iron Plate
+item.gold_plate.name=Gold Plate
+item.diamond_plate.name=Diamond Plate
+item.emerald_plate.name=Emerald Plate
+item.redstone_plate.name=Redstone Plate
+item.lapis_lazuli_plate.name=Lapis Lazuli Plate
+
 //BLOCKS
+//MACHINES
 tile.crusher.name=Crusher
+
+//ORES
+tile.copper_ore.name=Copper Ore
+tile.tin_ore.name=Tin Ore
+tile.lead_ore.name=Lead Ore
+tile.silver_ore.name=Silver Ore
+
+//OREBLOCKS
+tile.charcoal_block.name=Block of Charcoal
+tile.copper_block.name=Block of Copper
+tile.tin_block.name=Block of Tin
+tile.lead_block.name=Block of Lead
+tile.silver_block.name=Block of Silver
 
 //CONTAINERS
 container.crusher=Crusher

@@ -1,11 +1,15 @@
 package net.vyroxes.minersprosperity.objects.containers;
 
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -21,7 +25,7 @@ public class ContainerCrusher extends Container
     private int totalCookTime;
     private int crusherBurnTime;
     private int currentItemBurnTime;
-    
+
     public ContainerCrusher(InventoryPlayer playerInventory, TileEntityCrusher tileEntityCrusher) 
     {
         this.tileCrusher = tileEntityCrusher;
@@ -38,10 +42,68 @@ public class ContainerCrusher extends Container
         });
         this.addSlotToContainer(new SlotItemHandler(handler, 3, 116, 35) // Slot wyjściowy
         {
-            @Override
-            public boolean isItemValid(ItemStack stack) 
+        	@Override
+            public boolean isItemValid(ItemStack stack)
             {
                 return false;
+            }
+        	
+//        	@Override
+//            public ItemStack onTake(EntityPlayer entityPlayer, ItemStack itemStack)
+//            {
+//        	    float experiencePerItem = RecipesCrusher.getInstance().getCrusherExperience(itemStack);
+//        	    int totalExperience = (int)(experiencePerItem * itemStack.getCount());
+//
+//                if (totalExperience > 0)
+//                {
+//                    entityPlayer.addExperience(totalExperience);
+//                }
+//
+//                entityPlayer.world.playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.25F, 1.0F);
+//
+//                return super.onTake(entityPlayer, itemStack);
+//            }
+
+            @Override
+            public ItemStack onTake(EntityPlayer entityPlayer, ItemStack itemStack)
+            {
+                float experiencePerItem = RecipesCrusher.getInstance().getCrusherExperience(itemStack);
+                int totalItemCount = itemStack.getCount();
+
+                if (!entityPlayer.world.isRemote)
+                {
+                    int totalExperience;
+
+                    if (experiencePerItem == 0.0F)
+                    {
+                        totalExperience = 0;
+                    }
+                    else if (experiencePerItem < 1.0F)
+                    {
+                        int flooredExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+
+                        if (flooredExperience < MathHelper.ceil((float) totalItemCount * experiencePerItem) &&
+                                Math.random() < (float) totalItemCount * experiencePerItem - (float) flooredExperience)
+                        {
+                            ++flooredExperience;
+                        }
+
+                        totalExperience = flooredExperience;
+                    }
+                    else
+                    {
+                        totalExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+                    }
+
+                    while (totalExperience > 0)
+                    {
+                        int xpSplit = EntityXPOrb.getXPSplit(totalExperience);
+                        totalExperience -= xpSplit;
+                        entityPlayer.world.spawnEntity(new EntityXPOrb(entityPlayer.world, entityPlayer.posX, entityPlayer.posY + 0.5D, entityPlayer.posZ + 0.5D, xpSplit));
+                    }
+                }
+
+                return super.onTake(entityPlayer, itemStack);
             }
         });
         
@@ -58,7 +120,7 @@ public class ContainerCrusher extends Container
             this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
     }
-    
+
     @Override
     public void detectAndSendChanges() 
     {
@@ -107,7 +169,7 @@ public class ContainerCrusher extends Container
     {
         return this.tileCrusher.isUsableByPlayer(playerIn);
     }
-
+    
     @Override
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) 
     {
@@ -125,10 +187,46 @@ public class ContainerCrusher extends Container
                 {
                 	return ItemStack.EMPTY;
                 }
-                
+
                 slot.onSlotChange(itemstack1, itemstack);
+
+                float experiencePerItem = RecipesCrusher.getInstance().getCrusherExperience(itemstack);
+                int totalItemCount = itemstack.getCount();
+
+                if (!playerIn.world.isRemote)
+                {
+                    int totalExperience;
+
+                    if (experiencePerItem == 0.0F)
+                    {
+                        totalExperience = 0;
+                    }
+                    else if (experiencePerItem < 1.0F)
+                    {
+                        int flooredExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+
+                        if (flooredExperience < MathHelper.ceil((float) totalItemCount * experiencePerItem) &&
+                                Math.random() < (float) totalItemCount * experiencePerItem - (float) flooredExperience)
+                        {
+                            ++flooredExperience;
+                        }
+
+                        totalExperience = flooredExperience;
+                    }
+                    else
+                    {
+                        totalExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+                    }
+
+                    while (totalExperience > 0)
+                    {
+                        int xpSplit = EntityXPOrb.getXPSplit(totalExperience);
+                        totalExperience -= xpSplit;
+                        playerIn.world.spawnEntity(new EntityXPOrb(playerIn.world, playerIn.posX, playerIn.posY + 0.5D, playerIn.posZ + 0.5D, xpSplit));
+                    }
+                }
             }
-            else if (index != 2 && index != 1 && index != 0) 
+            else if (index != 0 && index != 1 && index != 2)
             {        
                 if (RecipesCrusher.getInstance().isInputInAnyRecipe(itemstack1))
                 {
@@ -144,16 +242,19 @@ public class ContainerCrusher extends Container
                     	return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 4 && index < 31)
+                else if (index >= 4 && index <= 30)
                 {
-                	if(!this.mergeItemStack(itemstack1, 4, 40, false)) 
+                	if(!this.mergeItemStack(itemstack1, 31, 40, false))
 		            {
 		                return ItemStack.EMPTY;
 		            }
                 }
-                else if (index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 40, false))
+                else if (index >= 31 && index <= 39)
                 {
-                	return ItemStack.EMPTY;
+                    if(!this.mergeItemStack(itemstack1, 4, 31, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
                 }
             }
             else if (!this.mergeItemStack(itemstack1, 4, 40, false))

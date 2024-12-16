@@ -23,7 +23,7 @@ public class IronBackpack extends ItemBase
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote)
         {
-            playerIn.openGui(MinersProsperity.instance, GuiHandler.IRON_BACKPACK_GUI, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
+            playerIn.openGui(MinersProsperity.instance, GuiHandler.GUI_IRON_BACKPACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
     }

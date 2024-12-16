@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"A A",
+		"AAA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "cobblestone"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:stone_chestplate",
+		"count": 1
+	}
+}

@@ -1,6 +1,7 @@
 package net.vyroxes.minersprosperity.objects.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -11,9 +12,9 @@ import net.vyroxes.minersprosperity.util.interfaces.IHasModel;
 
 public class BlockBase extends Block implements IHasModel
 {
-	public BlockBase(String name, Material material)
+	public BlockBase(String name, Material material, MapColor mapColor)
 	{
-		super(material);
+		super(material, mapColor);
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(MinersProsperity.blocks_tab);

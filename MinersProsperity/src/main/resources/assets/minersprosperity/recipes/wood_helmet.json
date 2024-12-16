@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"A A"
+	],
+	"key": {
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "plankWood"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:wood_helmet",
+		"count": 1
+	}
+}

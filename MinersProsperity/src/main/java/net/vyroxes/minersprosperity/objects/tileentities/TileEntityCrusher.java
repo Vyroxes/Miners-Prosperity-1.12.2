@@ -28,6 +28,7 @@ import net.vyroxes.minersprosperity.Reference;
 import net.vyroxes.minersprosperity.objects.blocks.machines.Crusher;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesCrusher;
 import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
+import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 public class TileEntityCrusher extends TileEntity implements ITickable
@@ -40,7 +41,14 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     private int totalCookTime;
     private String customName;
     public int buttonState;
-
+    public int northState;
+    public int southState;
+    public int eastState;
+    public int westState;
+    public int upState;
+    public int downState;
+    public int currentGuiId = GuiHandler.GUI_CRUSHER;
+    
     public int getButtonState()
     {
     	return this.buttonState;
@@ -61,7 +69,192 @@ public class TileEntityCrusher extends TileEntity implements ITickable
 		
 		NetworkHandler.sendButtonStateUpdate(this.buttonState, this.pos);
     }
-    
+
+    public int getFaceState(int face)
+    {
+        if (face == 0)
+        {
+            return this.northState;
+        }
+        else if (face == 1)
+        {
+            return this.southState;
+        }
+        else if (face == 2)
+        {
+            return this.eastState;
+        }
+        else if (face == 3)
+        {
+            return this.westState;
+        }
+        else if (face == 4)
+        {
+            return this.upState;
+        }
+        else if (face == 5)
+        {
+            return this.downState;
+        }
+        return face;
+    }
+
+    public void addFaceState(int face)
+    {
+        if (face == 0)
+        {
+            if (this.northState < 4)
+            {
+                ++this.northState;
+            }
+            else
+            {
+                this.northState = 0;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.northState, this.pos);
+        }
+        else if (face == 1)
+        {
+            if (this.southState < 4)
+            {
+                ++this.southState;
+            }
+            else
+            {
+                this.southState = 0;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.southState, this.pos);
+        }
+        else if (face == 2)
+        {
+            if (this.eastState < 4)
+            {
+                ++this.eastState;
+            }
+            else
+            {
+                this.eastState = 0;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.eastState, this.pos);
+        }
+        else if (face == 3)
+        {
+            if (this.westState < 4)
+            {
+                ++this.westState;
+            }
+            else
+            {
+                this.westState = 0;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.westState, this.pos);
+        }
+        else if (face == 4)
+        {
+            if (this.upState < 4)
+            {
+                ++this.upState;
+            }
+            else
+            {
+                this.upState = 0;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.upState, this.pos);
+        }
+        else if (face == 5)
+        {
+            if (this.downState < 4)
+            {
+                ++this.downState;
+            }
+            else
+            {
+                this.downState = 0;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.downState, this.pos);
+        }
+
+        this.markDirty();
+    }
+
+    public void subFaceState(int face)
+    {
+        if (face == 0)
+        {
+            if (this.northState > 0)
+            {
+                --this.northState;
+            }
+            else
+            {
+                this.northState = 4;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.northState, this.pos);
+        }
+        else if (face == 1)
+        {
+            if (this.southState > 0)
+            {
+                --this.southState;
+            }
+            else
+            {
+                this.southState = 4;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.southState, this.pos);
+        }
+        else if (face == 2)
+        {
+            if (this.eastState > 0)
+            {
+                --this.eastState;
+            }
+            else
+            {
+                this.eastState = 4;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.eastState, this.pos);
+        }
+        else if (face == 3)
+        {
+            if (this.westState > 0)
+            {
+                --this.westState;
+            }
+            else
+            {
+                this.westState = 4;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.westState, this.pos);
+        }
+        else if (face == 4)
+        {
+            if (this.upState > 0)
+            {
+                --this.upState;
+            }
+            else
+            {
+                this.upState = 4;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.upState, this.pos);
+        }
+        else if (face == 5)
+        {
+            if (this.downState > 0)
+            {
+                --this.downState;
+            }
+            else
+            {
+                this.downState = 4;
+            }
+            NetworkHandler.sendFaceStateUpdate(face, this.downState, this.pos);
+        }
+
+        this.markDirty();
+    }
+
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
     {
@@ -112,26 +305,45 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     public NBTTagCompound getUpdateTag() 
     {
         NBTTagCompound tag = super.writeToNBT(new NBTTagCompound());
+        tag.setTag("Inventory", this.crusherItemStacks.serializeNBT());
+        tag.setInteger("BurnTime", this.crusherBurnTime);
+        tag.setInteger("CookTime", this.cookTime);
+        tag.setInteger("TotalCookTime", this.totalCookTime);
+        tag.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
         tag.setInteger("ButtonState", this.buttonState);
+        tag.setInteger("CurrentGuiId", this.currentGuiId);
+        tag.setInteger("NorthState", this.northState);
+        tag.setInteger("SouthState", this.southState);
+        tag.setInteger("EastState", this.eastState);
+        tag.setInteger("WestState", this.westState);
+        tag.setInteger("UpState", this.upState);
+        tag.setInteger("DownState", this.downState);
         return tag;
     }
     
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    public NBTTagCompound writeToNBT(NBTTagCompound tag)
     {
-        super.writeToNBT(compound);
-        compound.setTag("Inventory", this.crusherItemStacks.serializeNBT());
-        compound.setInteger("BurnTime", this.crusherBurnTime);
-        compound.setInteger("CookTime", this.cookTime);
-        compound.setInteger("TotalCookTime", this.totalCookTime);
-        compound.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
-        compound.setInteger("ButtonState", this.buttonState);
+        super.writeToNBT(tag);
+        tag.setTag("Inventory", this.crusherItemStacks.serializeNBT());
+        tag.setInteger("BurnTime", this.crusherBurnTime);
+        tag.setInteger("CookTime", this.cookTime);
+        tag.setInteger("TotalCookTime", this.totalCookTime);
+        tag.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
+        tag.setInteger("ButtonState", this.buttonState);
+        tag.setInteger("CurrentGuiId", this.currentGuiId);
+        tag.setInteger("NorthState", this.northState);
+        tag.setInteger("SouthState", this.southState);
+        tag.setInteger("EastState", this.eastState);
+        tag.setInteger("WestState", this.westState);
+        tag.setInteger("UpState", this.upState);
+        tag.setInteger("DownState", this.downState);
         
         if (this.hasCustomName()) 
         {
-            compound.setString("CustomName", this.customName);
+            tag.setString("CustomName", this.customName);
         }
-        return compound;
+        return tag;
     }
 
     @Override
@@ -144,6 +356,13 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         this.totalCookTime = compound.getInteger("TotalCookTime");
         this.currentItemBurnTime = compound.getInteger("CurrentItemBurnTime");
         this.buttonState = compound.getInteger("ButtonState");
+        this.currentGuiId = compound.getInteger("CurrentGuiId");
+        this.northState = compound.getInteger("NorthState");
+        this.southState = compound.getInteger("SouthState");
+        this.eastState = compound.getInteger("EastState");
+        this.westState = compound.getInteger("WestState");
+        this.upState = compound.getInteger("UpState");
+        this.downState = compound.getInteger("DownState");
         
         if (compound.hasKey("CustomName", 8)) 
         {
@@ -175,7 +394,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     
     @Override
     public void update() 
-    {   
+    {
         boolean flag = this.isActive();
         boolean flag1 = false;
         
@@ -414,9 +633,25 @@ public class TileEntityCrusher extends TileEntity implements ITickable
 
         return true;
     }
-    
+
+    public void setCurrentGuiId(int guiId)
+    {
+        this.currentGuiId = guiId;
+
+        NetworkHandler.sendCurrentGuiIdUpdate(this.currentGuiId, this.pos);
+    }
+
+    public int getCurrentGuiId()
+    {
+        return this.currentGuiId;
+    }
+
     public String getGuiID()
     {
+        if (currentGuiId == GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION)
+        {
+            return Reference.MODID + ":crusher_slots_configuration";
+        }
         return Reference.MODID + ":crusher";
     }
 

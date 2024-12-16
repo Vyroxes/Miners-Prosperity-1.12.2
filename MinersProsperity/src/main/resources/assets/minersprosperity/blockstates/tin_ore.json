@@ -1,0 +1,15 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+			"model": "minersprosperity:tin_ore"
+	},
+	"variants": {
+		"inventory": [{}],
+		"normal": {
+			"model": "minersprosperity:tin_ore",
+			"textures": {
+				"all": "minersprosperity:blocks/tin_ore"
+			}
+		}
+	}
+}

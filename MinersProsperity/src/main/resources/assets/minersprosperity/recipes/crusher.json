@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		},
+		"B":
+		{
+			"item": "minecraft:furnace"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:crusher",
+		"count": 1
+	}
+}

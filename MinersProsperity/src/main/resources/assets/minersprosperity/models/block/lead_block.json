@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_all",
+    "textures":
+	{
+        "all": "minersprosperity:blocks/lead_block"
+    }
+}

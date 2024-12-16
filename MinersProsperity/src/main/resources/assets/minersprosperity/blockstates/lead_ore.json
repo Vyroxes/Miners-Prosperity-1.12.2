@@ -1,0 +1,15 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+			"model": "minersprosperity:lead_ore"
+	},
+	"variants": {
+		"inventory": [{}],
+		"normal": {
+			"model": "minersprosperity:lead_ore",
+			"textures": {
+				"all": "minersprosperity:blocks/lead_ore"
+			}
+		}
+	}
+}

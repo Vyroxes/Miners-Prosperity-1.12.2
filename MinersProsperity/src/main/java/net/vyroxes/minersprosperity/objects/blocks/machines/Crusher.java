@@ -4,6 +4,7 @@ import java.util.Random;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
@@ -45,13 +46,14 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	
     public Crusher(String name)
     {
-        super(name, Material.IRON);
-        setSoundType(SoundType.METAL);
+        super(name, Material.IRON, MapColor.STONE);
+        setSoundType(SoundType.STONE);
 		setCreativeTab(MinersProsperity.blocks_tab);
-		setHarvestLevel("pickaxe", 1);
-		setHardness(10);
+		setHarvestLevel("pickaxe", 0);
+		setHardness(5.0F);
+		setResistance(10.0F);
 		
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
+		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
     }
 	
     @Override
@@ -146,12 +148,12 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	{
 	    if (!worldIn.isRemote)
 	    {
-	        if (playerIn.openContainer != null && playerIn.openContainer instanceof ContainerCrusher)
+	        if (playerIn.openContainer instanceof ContainerCrusher)
 	        {
 	        	return false;
 	        }
 	        
-	        playerIn.openGui(MinersProsperity.instance, GuiHandler.CRUSHER_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+	        playerIn.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER, worldIn, pos.getX(), pos.getY(), pos.getZ());
 	    }
 	    
 	    return true;
