@@ -1,7 +1,10 @@
 package net.vyroxes.minersprosperity.objects.guis;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,13 +22,14 @@ public class GuiCrusher extends GuiContainer
 {
 	private static final ResourceLocation CRUSHER_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/crusher.png");
 	private final TileEntityCrusher tileEntity;
+	private int redstoneControlButtonState;
 	
 	public GuiCrusher(InventoryPlayer player, TileEntityCrusher tileEntity)
 	{
 		super(new ContainerCrusher(player, tileEntity));
 		this.tileEntity = tileEntity;
 	}
-	
+
 	@Override
 	public void initGui() 
 	{
@@ -34,23 +38,37 @@ public class GuiCrusher extends GuiContainer
 	    int guiTop = (this.height - this.ySize) / 2;
 	    
 	    this.buttonList.clear();
-	    
-	    int buttonState = this.tileEntity.getButtonState();
-	    
-	    if (buttonState == 0)
-	    {
-		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, buttonState));
-	    }
-	    else if (buttonState == 1)
-	    {
-		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 198, 31, buttonState));
-	    }
-	    else if (buttonState == 2)
-	    {
-		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31, buttonState));
-	    }
 
-		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 38, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 71));
+		this.redstoneControlButtonState = this.tileEntity.redstoneControlButtonState;
+
+		if (this.redstoneControlButtonState == 0)
+		{
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, this.redstoneControlButtonState));
+		}
+		else if (redstoneControlButtonState == 1)
+		{
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 194, 31, this.redstoneControlButtonState));
+		}
+		else if (redstoneControlButtonState == 2)
+		{
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 212, 31, this.redstoneControlButtonState));
+		}
+		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 37, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 230, 31));
+
+//	    if (this.redstoneControlButtonState == 0)
+//	    {
+//		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, this.redstoneControlButtonState));
+//	    }
+//	    else if (redstoneControlButtonState == 1)
+//	    {
+//		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 198, 31, this.redstoneControlButtonState));
+//	    }
+//	    else if (redstoneControlButtonState == 2)
+//	    {
+//		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31, this.redstoneControlButtonState));
+//	    }
+//
+//		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 38, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 71));
 	}
 
 	@Override
@@ -58,17 +76,78 @@ public class GuiCrusher extends GuiContainer
 	{
 		if (guiButton.id == 0)
 		{
-			this.tileEntity.addButtonState();
-			this.initGui();
+			if (this.redstoneControlButtonState < 2)
+			{
+				++this.tileEntity.redstoneControlButtonState;
+			}
+			else
+			{
+				this.tileEntity.redstoneControlButtonState = 0;
+			}
+			this.tileEntity.setRedstoneControlButtonState();
 		}
 		if (guiButton.id == 1)
 		{
-			this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION);
-
+			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION);
 			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
 		}
+		this.initGui();
 	}
-	
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
+	{
+		if (mouseButton == 1)
+		{
+			super.mouseClicked(mouseX, mouseY, mouseButton);
+			for (GuiButton guiButton : this.buttonList)
+			{
+				if (guiButton instanceof GuiRedstoneControlButton && ((GuiRedstoneControlButton) guiButton).isHovered(mouseX, mouseY))
+				{
+					if (guiButton.id == 0)
+					{
+						if (this.redstoneControlButtonState > 0)
+						{
+							--this.tileEntity.redstoneControlButtonState;
+						}
+						else
+						{
+							this.tileEntity.redstoneControlButtonState = 2;
+						}
+					}
+
+					this.tileEntity.setRedstoneControlButtonState();
+					Minecraft.getMinecraft().player.playSound(net.minecraft.init.SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+					this.initGui();
+					return;
+				}
+			}
+		}
+		else if (mouseButton == 2)
+		{
+			super.mouseClicked(mouseX, mouseY, mouseButton);
+			for (GuiButton guiButton : this.buttonList)
+			{
+				if (guiButton instanceof GuiRedstoneControlButton && ((GuiRedstoneControlButton) guiButton).isHovered(mouseX, mouseY))
+				{
+					if (guiButton.id == 0)
+					{
+						this.tileEntity.redstoneControlButtonState = 0;
+					}
+
+					this.tileEntity.setRedstoneControlButtonState();
+					Minecraft.getMinecraft().player.playSound(net.minecraft.init.SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+					this.initGui();
+					return;
+				}
+			}
+		}
+		else
+		{
+			super.mouseClicked(mouseX, mouseY, mouseButton);
+		}
+	}
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) 
 	{
@@ -101,7 +180,7 @@ public class GuiCrusher extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
-		String title = this.tileEntity.getDisplayName().getUnformattedText();
+		String title = Objects.requireNonNull(this.tileEntity.getDisplayName()).getUnformattedText();
 		this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 73, 4210752);
 	}
@@ -117,30 +196,30 @@ public class GuiCrusher extends GuiContainer
 		 
 		if (TileEntityCrusher.isActive(tileEntity))
 		{
-			int k = this.getBurnLeftScaled(13);
+			int k = this.getBurnLeftScaled();
 			this.drawTexturedModalRect(i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
 		}
 		
-		int l = this.getCookProgressScaled(24);
+		int l = this.getCookProgressScaled();
 		this.drawTexturedModalRect(i + 79, j + 34, 176, 14, l + 1, 16);
 	}
-	
-	private int getCookProgressScaled(int pixels)
+
+	private int getCookProgressScaled()
 	{
-		int i = this.tileEntity.getField(2);
-		int j = this.tileEntity.getField(3);
-		return j != 0 && i != 0 ? i * pixels / j : 0;
+		int i = this.tileEntity.cookTime;
+		int j = this.tileEntity.totalCookTime;
+		return j != 0 && i != 0 ? i * 24 / j : 0;
 	}
 	
-	private int getBurnLeftScaled(int pixels)
+	private int getBurnLeftScaled()
 	{
-		int i = this.tileEntity.getField(1);
+		int i = this.tileEntity.currentItemBurnTime;
 
         if (i == 0)
         {
             i = 200;
         }
 
-        return this.tileEntity.getField(0) * pixels / i;
+        return this.tileEntity.crusherBurnTime * 13 / i;
 	}
 }

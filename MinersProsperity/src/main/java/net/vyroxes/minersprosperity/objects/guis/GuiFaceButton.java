@@ -12,23 +12,32 @@ public class GuiFaceButton extends GuiButton
 	private final ResourceLocation texture;
 	private final int textureX;
 	private final int textureY;
-    private final int faceState;
+    private final String tooltip;
+    private final String slot;
+    private final int slotState;
     private List<String> currentTooltip = null;
 
-	public GuiFaceButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, int faceState)
+	public GuiFaceButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, String tooltip, String slot, int slotState)
     {
         super(buttonId, x, y, width, height, "");
         this.texture = texture;
         this.textureX = textureX;
         this.textureY = textureY;
-        this.faceState = faceState;
+        this.tooltip = tooltip;
+        this.slot = slot;
+        this.slotState = slotState;
     }
 
 	public List<String> getCurrentTooltip()
 	{
 	    return currentTooltip;
 	}
-	
+
+    public boolean isHovered(int mouseX, int mouseY)
+    {
+        return mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
+    }
+
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) 
     {
@@ -36,7 +45,7 @@ public class GuiFaceButton extends GuiButton
         {
             boolean isHovered = mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
 
-            int yOffset = isHovered ? 18 : 0;
+            int yOffset = isHovered ? 16 : 0;
 
             mc.getTextureManager().bindTexture(this.texture);
             this.drawTexturedModalRect(this.x, this.y, this.textureX, this.textureY + yOffset, this.width, this.height);
@@ -44,11 +53,33 @@ public class GuiFaceButton extends GuiButton
             if (isHovered)
             {
                 currentTooltip = new ArrayList<>();
-                if (this.faceState == 0) currentTooltip.add("Ignored");
-                else if (this.faceState == 1) currentTooltip.add("Input 1");
-                else if (this.faceState == 2) currentTooltip.add("Input 2");
-                else if (this.faceState == 3) currentTooltip.add("Fuel");
-                else if (this.faceState == 4) currentTooltip.add("Output");
+                if (this.slot.equals("Output"))
+                {
+                    if(this.slotState == 0)
+                    {
+                        currentTooltip.add(tooltip + ": Ignored");
+                    }
+                    else if (this.slotState == 1)
+                    {
+                        currentTooltip.add(tooltip + ": Output");
+                    }
+                }
+                else
+                {
+                    if (this.slotState == 0)
+                    {
+                        currentTooltip.add(tooltip + ": Ignored");
+                    }
+                    else if (this.slotState == 1)
+                    {
+                        currentTooltip.add(tooltip + ": Input");
+                    }
+                    else if (this.slotState == 2)
+                    {
+                        currentTooltip.add(tooltip + ": Output");
+                    }
+                }
+
             }
             else
             {

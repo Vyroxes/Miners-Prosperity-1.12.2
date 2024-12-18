@@ -28,7 +28,12 @@ public class GuiRedstoneControlButton extends GuiButton
 	{
 	    return currentTooltip;
 	}
-	
+
+    public boolean isHovered(int mouseX, int mouseY)
+    {
+        return mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
+    }
+
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) 
     {
@@ -36,7 +41,8 @@ public class GuiRedstoneControlButton extends GuiButton
         {
             boolean isHovered = mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
 
-            int yOffset = isHovered ? 20 : 0;
+            int yOffset = isHovered ? 18 : 0;
+//            int yOffset = isHovered ? 20 : 0;
 
             mc.getTextureManager().bindTexture(this.texture);
             this.drawTexturedModalRect(this.x, this.y, this.textureX, this.textureY + yOffset, this.width, this.height); 

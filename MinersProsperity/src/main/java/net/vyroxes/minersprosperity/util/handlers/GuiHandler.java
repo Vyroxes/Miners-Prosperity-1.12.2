@@ -5,11 +5,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.vyroxes.minersprosperity.objects.containers.ContainerBackpack;
 import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
+import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.containers.ContainerIronBackpack;
-import net.vyroxes.minersprosperity.objects.guis.GuiBackpack;
-import net.vyroxes.minersprosperity.objects.guis.GuiCrusher;
-import net.vyroxes.minersprosperity.objects.guis.GuiCrusherSlotsConfiguration;
-import net.vyroxes.minersprosperity.objects.guis.GuiIronBackpack;
+import net.vyroxes.minersprosperity.objects.guis.*;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -20,6 +18,7 @@ public class GuiHandler implements IGuiHandler
 {
 	public static final int GUI_CRUSHER = ConfigHandler.GUI_CRUSHER;
     public static final int GUI_CRUSHER_SLOTS_CONFIGURATION = ConfigHandler.GUI_CRUSHER_SLOTS_CONFIGURATION;
+    public static final int GUI_CRUSHER_SLOT_CONFIGURATION = ConfigHandler.GUI_CRUSHER_SLOT_CONFIGURATION;
     public static final int GUI_BACKPACK = ConfigHandler.GUI_BACKPACK;
     public static final int GUI_IRON_BACKPACK = ConfigHandler.GUI_IRON_BACKPACK;
 
@@ -32,7 +31,11 @@ public class GuiHandler implements IGuiHandler
     	}
         if (ID == GUI_CRUSHER_SLOTS_CONFIGURATION)
         {
-            return new ContainerCrusher(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(new BlockPos(x, y, z))));
+            return new ContainerInventory(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(new BlockPos(x, y, z))));
+        }
+        if (ID == GUI_CRUSHER_SLOT_CONFIGURATION)
+        {
+            return new ContainerInventory(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(new BlockPos(x, y, z))));
         }
         if (ID == GUI_BACKPACK)
         {
@@ -57,6 +60,10 @@ public class GuiHandler implements IGuiHandler
         if (ID == GUI_CRUSHER_SLOTS_CONFIGURATION)
         {
             return new GuiCrusherSlotsConfiguration(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
+        }
+        if (ID == GUI_CRUSHER_SLOT_CONFIGURATION)
+        {
+            return new GuiCrusherSlotConfiguration(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
         }
         if (ID == GUI_BACKPACK)
         {

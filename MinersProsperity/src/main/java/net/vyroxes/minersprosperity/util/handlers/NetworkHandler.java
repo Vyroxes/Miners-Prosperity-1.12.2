@@ -6,8 +6,8 @@ import net.vyroxes.minersprosperity.network.MessageButtonState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.vyroxes.minersprosperity.network.MessageCurrentGuiId;
-import net.vyroxes.minersprosperity.network.MessageFaceState;
+import net.vyroxes.minersprosperity.network.MessageCrusherVariables;
+import net.vyroxes.minersprosperity.network.MessageSlotsState;
 
 public class NetworkHandler
 {
@@ -18,10 +18,10 @@ public class NetworkHandler
         int id = 0;
     	NETWORK.registerMessage(MessageButtonState.Handler.class, MessageButtonState.class, id++, Side.CLIENT);
     	NETWORK.registerMessage(MessageButtonState.Handler.class, MessageButtonState.class, id++, Side.SERVER);
-        NETWORK.registerMessage(MessageCurrentGuiId.Handler.class, MessageCurrentGuiId.class, id++, Side.CLIENT);
-        NETWORK.registerMessage(MessageCurrentGuiId.Handler.class, MessageCurrentGuiId.class, id++, Side.SERVER);
-        NETWORK.registerMessage(MessageFaceState.Handler.class, MessageFaceState.class, id++, Side.CLIENT);
-        NETWORK.registerMessage(MessageFaceState.Handler.class, MessageFaceState.class, id++, Side.SERVER);
+        NETWORK.registerMessage(MessageCrusherVariables.Handler.class, MessageCrusherVariables.class, id++, Side.CLIENT);
+        NETWORK.registerMessage(MessageCrusherVariables.Handler.class, MessageCrusherVariables.class, id++, Side.SERVER);
+        NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.CLIENT);
+        NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.SERVER);
     }
 
     public static void sendButtonStateUpdate(int buttonState, BlockPos pos)
@@ -29,13 +29,13 @@ public class NetworkHandler
         NETWORK.sendToServer(new MessageButtonState(buttonState, pos));
     }
 
-    public static void sendCurrentGuiIdUpdate(int currentGuiId, BlockPos pos)
+    public static void sendCrusherVariablesUpdate(int[] crusherVariables, BlockPos pos)
     {
-        NETWORK.sendToServer(new MessageCurrentGuiId(currentGuiId, pos));
+        NETWORK.sendToServer(new MessageCrusherVariables(crusherVariables, pos));
     }
 
-    public static void sendFaceStateUpdate(int face, int faceState, BlockPos pos)
+    public static void sendSlotsStateUpdate(int[][] slotsState, BlockPos pos)
     {
-        NETWORK.sendToServer(new MessageFaceState(face, faceState, pos));
+        NETWORK.sendToServer(new MessageSlotsState(slotsState, pos));
     }
 }

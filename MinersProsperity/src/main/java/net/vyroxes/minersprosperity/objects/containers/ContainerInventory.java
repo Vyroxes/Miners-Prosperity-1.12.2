@@ -1,15 +1,12 @@
 package net.vyroxes.minersprosperity.objects.containers;
 
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesCrusher;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerInventory extends Container
 {
@@ -40,13 +37,13 @@ public class ContainerInventory extends Container
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer playerIn) 
+    public boolean canInteractWith(@NotNull EntityPlayer playerIn)
     {
         return this.tileEntityCrusher.isUsableByPlayer(playerIn);
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -63,7 +60,7 @@ public class ContainerInventory extends Container
                     return ItemStack.EMPTY;
                 }
             }
-            else if (index >= 27 && index <= 35)
+            else if (index <= 35)
             {
                 if (!this.mergeItemStack(itemstack1, 0, 27, false))
                 {

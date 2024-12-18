@@ -50,9 +50,9 @@ public class RecipesCrusher
 	
 	private RecipesCrusher() 
 	{
-		addCrusherRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 0.7F, 20);
-		addCrusherRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), new ItemStack(Items.REDSTONE), 0.1F, 20);
-		addCrusherRecipe(new ItemStack(ItemInit.CHAIN), new ItemStack(ItemInit.COAL_GEAR), new ItemStack(Items.APPLE), 1.0F, 20);
+		addCrusherRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 0.7F, 200);
+		addCrusherRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), new ItemStack(Items.REDSTONE), 0.1F, 200);
+		addCrusherRecipe(new ItemStack(ItemInit.CHAIN), new ItemStack(ItemInit.COAL_GEAR), new ItemStack(Items.APPLE), 1.0F, 200);
 	}
 	
 	public void addCrusherRecipe(ItemStack input1, ItemStack input2, ItemStack result, float experience, int cookTime) 

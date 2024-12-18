@@ -15,6 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class Backpack extends ItemBase
 {
@@ -24,13 +25,13 @@ public class Backpack extends ItemBase
     }
     
     @Override
-    public int getItemStackLimit(ItemStack stack)
+    public int getItemStackLimit(@NotNull ItemStack stack)
     {
         return 1;
     }
     
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
+    public @NotNull ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         ItemStack itemStack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote)

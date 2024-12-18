@@ -44,7 +44,7 @@ public class MessageButtonState implements IMessage
             TileEntityCrusher tileEntity = (TileEntityCrusher) ctx.getServerHandler().player.world.getTileEntity(message.pos);
             if (tileEntity != null)
             {
-                tileEntity.buttonState = message.buttonState;
+                tileEntity.redstoneControlButtonState = message.buttonState;
                 tileEntity.markDirty();
             }
             return null;
