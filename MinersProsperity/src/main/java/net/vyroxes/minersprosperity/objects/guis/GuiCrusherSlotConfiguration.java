@@ -14,6 +14,7 @@ import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
+import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -428,8 +429,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
 
 		if (guiButton.id == 6)
 		{
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+            NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
 	}
@@ -748,8 +748,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
 		if (keyCode == 1)
 		{
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+            NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 	}
 }

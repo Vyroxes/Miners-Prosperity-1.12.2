@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.init.BlockInit;
 import net.vyroxes.minersprosperity.init.ItemInit;
@@ -37,8 +39,14 @@ public class RegistryHandler
 	}
 	
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public static void onModelRegister(ModelRegistryEvent event)
 	{
+		MinecraftForge.EVENT_BUS.register(new TooltipHandler());
+
+		KeyInputHandler.registerKeyBindings();
+		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+
 		for(Item item : ItemInit.ITEMS)
 		{
 			if(item instanceof IHasModel)
@@ -65,12 +73,12 @@ public class RegistryHandler
 	{
 		MinecraftForge.EVENT_BUS.register(MinersProsperity.instance);
 		
-	    MinecraftForge.EVENT_BUS.register(new TooltipHandler());
+	    //MinecraftForge.EVENT_BUS.register(new TooltipHandler());
 		
 	    MinecraftForge.EVENT_BUS.register(new CraftingHandler());
 	    
-		KeyInputHandler.registerKeyBindings();
-		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+		//KeyInputHandler.registerKeyBindings();
+		//MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
 		
 		ConfigHandler.registerConfig(event);
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());

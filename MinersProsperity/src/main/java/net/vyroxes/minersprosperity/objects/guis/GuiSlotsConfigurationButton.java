@@ -35,7 +35,6 @@ public class GuiSlotsConfigurationButton extends GuiButton
             boolean isHovered = mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
 
             int yOffset = isHovered ? 18 : 0;
-//            int yOffset = isHovered ? 20 : 0;
 
             mc.getTextureManager().bindTexture(this.texture);
             this.drawTexturedModalRect(this.x, this.y, this.textureX, this.textureY + yOffset, this.width, this.height); 

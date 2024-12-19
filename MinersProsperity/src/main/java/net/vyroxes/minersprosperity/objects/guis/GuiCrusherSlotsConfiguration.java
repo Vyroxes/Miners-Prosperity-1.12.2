@@ -14,6 +14,7 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
+import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,8 +42,8 @@ public class GuiCrusherSlotsConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
-		this.addButton(new GuiSlotButton(0, guiLeft + 42, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 176, 0, "Input Slot"));
-		this.addButton(new GuiSlotButton(1, guiLeft + 68, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 176, 0, "Input Slot"));
+		this.addButton(new GuiSlotButton(0, guiLeft + 42, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 176, 0, "Input 1 Slot"));
+		this.addButton(new GuiSlotButton(1, guiLeft + 68, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 176, 0, "Input 2 Slot"));
 		this.addButton(new GuiSlotButton(2, guiLeft + 55, guiTop + 52, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 194, 0, "Fuel Slot"));
 		this.addButton(new GuiSlotButton(3, guiLeft + 111, guiTop + 30, 26, 26, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 212, 0, "Output Slot"));
 		this.addButton(new GuiBackButton(4, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 238, 0, "Back"));
@@ -54,31 +55,26 @@ public class GuiCrusherSlotsConfiguration extends GuiContainer
 		if (guiButton.id == 0)
 		{
 			this.tileEntity.slot = "Input 1";
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 1)
 		{
 			this.tileEntity.setSlot("Input 2");
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 2)
 		{
 			this.tileEntity.setSlot("Fuel");
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 3)
 		{
 			this.tileEntity.setSlot("Output");
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOT_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 4)
 		{
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
 	}
@@ -140,11 +136,9 @@ public class GuiCrusherSlotsConfiguration extends GuiContainer
 	@Override
 	public void keyTyped(char typedChar, int keyCode)
 	{
-		if (keyCode == 1)
-		{
+		if (keyCode == 1) {
 			this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER.ordinal(), this.tileEntity.getPos());
 		}
 	}
 }

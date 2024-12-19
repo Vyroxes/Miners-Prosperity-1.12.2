@@ -7,61 +7,44 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 
-public class MessageCrusherVariables implements IMessage
+public class MessageRedstoneControlButtonState implements IMessage
 {
-    private int[] crusherVariables;
+    private int redstoneControlButtonState;
     private BlockPos pos;
 
-    public MessageCrusherVariables() {}
+    public MessageRedstoneControlButtonState() {}
 
-    public MessageCrusherVariables(int[] crusherVariables, BlockPos pos)
+    public MessageRedstoneControlButtonState(int redstoneControlButtonState, BlockPos pos)
     {
-        this.crusherVariables = crusherVariables;
+        this.redstoneControlButtonState = redstoneControlButtonState;
         this.pos = pos;
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        int length = buf.readInt();
-        this.crusherVariables = new int[length];
-
-        for (int i = 0; i < length; i++)
-        {
-            this.crusherVariables[i] = buf.readInt();
-        }
-
+        this.redstoneControlButtonState = buf.readInt();
         this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(this.crusherVariables.length);
-
-        for (int value : this.crusherVariables)
-        {
-            buf.writeInt(value);
-        }
-
+        buf.writeInt(this.redstoneControlButtonState);
         buf.writeInt(this.pos.getX());
         buf.writeInt(this.pos.getY());
         buf.writeInt(this.pos.getZ());
     }
 
-    public static class Handler implements IMessageHandler<MessageCrusherVariables, IMessage>
+    public static class Handler implements IMessageHandler<MessageRedstoneControlButtonState, IMessage>
     {
         @Override
-        public IMessage onMessage(MessageCrusherVariables message, MessageContext ctx)
+        public IMessage onMessage(MessageRedstoneControlButtonState message, MessageContext ctx)
         {
             TileEntityCrusher tileEntity = (TileEntityCrusher) ctx.getServerHandler().player.world.getTileEntity(message.pos);
             if (tileEntity != null)
             {
-                tileEntity.crusherBurnTime = message.crusherVariables[0];
-                tileEntity.currentItemBurnTime = message.crusherVariables[1];
-                tileEntity.cookTime = message.crusherVariables[2];
-                tileEntity.totalCookTime = message.crusherVariables[3];
-
+                tileEntity.redstoneControlButtonState = message.redstoneControlButtonState;
                 tileEntity.markDirty();
             }
             return null;

@@ -16,7 +16,7 @@ import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
-
+import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 public class GuiCrusher extends GuiContainer
 {
@@ -43,32 +43,17 @@ public class GuiCrusher extends GuiContainer
 
 		if (this.redstoneControlButtonState == 0)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, this.redstoneControlButtonState));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, this.redstoneControlButtonState));
 		}
 		else if (redstoneControlButtonState == 1)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 194, 31, this.redstoneControlButtonState));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 194, 31, this.redstoneControlButtonState));
 		}
 		else if (redstoneControlButtonState == 2)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 212, 31, this.redstoneControlButtonState));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 212, 31, this.redstoneControlButtonState));
 		}
-		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 37, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 230, 31));
-
-//	    if (this.redstoneControlButtonState == 0)
-//	    {
-//		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, this.redstoneControlButtonState));
-//	    }
-//	    else if (redstoneControlButtonState == 1)
-//	    {
-//		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 198, 31, this.redstoneControlButtonState));
-//	    }
-//	    else if (redstoneControlButtonState == 2)
-//	    {
-//		    this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 15, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 220, 31, this.redstoneControlButtonState));
-//	    }
-//
-//		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 38, 22, 20, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 71));
+		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 27, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 230, 31));
 	}
 
 	@Override
@@ -88,8 +73,7 @@ public class GuiCrusher extends GuiContainer
 		}
 		if (guiButton.id == 1)
 		{
-			//this.tileEntity.setCurrentGuiId(GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION);
-			this.mc.player.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER_SLOTS_CONFIGURATION, this.mc.world, this.tileEntity.getPos().getX(),  this.tileEntity.getPos().getY(),  this.tileEntity.getPos().getZ());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
 	}

@@ -48,172 +48,370 @@ public class TileEntityCrusher extends TileEntity implements ITickable
     public int[] fuelState = new int[6];;
     public int[] outputState = new int[6];;
     public String slot;
-    public int currentGuiId = GuiHandler.GUI_CRUSHER;
     public EnumFacing facing;
     public int currentFace;
     public EnumFacing crusherFacing;
-    //public int[] crusherVariables = new int[4];
 
     private final ItemStackHandler crusherItemStacks = new ItemStackHandler(4)
     {
+//        @Override
+//        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
+//        {
+//            ItemStack slot0 = this.getStackInSlot(0);
+//            ItemStack slot1 = this.getStackInSlot(1);
+//
+//            if (facing != null)
+//            {
+//                if (currentFace == 0)
+//                {
+//                    if (input1State[0] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                            else if (slot0.isEmpty() && !slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, stack).isEmpty())
+//                                {
+//                                    return super.insertItem(0, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot0.isEmpty() && slot0.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (input2State[0] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                            else if (!slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, stack).isEmpty()) {
+//                                    return super.insertItem(1, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot1.isEmpty() && slot1.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (fuelState[0] == 1)
+//                    {
+//                        if (isItemFuel(stack))
+//                        {
+//                            return super.insertItem(2, stack, simulate);
+//                        }
+//                    }
+//                }
+//                else if (currentFace == 1)
+//                {
+//                    if (input1State[1] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                            else if (slot0.isEmpty() && !slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, stack).isEmpty())
+//                                {
+//                                    return super.insertItem(0, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot0.isEmpty() && slot0.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (input2State[1] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                            else if (!slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, stack).isEmpty()) {
+//                                    return super.insertItem(1, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot1.isEmpty() && slot1.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (fuelState[1] == 1)
+//                    {
+//                        if (isItemFuel(stack))
+//                        {
+//                            return super.insertItem(2, stack, simulate);
+//                        }
+//                    }
+//                }
+//                if (currentFace == 2)
+//                {
+//                    if (input1State[2] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                            else if (slot0.isEmpty() && !slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, stack).isEmpty())
+//                                {
+//                                    return super.insertItem(0, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot0.isEmpty() && slot0.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (input2State[2] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                            else if (!slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, stack).isEmpty()) {
+//                                    return super.insertItem(1, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot1.isEmpty() && slot1.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (fuelState[2] == 1)
+//                    {
+//                        if (isItemFuel(stack))
+//                        {
+//                            return super.insertItem(2, stack, simulate);
+//                        }
+//                    }
+//                }
+//                else if (currentFace == 3)
+//                {
+//                    if (input1State[3] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                            else if (slot0.isEmpty() && !slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, stack).isEmpty())
+//                                {
+//                                    return super.insertItem(0, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot0.isEmpty() && slot0.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (input2State[3] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                            else if (!slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, stack).isEmpty()) {
+//                                    return super.insertItem(1, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot1.isEmpty() && slot1.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (fuelState[3] == 1)
+//                    {
+//                        if (isItemFuel(stack))
+//                        {
+//                            return super.insertItem(2, stack, simulate);
+//                        }
+//                    }
+//                }
+//                if (currentFace == 4)
+//                {
+//                    if (input1State[4] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                            else if (slot0.isEmpty() && !slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, stack).isEmpty())
+//                                {
+//                                    return super.insertItem(0, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot0.isEmpty() && slot0.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (input2State[4] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                            else if (!slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, stack).isEmpty()) {
+//                                    return super.insertItem(1, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot1.isEmpty() && slot1.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (fuelState[4] == 1)
+//                    {
+//                        if (isItemFuel(stack))
+//                        {
+//                            return super.insertItem(2, stack, simulate);
+//                        }
+//                    }
+//                }
+//                else if (currentFace == 5)
+//                {
+//                    if (input1State[5] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                            else if (slot0.isEmpty() && !slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, stack).isEmpty())
+//                                {
+//                                    return super.insertItem(0, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot0.isEmpty() && slot0.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(0, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (input2State[5] == 1)
+//                    {
+//                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
+//                        {
+//                            if (slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                            else if (!slot0.isEmpty() && slot1.isEmpty())
+//                            {
+//                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, stack).isEmpty()) {
+//                                    return super.insertItem(1, stack, simulate);
+//                                }
+//                            }
+//                            else if (!slot1.isEmpty() && slot1.getItem().equals(stack.getItem()))
+//                            {
+//                                return super.insertItem(1, stack, simulate);
+//                            }
+//                        }
+//                    }
+//
+//                    if (fuelState[5] == 1)
+//                    {
+//                        if (isItemFuel(stack))
+//                        {
+//                            return super.insertItem(2, stack, simulate);
+//                        }
+//                    }
+//                }
+//                return stack;
+//            }
+//            return super.insertItem(slot, stack, simulate);
+//        }
+
         @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
         {
-//            System.out.println("Facing: " + facing);
-//            System.out.println("Current Face: " + currentFace);
-//            System.out.println("Input 1: " + Arrays.toString(input1State));
-//            System.out.println("Input 2: " + Arrays.toString(input2State));
-//            System.out.println("Fuel: " + Arrays.toString(fuelState));
-//            System.out.println("Output: " + Arrays.toString(outputState));
+            if (facing == null || currentFace < 0 || currentFace >= 6)
+            {
+                return super.insertItem(slot, stack, simulate);
+            }
 
             ItemStack slot0 = this.getStackInSlot(0);
             ItemStack slot1 = this.getStackInSlot(1);
 
-            if (facing != null)
+            if (input1State[currentFace] == 1 && isValidInputForSlot(stack, slot0, slot1, true))
             {
-                if (currentFace == 0)
-                {
-                    if (input1State[0] == 1)
-                    {
-                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
-                        {
-                            System.out.println("Slot0: " + slot0.getDisplayName());
-                            System.out.println("Stack: " + stack.getDisplayName());
-                            if (slot0.isEmpty() && slot1.isEmpty())
-                            {
-                                return super.insertItem(0, stack, simulate);
-                            }
-                            else if (slot0.isEmpty() && !slot1.isEmpty())
-                            {
-                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, stack).isEmpty())
-                                {
-                                    return super.insertItem(0, stack, simulate);
-                                }
-                            }
-                            else if (!slot0.isEmpty() && slot0.getItem().equals(stack.getItem()))
-                            {
-                                return super.insertItem(0, stack, simulate);
-                            }
-                        }
-                    }
-
-                    if (input2State[0] == 1)
-                    {
-                        if (RecipesCrusher.getInstance().isInputInAnyRecipe(stack))
-                        {
-                            if (slot0.isEmpty() && slot1.isEmpty())
-                            {
-                                return super.insertItem(1, stack, simulate);
-                            }
-                            else if (!slot0.isEmpty() && slot1.isEmpty())
-                            {
-                                if (!RecipesCrusher.getInstance().getCrusherResult(stack, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, stack).isEmpty()) {
-                                    return super.insertItem(1, stack, simulate);
-                                }
-                            }
-                            else if (!slot1.isEmpty() && slot1.getItem().equals(stack.getItem()))
-                            {
-                                return super.insertItem(1, stack, simulate);
-                            }
-                        }
-                    }
-
-                    if (fuelState[0] == 1)
-                    {
-                        if (isItemFuel(stack))
-                        {
-                            return super.insertItem(2, stack, simulate);
-                        }
-                    }
-                }
-                else if (currentFace == 1)
-                {
-                    if (input1State[1] == 1)
-                    {
-                        return super.insertItem(0, stack, false);
-                    }
-
-                    if (input2State[1] == 1)
-                    {
-                        return super.insertItem(1, stack, false);
-                    }
-
-                    if (fuelState[1] == 1)
-                    {
-                        return super.insertItem(2, stack, false);
-                    }
-                }
-                if (currentFace == 2)
-                {
-                    if (input1State[2] == 1)
-                    {
-                        return super.insertItem(0, stack, simulate);
-                    }
-
-                    if (input2State[2] == 1)
-                    {
-                        return super.insertItem(1, stack, simulate);
-                    }
-
-                    if (fuelState[2] == 1)
-                    {
-                        return super.insertItem(2, stack, simulate);
-                    }
-                }
-                else if (currentFace == 3)
-                {
-                    if (input1State[3] == 1)
-                    {
-                        return super.insertItem(0, stack, simulate);
-                    }
-
-                    if (input2State[3] == 1)
-                    {
-                        return super.insertItem(1, stack, simulate);
-                    }
-
-                    if (fuelState[3] == 1)
-                    {
-                        return super.insertItem(2, stack, simulate);
-                    }
-                }
-                if (currentFace == 4)
-                {
-                    if (input1State[4] == 1)
-                    {
-                        return super.insertItem(0, stack, simulate);
-                    }
-
-                    if (input2State[4] == 1)
-                    {
-                        return super.insertItem(1, stack, simulate);
-                    }
-
-                    if (fuelState[4] == 1)
-                    {
-                        return super.insertItem(2, stack, simulate);
-                    }
-                }
-                else if (currentFace == 5)
-                {
-                    if (input1State[5] == 1)
-                    {
-                        return super.insertItem(0, stack, simulate);
-                    }
-
-                    if (input2State[5] == 1)
-                    {
-                        return super.insertItem(1, stack, simulate);
-                    }
-
-                    if (fuelState[5] == 1)
-                    {
-                        return super.insertItem(2, stack, simulate);
-                    }
-                }
-                return stack;
+                return super.insertItem(0, stack, simulate);
             }
-            return super.insertItem(slot, stack, simulate);
+
+            if (input2State[currentFace] == 1 && isValidInputForSlot(stack, slot0, slot1, false))
+            {
+                return super.insertItem(1, stack, simulate);
+            }
+
+            if (fuelState[currentFace] == 1 && isItemFuel(stack))
+            {
+                return super.insertItem(2, stack, simulate);
+            }
+
+            return stack;
         }
 
         @Override
@@ -222,6 +420,36 @@ public class TileEntityCrusher extends TileEntity implements ITickable
             return super.extractItem(slot, amount, simulate);
         }
     };
+
+    private boolean isValidInputForSlot(ItemStack stack, ItemStack slot0, ItemStack slot1, boolean isSlot0)
+    {
+        RecipesCrusher recipes = RecipesCrusher.getInstance();
+
+        if (!recipes.isInputInAnyRecipe(stack))
+        {
+            return false;
+        }
+
+        if (slot0.isEmpty() && slot1.isEmpty())
+        {
+            return true;
+        }
+
+        ItemStack otherSlot = isSlot0 ? slot1 : slot0;
+
+        if (isSlot0 && slot0.isEmpty() && !otherSlot.isEmpty())
+        {
+            return !recipes.getCrusherResult(stack, otherSlot).isEmpty() || !recipes.getCrusherResult(otherSlot, stack).isEmpty();
+        }
+
+        if (!isSlot0 && slot1.isEmpty() && !slot0.isEmpty())
+        {
+            return !recipes.getCrusherResult(stack, otherSlot).isEmpty() || !recipes.getCrusherResult(otherSlot, stack).isEmpty();
+        }
+
+        ItemStack currentSlot = isSlot0 ? slot0 : slot1;
+        return !currentSlot.isEmpty() && currentSlot.getItem().equals(stack.getItem());
+    }
 
     public void setSlot(String slot)
     {
@@ -252,104 +480,172 @@ public class TileEntityCrusher extends TileEntity implements ITickable
 
     public void currentFace(EnumFacing facing)
     {
-        if (this.hasWorld())
+        if (!this.hasWorld())
         {
-            IBlockState state = this.world.getBlockState(this.pos);
-            if (state.getBlock() instanceof Crusher)
-            {
-                crusherFacing = state.getValue(BlockHorizontal.FACING);
-            }
+            return;
+        }
 
-            if (facing == null)
-            {
-                currentFace = -1;
-            }
-            else if (facing == EnumFacing.NORTH)
-            {
-                if (crusherFacing == EnumFacing.NORTH)
-                {
-                    currentFace = 0;
-                }
-                else if (crusherFacing == EnumFacing.SOUTH)
-                {
-                    currentFace = 1;
-                }
-                else if (crusherFacing == EnumFacing.EAST)
-                {
-                    currentFace = 2;
-                }
-                else if (crusherFacing == EnumFacing.WEST)
-                {
-                    currentFace = 3;
-                }
-            }
-            else if (facing == EnumFacing.SOUTH)
-            {
-                if (crusherFacing == EnumFacing.NORTH)
-                {
-                    currentFace = 1;
-                }
-                else if (crusherFacing == EnumFacing.SOUTH)
-                {
-                    currentFace = 0;
-                }
-                else if (crusherFacing == EnumFacing.EAST)
-                {
-                    currentFace = 3;
-                }
-                else if (crusherFacing == EnumFacing.WEST)
-                {
-                    currentFace = 2;
-                }
-            }
-            else if (facing == EnumFacing.EAST)
-            {
-                if (crusherFacing == EnumFacing.NORTH)
-                {
-                    currentFace = 3;
-                }
-                else if (crusherFacing == EnumFacing.SOUTH)
-                {
-                    currentFace = 2;
-                }
-                else if (crusherFacing == EnumFacing.EAST)
-                {
-                    currentFace = 0;
-                }
-                else if (crusherFacing == EnumFacing.WEST)
-                {
-                    currentFace = 1;
-                }
-            }
-            else if (facing == EnumFacing.WEST)
-            {
-                if (crusherFacing == EnumFacing.NORTH)
-                {
-                    currentFace = 2;
-                }
-                else if (crusherFacing == EnumFacing.SOUTH)
-                {
-                    currentFace = 3;
-                }
-                else if (crusherFacing == EnumFacing.EAST)
-                {
-                    currentFace = 1;
-                }
-                else if (crusherFacing == EnumFacing.WEST)
-                {
-                    currentFace = 0;
-                }
-            }
-            else if (facing == EnumFacing.UP)
-            {
-                currentFace = 4;
-            }
-            else if (facing == EnumFacing.DOWN)
-            {
-                currentFace = 5;
-            }
+        IBlockState state = this.world.getBlockState(this.pos);
+        if (!(state.getBlock() instanceof Crusher))
+        {
+            return;
+        }
+
+        crusherFacing = state.getValue(BlockHorizontal.FACING);
+
+        if (facing == null)
+        {
+            currentFace = -1;
+            return;
+        }
+
+        if (facing == EnumFacing.UP)
+        {
+            currentFace = 4;
+            return;
+        }
+
+        if (facing == EnumFacing.DOWN)
+        {
+            currentFace = 5;
+            return;
+        }
+
+        int[][] faceMapping = {
+                {0, 1, 3, 2}, // facing == NORTH
+                {1, 0, 2, 3}, // facing == SOUTH
+                {3, 2, 0, 1}, // facing == EAST
+                {2, 3, 1, 0}  // facing == WEST
+        };
+
+        int facingIndex = switch (facing)
+        {
+            case NORTH -> 0;
+            case SOUTH -> 1;
+            case EAST -> 2;
+            case WEST -> 3;
+            default -> -1;
+        };
+
+        int crusherFacingIndex = switch (crusherFacing)
+        {
+            case NORTH -> 0;
+            case SOUTH -> 1;
+            case EAST -> 2;
+            case WEST -> 3;
+            default -> -1;
+        };
+
+        if (facingIndex != -1 && crusherFacingIndex != -1)
+        {
+            currentFace = faceMapping[facingIndex][crusherFacingIndex];
+        }
+        else
+        {
+            currentFace = -1;
         }
     }
+
+//    public void currentFace(EnumFacing facing)
+//    {
+//        if (this.hasWorld())
+//        {
+//            IBlockState state = this.world.getBlockState(this.pos);
+//            if (state.getBlock() instanceof Crusher)
+//            {
+//                crusherFacing = state.getValue(BlockHorizontal.FACING);
+//            }
+//
+//            if (facing == null)
+//            {
+//                currentFace = -1;
+//            }
+//            else if (facing == EnumFacing.NORTH)
+//            {
+//                if (crusherFacing == EnumFacing.NORTH)
+//                {
+//                    currentFace = 0;
+//                }
+//                else if (crusherFacing == EnumFacing.SOUTH)
+//                {
+//                    currentFace = 1;
+//                }
+//                else if (crusherFacing == EnumFacing.EAST)
+//                {
+//                    currentFace = 3;
+//                }
+//                else if (crusherFacing == EnumFacing.WEST)
+//                {
+//                    currentFace = 2;
+//                }
+//            }
+//            else if (facing == EnumFacing.SOUTH)
+//            {
+//                if (crusherFacing == EnumFacing.NORTH)
+//                {
+//                    currentFace = 1;
+//                }
+//                else if (crusherFacing == EnumFacing.SOUTH)
+//                {
+//                    currentFace = 0;
+//                }
+//                else if (crusherFacing == EnumFacing.EAST)
+//                {
+//                    currentFace = 2;
+//                }
+//                else if (crusherFacing == EnumFacing.WEST)
+//                {
+//                    currentFace = 3;
+//                }
+//            }
+//            else if (facing == EnumFacing.EAST)
+//            {
+//                if (crusherFacing == EnumFacing.NORTH)
+//                {
+//                    currentFace = 3;
+//                }
+//                else if (crusherFacing == EnumFacing.SOUTH)
+//                {
+//                    currentFace = 2;
+//                }
+//                else if (crusherFacing == EnumFacing.EAST)
+//                {
+//                    currentFace = 0;
+//                }
+//                else if (crusherFacing == EnumFacing.WEST)
+//                {
+//                    currentFace = 1;
+//                }
+//            }
+//            else if (facing == EnumFacing.WEST)
+//            {
+//                if (crusherFacing == EnumFacing.NORTH)
+//                {
+//                    currentFace = 2;
+//                }
+//                else if (crusherFacing == EnumFacing.SOUTH)
+//                {
+//                    currentFace = 3;
+//                }
+//                else if (crusherFacing == EnumFacing.EAST)
+//                {
+//                    currentFace = 1;
+//                }
+//                else if (crusherFacing == EnumFacing.WEST)
+//                {
+//                    currentFace = 0;
+//                }
+//            }
+//            else if (facing == EnumFacing.UP)
+//            {
+//                currentFace = 4;
+//            }
+//            else if (facing == EnumFacing.DOWN)
+//            {
+//                currentFace = 5;
+//            }
+//        }
+//    }
     
     public void setRedstoneControlButtonState()
     {
@@ -407,8 +703,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         tag.setInteger("CookTime", this.cookTime);
         tag.setInteger("TotalCookTime", this.totalCookTime);
         tag.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
-        tag.setInteger("ButtonState", this.redstoneControlButtonState);
-        tag.setInteger("CurrentGuiId", this.currentGuiId);
+        tag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
 
         if (this.hasCustomName())
         {
@@ -447,8 +742,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         tag.setInteger("CookTime", this.cookTime);
         tag.setInteger("TotalCookTime", this.totalCookTime);
         tag.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
-        tag.setInteger("ButtonState", this.redstoneControlButtonState);
-        tag.setInteger("CurrentGuiId", this.currentGuiId);
+        tag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
 
         for (int i = 0; i < input1State.length; i++)
         {
@@ -487,8 +781,7 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         this.cookTime = compound.getInteger("CookTime");
         this.totalCookTime = compound.getInteger("TotalCookTime");
         this.currentItemBurnTime = compound.getInteger("CurrentItemBurnTime");
-        this.redstoneControlButtonState = compound.getInteger("ButtonState");
-        this.currentGuiId = compound.getInteger("CurrentGuiId");
+        this.redstoneControlButtonState = compound.getInteger("RedstoneControlButtonState");
         
         if (compound.hasKey("CustomName", 8)) 
         {
@@ -537,8 +830,6 @@ public class TileEntityCrusher extends TileEntity implements ITickable
 
     @Override
     public void update() {
-        System.out.println("CookTime: " + this.cookTime);
-
         boolean wasActive = this.isActive();
         boolean stateChanged = false;
 
@@ -901,18 +1192,6 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         }
     }
 
-//    public void setCrusherVariables()
-//    {
-//        crusherVariables[0] = this.crusherBurnTime;
-//        crusherVariables[1] = this.currentItemBurnTime;
-//        crusherVariables[2] = this.cookTime;
-//        crusherVariables[3] = this.totalCookTime;
-//
-//        this.markDirty();
-//
-//        NetworkHandler.sendCrusherVariablesUpdate(crusherVariables, this.pos);
-//    }
-
     public void setField(int id, int value)
     {
         switch (id)
@@ -931,14 +1210,5 @@ public class TileEntityCrusher extends TileEntity implements ITickable
         }
 
         this.markDirty();
-
-//        crusherVariables[0] = this.crusherBurnTime;
-//        crusherVariables[1] = this.currentItemBurnTime;
-//        crusherVariables[2] = this.cookTime;
-//        crusherVariables[3] = this.totalCookTime;
-//
-//        this.markDirty();
-//
-//        NetworkHandler.sendCrusherVariablesUpdate(crusherVariables, this.pos);
     }
 }

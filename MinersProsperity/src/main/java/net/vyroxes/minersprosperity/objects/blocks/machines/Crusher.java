@@ -6,7 +6,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -26,6 +25,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,6 +37,7 @@ import net.vyroxes.minersprosperity.objects.blocks.BlockBase;
 import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class Crusher extends BlockBase implements ITileEntityProvider
 {	
@@ -55,21 +56,20 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 		
 		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
     }
-	
-    @Override
-    public int getLightValue(IBlockState state) 
-    {
-        return state.getValue(ACTIVE) ? 13 : 0;
-    }
-    
+
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) 
+	public int getLightValue(IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos) {
+		return state.getValue(ACTIVE) ? 13 : 0;
+	}
+
+	@Override
+	public @NotNull Item getItemDropped(@NotNull IBlockState state, @NotNull Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(BlockInit.CRUSHER);
 	}
 	
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
+	public void onBlockAdded(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state)
 	{
 		this.setDefaultFacing(worldIn, pos, state);
 	}
@@ -107,7 +107,7 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	
 	@SideOnly(Side.CLIENT)
     @SuppressWarnings("incomplete-switch")
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    public void randomDisplayTick(IBlockState stateIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull Random rand)
     {
 		if (stateIn.getValue(ACTIVE))
         {
@@ -144,7 +144,7 @@ public class Crusher extends BlockBase implements ITileEntityProvider
     }
 	
 	@Override
-	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) 
+	public boolean onBlockActivated(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer playerIn, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 	    if (!worldIn.isRemote)
 	    {
@@ -153,7 +153,7 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	        	return false;
 	        }
 	        
-	        playerIn.openGui(MinersProsperity.instance, GuiHandler.GUI_CRUSHER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+	        playerIn.openGui(MinersProsperity.instance, GuiHandler.GuiTypes.CRUSHER.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 	    }
 	    
 	    return true;
@@ -182,38 +182,39 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 		}
 	}
 
-	@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-	{
-		return new ItemStack(BlockInit.CRUSHER);
-	}
+//	@Override
+//	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+//	{
+//		return new ItemStack(BlockInit.CRUSHER);
+//	}
 	
 	@Override
-	public boolean hasTileEntity(IBlockState state) 
+	public boolean hasTileEntity(@NotNull IBlockState state)
 	{
 		return true;
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta)
+	public TileEntity createNewTileEntity(@NotNull World worldIn, int meta)
 	{
 		return new TileEntityCrusher();
 	}
-	
+
 	@Override
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) 
+	public @NotNull IBlockState getStateForPlacement(@NotNull World world, @NotNull BlockPos pos, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, @NotNull EnumHand hand)
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
-	
+
+
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) 
+	public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack)
 	{
 		worldIn.setBlockState(pos, this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state)
 	{
 	    if (!keepInventory)
 	    {
@@ -260,13 +261,13 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	}
 	
 	@Override
-	protected BlockStateContainer createBlockState() 
+	protected @NotNull BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {ACTIVE, FACING});
+		return new BlockStateContainer(this, ACTIVE, FACING);
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta) 
+	public IBlockState getStateFromMeta(int meta)
 	{
 		EnumFacing facing = EnumFacing.byIndex(meta & 7);
 	    boolean active = (meta & 8) != 0;

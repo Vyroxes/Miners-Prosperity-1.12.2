@@ -3,6 +3,8 @@ package net.vyroxes.minersprosperity.util.handlers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.vyroxes.minersprosperity.objects.containers.ContainerBackpack;
 import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
@@ -16,65 +18,50 @@ import java.util.Objects;
 
 public class GuiHandler implements IGuiHandler
 {
-	public static final int GUI_CRUSHER = ConfigHandler.GUI_CRUSHER;
-    public static final int GUI_CRUSHER_SLOTS_CONFIGURATION = ConfigHandler.GUI_CRUSHER_SLOTS_CONFIGURATION;
-    public static final int GUI_CRUSHER_SLOT_CONFIGURATION = ConfigHandler.GUI_CRUSHER_SLOT_CONFIGURATION;
-    public static final int GUI_BACKPACK = ConfigHandler.GUI_BACKPACK;
-    public static final int GUI_IRON_BACKPACK = ConfigHandler.GUI_IRON_BACKPACK;
 
-    @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    public enum GuiTypes
     {
-    	if (ID == GUI_CRUSHER)
-    	{
-    		return new ContainerCrusher(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(new BlockPos(x, y, z))));
-    	}
-        if (ID == GUI_CRUSHER_SLOTS_CONFIGURATION)
+        CRUSHER,
+        CRUSHER_SLOTS_CONFIGURATION,
+        CRUSHER_SLOT_CONFIGURATION,
+        BACKPACK,
+        IRON_BACKPACK;
+
+        public static GuiTypes fromId(int id)
         {
-            return new ContainerInventory(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(new BlockPos(x, y, z))));
+            if (id < 0 || id >= values().length)
+            {
+                throw new IllegalArgumentException("Invalid GUI ID: " + id);
+            }
+            return values()[id];
         }
-        if (ID == GUI_CRUSHER_SLOT_CONFIGURATION)
-        {
-            return new ContainerInventory(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(new BlockPos(x, y, z))));
-        }
-        if (ID == GUI_BACKPACK)
-        {
-            ItemStack backpackItemStack = player.getHeldItemMainhand();
-            return new ContainerBackpack(player.inventory, backpackItemStack);
-        }
-        if (ID == GUI_IRON_BACKPACK)
-        {
-            ItemStack IronBackpackItemStack = player.getHeldItemMainhand();
-            return new ContainerIronBackpack(player.inventory, IronBackpackItemStack);
-        }
-        return null;
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
+    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
     {
-    	if (ID == GUI_CRUSHER)
-    	{
-    		return new GuiCrusher(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
-    	}
-        if (ID == GUI_CRUSHER_SLOTS_CONFIGURATION)
+        BlockPos pos = new BlockPos(x, y, z);
+        return switch (GuiTypes.fromId(id))
         {
-            return new GuiCrusherSlotsConfiguration(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
-        }
-        if (ID == GUI_CRUSHER_SLOT_CONFIGURATION)
+            case CRUSHER -> new ContainerCrusher(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(pos)));
+            case CRUSHER_SLOTS_CONFIGURATION, CRUSHER_SLOT_CONFIGURATION -> new ContainerInventory(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(pos)));
+            case BACKPACK -> new ContainerBackpack(player.inventory, player.getHeldItemMainhand());
+            case IRON_BACKPACK -> new ContainerIronBackpack(player.inventory, player.getHeldItemMainhand());
+        };
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
+    {
+        BlockPos pos = new BlockPos(x, y, z);
+        return switch (GuiTypes.fromId(id))
         {
-            return new GuiCrusherSlotConfiguration(player.inventory, (TileEntityCrusher)world.getTileEntity(new BlockPos(x,y,z)));
-        }
-        if (ID == GUI_BACKPACK)
-        {
-            ItemStack backpackItemStack = player.getHeldItemMainhand();
-            return new GuiBackpack(new ContainerBackpack(player.inventory, backpackItemStack));
-        }
-        if (ID == GUI_IRON_BACKPACK)
-        {
-            ItemStack IronBackpackItemStack = player.getHeldItemMainhand();
-            return new GuiIronBackpack(new ContainerIronBackpack(player.inventory, IronBackpackItemStack));
-        }
-        return null;
+            case CRUSHER -> new GuiCrusher(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(pos)));
+            case CRUSHER_SLOTS_CONFIGURATION -> new GuiCrusherSlotsConfiguration(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(pos)));
+            case CRUSHER_SLOT_CONFIGURATION -> new GuiCrusherSlotConfiguration(player.inventory, (TileEntityCrusher) Objects.requireNonNull(world.getTileEntity(pos)));
+            case BACKPACK -> new GuiBackpack(new ContainerBackpack(player.inventory, player.getHeldItemMainhand()));
+            case IRON_BACKPACK -> new GuiIronBackpack(new ContainerIronBackpack(player.inventory, player.getHeldItemMainhand()));
+        };
     }
 }
