@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
 import net.vyroxes.minersprosperity.objects.blocks.BlockCharcoal;
 import net.vyroxes.minersprosperity.objects.blocks.BlockOreBlocks;
 import net.vyroxes.minersprosperity.objects.blocks.BlockOres;
-import net.vyroxes.minersprosperity.objects.blocks.machines.Crusher;
+import net.vyroxes.minersprosperity.objects.blocks.machines.MachineAlloyFurnace;
 
 public class BlockInit
 {
@@ -16,7 +15,7 @@ public class BlockInit
 
 	//BLOCKS
 	//MACHINES
-	public static final Block CRUSHER = new Crusher("crusher");
+	public static final Block CRUSHER = new MachineAlloyFurnace("alloy_furnace");
 
 	//ORES
 	public static final Block COPPER_ORE = new BlockOres("copper_ore", 1, 5.0F, 10.0F);

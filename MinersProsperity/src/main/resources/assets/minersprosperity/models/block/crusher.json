@@ -1,9 +1,0 @@
-{
-	"parent": "minersprosperity:block/machine",
-	"textures":
-	{
-		"up": "minersprosperity:blocks/crusher_top",
-		"front": "#front",
-		"side": "minersprosperity:blocks/crusher_side"
-	}
-}

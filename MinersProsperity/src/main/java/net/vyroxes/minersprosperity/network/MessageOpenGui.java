@@ -7,7 +7,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.vyroxes.minersprosperity.MinersProsperity;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
 
 public class MessageOpenGui implements IMessage
 {

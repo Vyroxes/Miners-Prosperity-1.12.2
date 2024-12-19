@@ -12,16 +12,16 @@ public class GuiRedstoneControlButton extends GuiButton
 	private final ResourceLocation texture;
 	private final int textureX;
 	private final int textureY;
-	private final int buttonState;
+    private final String tooltip;
 	private List<String> currentTooltip = null;
 	
-	public GuiRedstoneControlButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, int buttonState) 
+	public GuiRedstoneControlButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, String tooltip)
     {
         super(buttonId, x, y, width, height, "");
         this.texture = texture;
         this.textureX = textureX;
         this.textureY = textureY;
-        this.buttonState = buttonState;
+        this.tooltip = tooltip;
     }
 
 	public List<String> getCurrentTooltip()
@@ -49,9 +49,7 @@ public class GuiRedstoneControlButton extends GuiButton
             if (isHovered)
             {	
             	 currentTooltip = new ArrayList<>();
-                 if (this.buttonState == 0) currentTooltip.add("Ignored");
-                 else if (this.buttonState == 1) currentTooltip.add("Low Signal");
-                 else if (this.buttonState == 2) currentTooltip.add("High Signal");
+                 currentTooltip.add(this.tooltip);
             }
             else 
             {

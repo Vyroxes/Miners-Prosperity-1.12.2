@@ -5,7 +5,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
-import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesCrusher;
+import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import net.vyroxes.minersprosperity.util.compat.jei.JEICompat;
 import java.util.List;
 
@@ -34,8 +34,8 @@ public class CrusherRecipe implements IRecipeWrapper
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY)
     {
-        RecipesCrusher recipes = RecipesCrusher.getInstance();
-        float experience = recipes.getCrusherExperience(output);
+        RecipesAlloyFurnace recipes = RecipesAlloyFurnace.getInstance();
+        float experience = recipes.getExperience(output);
 
         if (experience > 0)
         {

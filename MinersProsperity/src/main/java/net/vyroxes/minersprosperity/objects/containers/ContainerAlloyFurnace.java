@@ -3,7 +3,6 @@ package net.vyroxes.minersprosperity.objects.containers;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
@@ -14,30 +13,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesCrusher;
-import net.vyroxes.minersprosperity.objects.guis.GuiCrusher;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import org.jetbrains.annotations.NotNull;
 
-public class ContainerCrusher extends Container
+public class ContainerAlloyFurnace extends Container
 {
-    private final TileEntityCrusher tileCrusher;
+    private final TileEntityAlloyFurnace tileEntity;
     private int cookTime;
     private int totalCookTime;
-    private int crusherBurnTime;
+    private int burnTime;
     private int currentItemBurnTime;
 
-    public ContainerCrusher(InventoryPlayer playerInventory, TileEntityCrusher tileEntityCrusher) 
+    public ContainerAlloyFurnace(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntity)
     {
-        this.tileCrusher = tileEntityCrusher;
-        IItemHandler handler = tileEntityCrusher.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        this.tileEntity = tileEntity;
+        IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         this.addSlotToContainer(new SlotItemHandler(handler, 0, 43, 17) // Slot wejściowy lewy (1)
         {
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
             {
-                return RecipesCrusher.getInstance().isInputInAnyRecipe(stack);
+                return RecipesAlloyFurnace.getInstance().isInputInAnyRecipe(stack);
             }
         });
 
@@ -47,7 +45,7 @@ public class ContainerCrusher extends Container
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
             {
-                return RecipesCrusher.getInstance().isInputInAnyRecipe(stack);
+                return RecipesAlloyFurnace.getInstance().isInputInAnyRecipe(stack);
             }
         });
         this.addSlotToContainer(new SlotItemHandler(handler, 2, 56, 53) // Slot paliwa
@@ -55,7 +53,7 @@ public class ContainerCrusher extends Container
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
             {
-                return TileEntityCrusher.isItemFuel(stack);
+                return TileEntityAlloyFurnace.isItemFuel(stack);
             }
         });
         this.addSlotToContainer(new SlotItemHandler(handler, 3, 116, 35) // Slot wyjściowy
@@ -69,7 +67,7 @@ public class ContainerCrusher extends Container
             @Override
             public @NotNull ItemStack onTake(@NotNull EntityPlayer entityPlayer, @NotNull ItemStack itemStack)
             {
-                float experiencePerItem = RecipesCrusher.getInstance().getCrusherExperience(itemStack);
+                float experiencePerItem = RecipesAlloyFurnace.getInstance().getExperience(itemStack);
                 int totalItemCount = itemStack.getCount();
 
                 if (!entityPlayer.world.isRemote)
@@ -130,44 +128,44 @@ public class ContainerCrusher extends Container
 
         for (IContainerListener icontainerlistener : this.listeners)
         {
-            if (this.cookTime != this.tileCrusher.cookTime)
+            if (this.cookTime != this.tileEntity.cookTime)
             {
-                icontainerlistener.sendWindowProperty(this, 2, this.tileCrusher.cookTime);
+                icontainerlistener.sendWindowProperty(this, 2, this.tileEntity.cookTime);
             }
 
-            if (this.crusherBurnTime != this.tileCrusher.crusherBurnTime)
+            if (this.burnTime != this.tileEntity.burnTime)
             {
-                icontainerlistener.sendWindowProperty(this, 0, this.tileCrusher.crusherBurnTime);
+                icontainerlistener.sendWindowProperty(this, 0, this.tileEntity.burnTime);
             }
 
-            if (this.currentItemBurnTime != this.tileCrusher.currentItemBurnTime)
+            if (this.currentItemBurnTime != this.tileEntity.currentItemBurnTime)
             {
-                icontainerlistener.sendWindowProperty(this, 1, this.tileCrusher.currentItemBurnTime);
+                icontainerlistener.sendWindowProperty(this, 1, this.tileEntity.currentItemBurnTime);
             }
 
-            if (this.totalCookTime != this.tileCrusher.totalCookTime)
+            if (this.totalCookTime != this.tileEntity.totalCookTime)
             {
-                icontainerlistener.sendWindowProperty(this, 3, this.tileCrusher.totalCookTime);
+                icontainerlistener.sendWindowProperty(this, 3, this.tileEntity.totalCookTime);
             }
         }
         
-        this.cookTime = this.tileCrusher.cookTime;
-        this.crusherBurnTime = this.tileCrusher.crusherBurnTime;
-        this.currentItemBurnTime = this.tileCrusher.currentItemBurnTime;
-        this.totalCookTime = this.tileCrusher.totalCookTime;
+        this.cookTime = this.tileEntity.cookTime;
+        this.burnTime = this.tileEntity.burnTime;
+        this.currentItemBurnTime = this.tileEntity.currentItemBurnTime;
+        this.totalCookTime = this.tileEntity.totalCookTime;
     }
     
     @Override
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int id, int data) 
     {
-        this.tileCrusher.setField(id, data);
+        this.tileEntity.setField(id, data);
     }
     
     @Override
     public boolean canInteractWith(@NotNull EntityPlayer playerIn)
     {
-        return this.tileCrusher.isUsableByPlayer(playerIn);
+        return this.tileEntity.isUsableByPlayer(playerIn);
     }
 
     @Override
@@ -190,7 +188,7 @@ public class ContainerCrusher extends Container
 
                 slot.onSlotChange(itemstack1, itemstack);
 
-                float experiencePerItem = RecipesCrusher.getInstance().getCrusherExperience(itemstack);
+                float experiencePerItem = RecipesAlloyFurnace.getInstance().getExperience(itemstack);
                 int totalItemCount = itemstack.getCount();
 
                 if (!playerIn.world.isRemote)
@@ -228,7 +226,7 @@ public class ContainerCrusher extends Container
             }
             else if (index > 3)
             {        
-                if (RecipesCrusher.getInstance().isInputInAnyRecipe(itemstack1))
+                if (RecipesAlloyFurnace.getInstance().isInputInAnyRecipe(itemstack1))
                 {
                     ItemStack slot0 = this.inventorySlots.get(0).getStack();
                     ItemStack slot1 = this.inventorySlots.get(1).getStack();
@@ -242,7 +240,7 @@ public class ContainerCrusher extends Container
                     }
                     else if (slot0.isEmpty() && !slot1.isEmpty() && !slot1.getItem().equals(itemstack1.getItem()))
                     {
-                        if (!RecipesCrusher.getInstance().getCrusherResult(itemstack1, slot1).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot1, itemstack1).isEmpty())
+                        if (!RecipesAlloyFurnace.getInstance().getResult(itemstack1, slot1).isEmpty() || !RecipesAlloyFurnace.getInstance().getResult(slot1, itemstack1).isEmpty())
                         {
                             if (!this.mergeItemStack(itemstack1, 0, 1, false))
                             {
@@ -259,7 +257,7 @@ public class ContainerCrusher extends Container
                     }
                     else if (!slot0.isEmpty() && slot1.isEmpty() && !slot0.getItem().equals(itemstack1.getItem()))
                     {
-                        if (!RecipesCrusher.getInstance().getCrusherResult(itemstack1, slot0).isEmpty() || !RecipesCrusher.getInstance().getCrusherResult(slot0, itemstack1).isEmpty())
+                        if (!RecipesAlloyFurnace.getInstance().getResult(itemstack1, slot0).isEmpty() || !RecipesAlloyFurnace.getInstance().getResult(slot0, itemstack1).isEmpty())
                         {
                             if (!this.mergeItemStack(itemstack1, 1, 2, false))
                             {
@@ -275,7 +273,7 @@ public class ContainerCrusher extends Container
                         }
                     }
                 }
-                else if (TileEntityCrusher.isItemFuel(itemstack1))
+                else if (TileEntityAlloyFurnace.isItemFuel(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 2, 3, false))
                     {

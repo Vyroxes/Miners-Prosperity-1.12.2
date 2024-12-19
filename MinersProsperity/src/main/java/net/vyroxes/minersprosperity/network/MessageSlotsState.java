@@ -5,7 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 
 public class MessageSlotsState implements IMessage
 {
@@ -66,7 +66,7 @@ public class MessageSlotsState implements IMessage
         @Override
         public IMessage onMessage(MessageSlotsState message, MessageContext ctx)
         {
-            TileEntityCrusher tileEntity = (TileEntityCrusher) ctx.getServerHandler().player.world.getTileEntity(message.pos);
+            TileEntityAlloyFurnace tileEntity = (TileEntityAlloyFurnace) ctx.getServerHandler().player.world.getTileEntity(message.pos);
             if (tileEntity != null)
             {
                 tileEntity.input1State = message.slotsState[0];

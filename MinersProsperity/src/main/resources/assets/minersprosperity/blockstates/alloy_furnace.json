@@ -1,9 +1,9 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "minersprosperity:crusher",
+		"model": "minersprosperity:alloy_furnace",
 		"textures": {
-			"front": "minersprosperity:blocks/crusher_front_off"
+			"front": "minersprosperity:blocks/alloy_furnace_front_off"
 		}
 	},
 	"variants": {
@@ -12,7 +12,7 @@
 			"false": {},
 			"true": {
 				"textures": {
-					"front": "minersprosperity:blocks/crusher_front_on"
+					"front": "minersprosperity:blocks/alloy_furnace_front_active"
 				}
 			}
 		},

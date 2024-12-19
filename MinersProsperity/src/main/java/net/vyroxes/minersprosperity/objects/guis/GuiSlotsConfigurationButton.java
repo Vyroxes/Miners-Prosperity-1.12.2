@@ -12,14 +12,16 @@ public class GuiSlotsConfigurationButton extends GuiButton
 	private final ResourceLocation texture;
 	private final int textureX;
 	private final int textureY;
+    private final String tooltip;
 	private List<String> currentTooltip = null;
 
-	public GuiSlotsConfigurationButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY)
+	public GuiSlotsConfigurationButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, String tooltip)
     {
         super(buttonId, x, y, width, height, "");
         this.texture = texture;
         this.textureX = textureX;
         this.textureY = textureY;
+        this.tooltip = tooltip;
     }
 
 	public List<String> getCurrentTooltip()
@@ -42,7 +44,7 @@ public class GuiSlotsConfigurationButton extends GuiButton
             if (isHovered)
             {
                 currentTooltip = new ArrayList<>();
-                currentTooltip.add("Slots Configuration");
+                currentTooltip.add(tooltip);
             }
             else 
             {

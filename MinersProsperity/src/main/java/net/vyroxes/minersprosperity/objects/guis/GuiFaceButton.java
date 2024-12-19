@@ -2,6 +2,7 @@ package net.vyroxes.minersprosperity.objects.guis;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -53,30 +54,33 @@ public class GuiFaceButton extends GuiButton
             if (isHovered)
             {
                 currentTooltip = new ArrayList<>();
-                if (this.slot.equals("Output"))
+                String ignored = I18n.format("gui.slot_ignored.name");
+                String input = I18n.format("gui.slot_input.name");
+                String output = I18n.format("gui.slot_output.name");
+                if (this.slot.equals("Output Slot"))
                 {
                     if(this.slotState == 0)
                     {
-                        currentTooltip.add(tooltip + ": Ignored");
+                        currentTooltip.add(tooltip + ": " + ignored);
                     }
                     else if (this.slotState == 1)
                     {
-                        currentTooltip.add(tooltip + ": Output");
+                        currentTooltip.add(tooltip + ": " + output);
                     }
                 }
                 else
                 {
                     if (this.slotState == 0)
                     {
-                        currentTooltip.add(tooltip + ": Ignored");
+                        currentTooltip.add(tooltip + ": " + ignored);
                     }
                     else if (this.slotState == 1)
                     {
-                        currentTooltip.add(tooltip + ": Input");
+                        currentTooltip.add(tooltip + ": " + input);
                     }
                     else if (this.slotState == 2)
                     {
-                        currentTooltip.add(tooltip + ": Output");
+                        currentTooltip.add(tooltip + ": " + output);
                     }
                 }
 

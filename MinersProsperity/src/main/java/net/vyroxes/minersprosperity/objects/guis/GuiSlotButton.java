@@ -2,6 +2,7 @@ package net.vyroxes.minersprosperity.objects.guis;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class GuiSlotButton extends GuiButton
             boolean isHovered = mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
 
             int yOffset;
-            if(this.tooltip.equals("Output Slot"))
+            if(this.tooltip.equals(I18n.format("gui.output.name")))
             {
                 yOffset = isHovered ? 26 : 0;
             }

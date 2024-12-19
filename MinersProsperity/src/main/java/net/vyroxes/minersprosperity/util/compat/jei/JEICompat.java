@@ -4,12 +4,11 @@ import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientRegistry;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
-import mezz.jei.runtime.JeiHelpers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
 import net.vyroxes.minersprosperity.init.BlockInit;
-import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
-import net.vyroxes.minersprosperity.objects.guis.GuiCrusher;
+import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.guis.GuiAlloyFurnace;
 import net.vyroxes.minersprosperity.util.compat.jei.crusher.CrusherRecipeCategory;
 import net.vyroxes.minersprosperity.util.compat.jei.crusher.CrusherRecipeMaker;
 
@@ -36,9 +35,9 @@ public class JEICompat implements IModPlugin
         IRecipeTransferRegistry recipeTransfer = registry.getRecipeTransferRegistry();
 
         registry.addRecipes(CrusherRecipeMaker.getRecipes(jeiHelpers), RecipeCategories.CRUSHER);
-        registry.addRecipeClickArea(GuiCrusher.class, 80, 35, 22, 15, RecipeCategories.CRUSHER, RecipeCategories.FUEL);
-        recipeTransfer.addRecipeTransferHandler(ContainerCrusher.class, RecipeCategories.CRUSHER, 0, 2, 4, 36);
-        recipeTransfer.addRecipeTransferHandler(ContainerCrusher.class, RecipeCategories.FUEL, 2, 1, 4, 36);
+        registry.addRecipeClickArea(GuiAlloyFurnace.class, 80, 35, 22, 15, RecipeCategories.CRUSHER, RecipeCategories.FUEL);
+        recipeTransfer.addRecipeTransferHandler(ContainerAlloyFurnace.class, RecipeCategories.CRUSHER, 0, 2, 4, 36);
+        recipeTransfer.addRecipeTransferHandler(ContainerAlloyFurnace.class, RecipeCategories.FUEL, 2, 1, 4, 36);
         registry.addRecipeCatalyst(new ItemStack(BlockInit.CRUSHER), RecipeCategories.CRUSHER);
         registry.addRecipeCatalyst(new ItemStack(BlockInit.CRUSHER), RecipeCategories.FUEL);
     }

@@ -9,14 +9,14 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.init.ItemInit;
 
-public class RecipesCrusher
+public class RecipesAlloyFurnace
 {
-	private static final RecipesCrusher INSTANCE = new RecipesCrusher();
+	private static final RecipesAlloyFurnace INSTANCE = new RecipesAlloyFurnace();
 
 	private final Table<ItemStack, ItemStack, RecipeData> recipesList = HashBasedTable.create();
 	private final Map<ItemStack, Float> experienceList = Maps.newHashMap();
 
-	public static RecipesCrusher getInstance()
+	public static RecipesAlloyFurnace getInstance()
 	{
 		return INSTANCE;
 	}
@@ -48,21 +48,21 @@ public class RecipesCrusher
 		}
 	}
 	
-	private RecipesCrusher() 
+	private RecipesAlloyFurnace()
 	{
-		addCrusherRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 0.7F, 200);
-		addCrusherRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), new ItemStack(Items.REDSTONE), 0.1F, 200);
-		addCrusherRecipe(new ItemStack(ItemInit.CHAIN), new ItemStack(ItemInit.COAL_GEAR), new ItemStack(Items.APPLE), 1.0F, 200);
+		addRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 0.7F, 200);
+		addRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), new ItemStack(Items.REDSTONE), 0.1F, 200);
+		addRecipe(new ItemStack(ItemInit.CHAIN), new ItemStack(ItemInit.COAL_GEAR), new ItemStack(Items.APPLE), 1.0F, 200);
 	}
 	
-	public void addCrusherRecipe(ItemStack input1, ItemStack input2, ItemStack result, float experience, int cookTime) 
+	public void addRecipe(ItemStack input1, ItemStack input2, ItemStack result, float experience, int cookTime)
 	{
-		if (getCrusherResult(input1, input2) != ItemStack.EMPTY) return;
+		if (getResult(input1, input2) != ItemStack.EMPTY) return;
 		this.recipesList.put(input1, input2, new RecipeData(result, experience, cookTime));
 		this.experienceList.put(result, experience);
 	}
 	
-	public ItemStack getCrusherResult(ItemStack input1, ItemStack input2) 
+	public ItemStack getResult(ItemStack input1, ItemStack input2)
 	{
 	    for (Entry<ItemStack, Map<ItemStack, RecipeData>> entry : this.recipesList.columnMap().entrySet())
 	    {
@@ -156,7 +156,7 @@ public class RecipesCrusher
 		return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
 	}
 	
-	public float getCrusherExperience(ItemStack stack)
+	public float getExperience(ItemStack stack)
 	{
 		for (Entry<ItemStack, Float> entry : this.experienceList.entrySet()) 
 		{

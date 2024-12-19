@@ -8,24 +8,24 @@ import com.google.common.collect.Table;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
-import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesCrusher;
+import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 
 public class CrusherRecipeMaker
 {
     public static List<CrusherRecipe> getRecipes(IJeiHelpers helpers)
     {
         IStackHelper stackHelper = helpers.getStackHelper();
-        RecipesCrusher instance = RecipesCrusher.getInstance();
-        Table<ItemStack, ItemStack, RecipesCrusher.RecipeData> recipes = instance.getRecipesList();
+        RecipesAlloyFurnace instance = RecipesAlloyFurnace.getInstance();
+        Table<ItemStack, ItemStack, RecipesAlloyFurnace.RecipeData> recipes = instance.getRecipesList();
         List<CrusherRecipe> jeiRecipes = new ArrayList<>();
 
-        for (Map.Entry<ItemStack, Map<ItemStack, RecipesCrusher.RecipeData>> entry : recipes.columnMap().entrySet())
+        for (Map.Entry<ItemStack, Map<ItemStack, RecipesAlloyFurnace.RecipeData>> entry : recipes.columnMap().entrySet())
         {
             ItemStack input1 = entry.getKey();
-            for (Map.Entry<ItemStack, RecipesCrusher.RecipeData> ent : entry.getValue().entrySet())
+            for (Map.Entry<ItemStack, RecipesAlloyFurnace.RecipeData> ent : entry.getValue().entrySet())
             {
                 ItemStack input2 = ent.getKey();
-                RecipesCrusher.RecipeData recipeData = ent.getValue();
+                RecipesAlloyFurnace.RecipeData recipeData = ent.getValue();
 
                 ItemStack output = recipeData.getResult();
                 int cookTime = recipeData.getCookTime();

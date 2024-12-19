@@ -10,9 +10,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.vyroxes.minersprosperity.MinersProsperity;
+import net.vyroxes.minersprosperity.Reference;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import org.jetbrains.annotations.NotNull;
@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class GuiCrusherSlotConfiguration extends GuiContainer
+public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 {
-	private static final ResourceLocation CRUSHER_SLOT_CONFIGURATION_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png");
-	private final TileEntityCrusher tileEntity;
+	private static final ResourceLocation ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slot_configuration.png");
+	private final TileEntityAlloyFurnace tileEntity;
     private int textureX;
 
-	public GuiCrusherSlotConfiguration(InventoryPlayer player, TileEntityCrusher tileEntity)
+	public GuiAlloyFurnaceSlotConfiguration(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
 	{
 		super(new ContainerInventory(player, tileEntity));
 		this.tileEntity = tileEntity;
@@ -48,7 +48,20 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
         int[] input2State = this.tileEntity.input2State;
         int[] fuelState = this.tileEntity.fuelState;
         int[] outputState = this.tileEntity.outputState;
+
         String slot = this.tileEntity.slot;
+
+        String front = I18n.format("gui.side_front.name");
+        String back = I18n.format("gui.side_back.name");
+        String left = I18n.format("gui.side_left.name");
+        String right = I18n.format("gui.side_right.name");
+        String top = I18n.format("gui.side_top.name");
+        String bottom = I18n.format("gui.side_bottom.name");
+
+        String input1 = "Input 1 Slot";
+        String input2 = "Input 2 Slot";
+        String fuel = "Fuel Slot";
+        String output = "Output Slot";
 
         switch (slot) {
             case "Input 1" -> {
@@ -59,7 +72,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input1State[0] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Front", "Input 1", input1State[0]));
+                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, input1, input1State[0]));
 
                 if (input1State[1] == 0) {
                     textureX = 176;
@@ -68,7 +81,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input1State[1] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Back", "Input 1", input1State[1]));
+                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, input1, input1State[1]));
 
                 if (input1State[2] == 0) {
                     textureX = 176;
@@ -77,7 +90,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input1State[2] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Left", "Input 1", input1State[2]));
+                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, input1, input1State[2]));
 
                 if (input1State[3] == 0) {
                     textureX = 176;
@@ -86,7 +99,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input1State[3] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Right", "Input 1", input1State[3]));
+                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, input1, input1State[3]));
 
                 if (input1State[4] == 0) {
                     textureX = 176;
@@ -95,7 +108,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input1State[4] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Top", "Input 1", input1State[4]));
+                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, input1, input1State[4]));
 
                 if (input1State[5] == 0) {
                     textureX = 176;
@@ -104,7 +117,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input1State[5] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Bottom", "Input 1", input1State[5]));
+                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, input1, input1State[5]));
             }
             case "Input 2" -> {
                 if (input2State[0] == 0) {
@@ -114,7 +127,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input2State[0] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Front", "Input 2", input2State[0]));
+                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, input2, input2State[0]));
 
                 if (input2State[1] == 0) {
                     textureX = 176;
@@ -123,7 +136,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input2State[1] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Back", "Input 2", input2State[1]));
+                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, input2, input2State[1]));
 
                 if (input2State[2] == 0) {
                     textureX = 176;
@@ -132,7 +145,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input2State[2] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Left", "Input 2", input2State[2]));
+                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, input2, input2State[2]));
 
                 if (input2State[3] == 0) {
                     textureX = 176;
@@ -141,7 +154,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input2State[3] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Right", "Input 2", input2State[3]));
+                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, input2, input2State[3]));
 
                 if (input2State[4] == 0) {
                     textureX = 176;
@@ -150,7 +163,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input2State[4] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Top", "Input 2", input2State[4]));
+                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, input2, input2State[4]));
 
                 if (input2State[5] == 0) {
                     textureX = 176;
@@ -159,7 +172,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (input2State[5] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Bottom", "Input 2", input2State[5]));
+                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, input2, input2State[5]));
             }
             case "Fuel" -> {
                 if (fuelState[0] == 0) {
@@ -169,7 +182,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (fuelState[0] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Front", "Fuel", fuelState[0]));
+                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, fuel, fuelState[0]));
 
                 if (fuelState[1] == 0) {
                     textureX = 176;
@@ -178,7 +191,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (fuelState[1] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Back", "Fuel", fuelState[1]));
+                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, fuel, fuelState[1]));
 
                 if (fuelState[2] == 0) {
                     textureX = 176;
@@ -187,7 +200,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (fuelState[2] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Left", "Fuel", fuelState[2]));
+                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, fuel, fuelState[2]));
 
                 if (fuelState[3] == 0) {
                     textureX = 176;
@@ -196,7 +209,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (fuelState[3] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Right", "Fuel", fuelState[3]));
+                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, fuel, fuelState[3]));
 
                 if (fuelState[4] == 0) {
                     textureX = 176;
@@ -205,7 +218,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (fuelState[4] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Top", "Fuel", fuelState[4]));
+                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, fuel, fuelState[4]));
 
                 if (fuelState[5] == 0) {
                     textureX = 176;
@@ -214,7 +227,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (fuelState[5] == 2) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Bottom", "Fuel", fuelState[5]));
+                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, fuel, fuelState[5]));
             }
             case "Output" -> {
                 if (outputState[0] == 0) {
@@ -222,46 +235,46 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
                 } else if (outputState[0] == 1) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Front", "Output", outputState[0]));
+                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, output, outputState[0]));
 
                 if (outputState[1] == 0) {
                     textureX = 176;
                 } else if (outputState[1] == 1) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Back", "Output", outputState[1]));
+                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, output, outputState[1]));
 
                 if (outputState[2] == 0) {
                     textureX = 176;
                 } else if (outputState[2] == 1) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Left", "Output", outputState[2]));
+                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, output, outputState[2]));
 
                 if (outputState[3] == 0) {
                     textureX = 176;
                 } else if (outputState[3] == 1) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Right", "Output", outputState[3]));
+                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, output, outputState[3]));
 
                 if (outputState[4] == 0) {
                     textureX = 176;
                 } else if (outputState[4] == 1) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Top", "Output", outputState[4]));
+                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, output, outputState[4]));
 
                 if (outputState[5] == 0) {
                     textureX = 176;
                 } else if (outputState[5] == 1) {
                     textureX = 208;
                 }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation("minersprosperity", "textures/gui/crusher_slot_configuration.png"), textureX, 0, "Bottom", "Output", outputState[5]));
+                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, output, outputState[5]));
             }
         }
 
-		this.addButton(new GuiBackButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 238, 0, "Back"));
+		this.addButton(new GuiBackButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slots_configuration.png"), 238, 0, I18n.format("gui.back.name")));
 	}
 
 	@Override
@@ -429,7 +442,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
 
 		if (guiButton.id == 6)
 		{
-            NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+            NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
 	}
@@ -736,7 +749,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.mc.getTextureManager().bindTexture(CRUSHER_SLOT_CONFIGURATION_TEXTURE);
+		this.mc.getTextureManager().bindTexture(ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE);
 		int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
@@ -748,7 +761,7 @@ public class GuiCrusherSlotConfiguration extends GuiContainer
 		if (keyCode == 1)
 		{
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+            NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 	}
 }

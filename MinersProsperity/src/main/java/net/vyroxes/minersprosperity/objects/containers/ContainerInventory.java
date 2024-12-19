@@ -5,16 +5,16 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerInventory extends Container
 {
-    private final TileEntityCrusher tileEntityCrusher;
+    private final TileEntityAlloyFurnace tileEntityAlloyFurnace;
 
-    public ContainerInventory(InventoryPlayer playerInventory, TileEntityCrusher tileEntityCrusher)
+    public ContainerInventory(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntityAlloyFurnace)
     {
-        this.tileEntityCrusher = tileEntityCrusher;
+        this.tileEntityAlloyFurnace = tileEntityAlloyFurnace;
         
         for (int i = 0; i < 3; ++i)
         {
@@ -39,7 +39,7 @@ public class ContainerInventory extends Container
     @Override
     public boolean canInteractWith(@NotNull EntityPlayer playerIn)
     {
-        return this.tileEntityCrusher.isUsableByPlayer(playerIn);
+        return this.tileEntityAlloyFurnace.isUsableByPlayer(playerIn);
     }
 
     @Override

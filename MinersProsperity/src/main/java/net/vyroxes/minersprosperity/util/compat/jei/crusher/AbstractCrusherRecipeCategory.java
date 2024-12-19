@@ -10,7 +10,7 @@ import net.vyroxes.minersprosperity.Reference;
 
 public abstract class AbstractCrusherRecipeCategory<T extends IRecipeWrapper> implements IRecipeCategory<T>
 {
-    protected static final ResourceLocation TEXTURES = new ResourceLocation(Reference.MODID + ":textures/gui/crusher.png");
+    protected static final ResourceLocation TEXTURES = new ResourceLocation(Reference.MODID + ":textures/gui/alloy_furnace.png");
 
     protected static final int input1 = 0;
     protected static final int input2 = 1;

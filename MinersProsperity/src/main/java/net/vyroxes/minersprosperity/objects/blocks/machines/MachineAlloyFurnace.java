@@ -34,18 +34,18 @@ import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.init.BlockInit;
 import net.vyroxes.minersprosperity.objects.blocks.BlockBase;
-import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import org.jetbrains.annotations.NotNull;
 
-public class Crusher extends BlockBase implements ITileEntityProvider
+public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvider
 {	
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool ACTIVE = PropertyBool.create("active");
 	private static boolean keepInventory;
 	
-    public Crusher(String name)
+    public MachineAlloyFurnace(String name)
     {
         super(name, Material.IRON, MapColor.STONE);
         setSoundType(SoundType.STONE);
@@ -58,7 +58,8 @@ public class Crusher extends BlockBase implements ITileEntityProvider
     }
 
 	@Override
-	public int getLightValue(IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos) {
+	public int getLightValue(IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos)
+	{
 		return state.getValue(ACTIVE) ? 13 : 0;
 	}
 
@@ -148,12 +149,12 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	{
 	    if (!worldIn.isRemote)
 	    {
-	        if (playerIn.openContainer instanceof ContainerCrusher)
+	        if (playerIn.openContainer instanceof ContainerAlloyFurnace)
 	        {
 	        	return false;
 	        }
 	        
-	        playerIn.openGui(MinersProsperity.instance, GuiHandler.GuiTypes.CRUSHER.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+	        playerIn.openGui(MinersProsperity.instance, GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 	    }
 	    
 	    return true;
@@ -197,7 +198,7 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	@Override
 	public TileEntity createNewTileEntity(@NotNull World worldIn, int meta)
 	{
-		return new TileEntityCrusher();
+		return new TileEntityAlloyFurnace();
 	}
 
 	@Override
@@ -205,7 +206,6 @@ public class Crusher extends BlockBase implements ITileEntityProvider
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
-
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack)

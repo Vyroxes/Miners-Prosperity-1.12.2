@@ -9,10 +9,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.vyroxes.minersprosperity.MinersProsperity;
-import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
+import net.vyroxes.minersprosperity.Reference;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
@@ -21,12 +20,12 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class GuiCrusherSlotsConfiguration extends GuiContainer
+public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 {
-	private static final ResourceLocation CRUSHER_SLOTS_CONFIGURATION_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png");
-	private final TileEntityCrusher tileEntity;
+	private static final ResourceLocation ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slots_configuration.png");
+	private final TileEntityAlloyFurnace tileEntity;
 
-	public GuiCrusherSlotsConfiguration(InventoryPlayer player, TileEntityCrusher tileEntity)
+	public GuiAlloyFurnaceSlotsConfiguration(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
 	{
 		super(new ContainerInventory(player, tileEntity));
 		this.tileEntity = tileEntity;
@@ -42,11 +41,11 @@ public class GuiCrusherSlotsConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
-		this.addButton(new GuiSlotButton(0, guiLeft + 42, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 176, 0, "Input 1 Slot"));
-		this.addButton(new GuiSlotButton(1, guiLeft + 68, guiTop + 16, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 176, 0, "Input 2 Slot"));
-		this.addButton(new GuiSlotButton(2, guiLeft + 55, guiTop + 52, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 194, 0, "Fuel Slot"));
-		this.addButton(new GuiSlotButton(3, guiLeft + 111, guiTop + 30, 26, 26, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 212, 0, "Output Slot"));
-		this.addButton(new GuiBackButton(4, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation("minersprosperity", "textures/gui/crusher_slots_configuration.png"), 238, 0, "Back"));
+		this.addButton(new GuiSlotButton(0, guiLeft + 42, guiTop + 16, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 176, 0, I18n.format("gui.input1.name")));
+		this.addButton(new GuiSlotButton(1, guiLeft + 68, guiTop + 16, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 176, 0, I18n.format("gui.input2.name")));
+		this.addButton(new GuiSlotButton(2, guiLeft + 55, guiTop + 52, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 194, 0, I18n.format("gui.fuel.name")));
+		this.addButton(new GuiSlotButton(3, guiLeft + 111, guiTop + 30, 26, 26, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 212, 0, I18n.format("gui.output.name")));
+		this.addButton(new GuiBackButton(4, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 238, 0, I18n.format("gui.back.name")));
 	}
 
 	@Override
@@ -55,26 +54,26 @@ public class GuiCrusherSlotsConfiguration extends GuiContainer
 		if (guiButton.id == 0)
 		{
 			this.tileEntity.slot = "Input 1";
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 1)
 		{
 			this.tileEntity.setSlot("Input 2");
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 2)
 		{
 			this.tileEntity.setSlot("Fuel");
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 3)
 		{
 			this.tileEntity.setSlot("Output");
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 4)
 		{
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
 	}
@@ -127,7 +126,7 @@ public class GuiCrusherSlotsConfiguration extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.mc.getTextureManager().bindTexture(CRUSHER_SLOTS_CONFIGURATION_TEXTURE);
+		this.mc.getTextureManager().bindTexture(ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE);
 		int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
@@ -138,7 +137,7 @@ public class GuiCrusherSlotsConfiguration extends GuiContainer
 	{
 		if (keyCode == 1) {
 			this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
 		}
 	}
 }

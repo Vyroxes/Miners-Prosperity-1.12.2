@@ -12,21 +12,21 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.vyroxes.minersprosperity.MinersProsperity;
-import net.vyroxes.minersprosperity.objects.containers.ContainerCrusher;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityCrusher;
+import net.vyroxes.minersprosperity.Reference;
+import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
-public class GuiCrusher extends GuiContainer
+public class GuiAlloyFurnace extends GuiContainer
 {
-	private static final ResourceLocation CRUSHER_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/crusher.png");
-	private final TileEntityCrusher tileEntity;
+	private static final ResourceLocation CRUSHER_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png");
+	private final TileEntityAlloyFurnace tileEntity;
 	private int redstoneControlButtonState;
 	
-	public GuiCrusher(InventoryPlayer player, TileEntityCrusher tileEntity)
+	public GuiAlloyFurnace(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
 	{
-		super(new ContainerCrusher(player, tileEntity));
+		super(new ContainerAlloyFurnace(player, tileEntity));
 		this.tileEntity = tileEntity;
 	}
 
@@ -43,17 +43,17 @@ public class GuiCrusher extends GuiContainer
 
 		if (this.redstoneControlButtonState == 0)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 176, 31, this.redstoneControlButtonState));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 176, 31, I18n.format("gui.redstone_ignored.name")));
 		}
 		else if (redstoneControlButtonState == 1)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 194, 31, this.redstoneControlButtonState));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 194, 31, I18n.format("gui.redstone_low_signal.name")));
 		}
 		else if (redstoneControlButtonState == 2)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 212, 31, this.redstoneControlButtonState));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 212, 31, I18n.format("gui.redstone_high_signal.name")));
 		}
-		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 27, 18, 18, new ResourceLocation("minersprosperity", "textures/gui/crusher.png"), 230, 31));
+		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 27, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 230, 31, I18n.format("gui.slots_configuration.name")));
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class GuiCrusher extends GuiContainer
 		}
 		if (guiButton.id == 1)
 		{
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.CRUSHER_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
 	}
@@ -178,7 +178,7 @@ public class GuiCrusher extends GuiContainer
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
 		 
-		if (TileEntityCrusher.isActive(tileEntity))
+		if (TileEntityAlloyFurnace.isActive(tileEntity))
 		{
 			int k = this.getBurnLeftScaled();
 			this.drawTexturedModalRect(i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
@@ -204,6 +204,6 @@ public class GuiCrusher extends GuiContainer
             i = 200;
         }
 
-        return this.tileEntity.crusherBurnTime * 13 / i;
+        return this.tileEntity.burnTime * 13 / i;
 	}
 }

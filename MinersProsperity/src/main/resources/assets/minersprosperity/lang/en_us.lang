@@ -1,17 +1,17 @@
-//TABS
+#TABS
 itemGroup.tools_tab=Miner's Prosperity Tools
 itemGroup.armour_tab=Miner's Prosperity Armor
 itemGroup.items_tab=Miner's Prosperity Items
 itemGroup.blocks_tab=Miner's Prosperity Blocks
 
-//TOOLS
+#TOOLS
 item.emerald_sword.name=Emerald Sword
 item.emerald_pickaxe.name=Emerald Pickaxe
 item.emerald_axe.name=Emerald Axe
 item.emerald_shovel.name=Emerald Shovel
 item.emerald_hoe.name=Emerald Hoe
 
-//ARMOUR
+#ARMOUR
 item.wood_helmet.name=Wood Helmet
 item.wood_chestplate.name=Wood Chestplate
 item.wood_leggings.name=Wood Leggings
@@ -25,20 +25,20 @@ item.emerald_chestplate.name=Emerald Chestplate
 item.emerald_leggings.name=Emerald Leggings
 item.emerald_boots.name=Emerald Boots
 
-//ITEMS
+#ITEMS
 item.chain.name=Chain
 
-//BACKPACKS
+#BACKPACKS
 item.backpack.name=Backpack
 item.iron_backpack.name=Iron Backpack
 
-//INGOTS
+#INGOTS
 item.copper_ingot.name=Copper Ingot
 item.tin_ingot.name=Tin Ingot
 item.lead_ingot.name=Lead Ingot
 item.silver_ingot.name=Silver Ingot
 
-//NUGGETS
+#NUGGETS
 item.copper_nugget.name=Copper Nugget
 item.tin_nugget.name=Tin Nugget
 item.lead_nugget.name=Lead Nugget
@@ -46,7 +46,7 @@ item.silver_nugget.name=Silver Nugget
 item.diamond_nugget.name=Diamond Nugget
 item.emerald_nugget.name=Emerald Nugget
 
-//DUSTS
+#DUSTS
 item.coal_dust.name=Coal Dust
 item.charcoal_dust.name=Charcoal Dust
 item.copper_dust.name=Copper Dust
@@ -58,7 +58,7 @@ item.gold_dust.name=Gold Dust
 item.diamond_dust.name=Diamond Dust
 item.emerald_dust.name=Emerald Dust
 
-//GEARS
+#GEARS
 item.coal_gear.name=Coal Gear
 item.charcoal_gear.name=Charcoal Gear
 item.copper_gear.name=Copper Gear
@@ -72,7 +72,7 @@ item.emerald_gear.name=Emerald Gear
 item.redstone_gear.name=Redstone Gear
 item.lapis_lazuli_gear.name=Lapis Lazuli Gear
 
-//PLATES
+#PLATES
 item.coal_plate.name=Coal Plate
 item.charcoal_plate.name=Charcoal Plate
 item.copper_plate.name=Copper Plate
@@ -86,26 +86,49 @@ item.emerald_plate.name=Emerald Plate
 item.redstone_plate.name=Redstone Plate
 item.lapis_lazuli_plate.name=Lapis Lazuli Plate
 
-//BLOCKS
-//MACHINES
-tile.crusher.name=Crusher
+#GUI
+gui.input1.name=Input 1 Slot
+gui.input2.name=Input 2 Slot
+gui.fuel.name=Fuel Slot
+gui.output.name=Output Slot
+gui.back.name=Back
+gui.side_front.name=Front
+gui.side_back.name=Back
+gui.side_left.name=Left
+gui.side_right.name=Right
+gui.side_top.name=Top
+gui.side_bottom.name=Bottom
+gui.redstone_ignored.name=Ignored
+gui.redstone_low_signal.name=Low Signal
+gui.redstone_high_signal.name=High Signal
+gui.slots_configuration.name=Slots Configuration
+gui.slot_ignored.name=Ignored
+gui.slot_input.name=Input
+gui.slot_output.name=Output
 
-//ORES
+#BLOCKS
+#MACHINES
+tile.alloy_furnace.name=Alloy Furnace
+tile.crusher.name=Crusher
+tile.solar_panel.name=Solar Panel
+
+#ORES
 tile.copper_ore.name=Copper Ore
 tile.tin_ore.name=Tin Ore
 tile.lead_ore.name=Lead Ore
 tile.silver_ore.name=Silver Ore
 
-//OREBLOCKS
+#ORE BLOCKS
 tile.charcoal_block.name=Block of Charcoal
 tile.copper_block.name=Block of Copper
 tile.tin_block.name=Block of Tin
 tile.lead_block.name=Block of Lead
 tile.silver_block.name=Block of Silver
 
-//CONTAINERS
+#CONTAINERS
+container.alloy_furnace=Alloy Furnace
 container.crusher=Crusher
 
-//KEYBINDS
+#KEYBINDS
 key.categories.backpacks=Backpacks
 key.toggle_auto-collect=Backpack - Toggle Auto-Collect
