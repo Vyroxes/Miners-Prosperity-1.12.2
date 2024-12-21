@@ -9,8 +9,8 @@ import net.minecraft.util.text.translation.I18n;
 import net.vyroxes.minersprosperity.init.BlockInit;
 import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.guis.GuiAlloyFurnace;
-import net.vyroxes.minersprosperity.util.compat.jei.crusher.CrusherRecipeCategory;
-import net.vyroxes.minersprosperity.util.compat.jei.crusher.CrusherRecipeMaker;
+import net.vyroxes.minersprosperity.util.compat.jei.alloy_furnace.AlloyFurnaceRecipeCategory;
+import net.vyroxes.minersprosperity.util.compat.jei.alloy_furnace.AlloyFurnaceRecipeMaker;
 
 import java.util.IllegalFormatException;
 
@@ -24,7 +24,7 @@ public class JEICompat implements IModPlugin
         final IJeiHelpers helpers = registry.getJeiHelpers();
         final IGuiHelper gui = helpers.getGuiHelper();
 
-        registry.addRecipeCategories(new CrusherRecipeCategory(gui));
+        registry.addRecipeCategories(new AlloyFurnaceRecipeCategory(gui));
     }
 
     @Override
@@ -34,12 +34,10 @@ public class JEICompat implements IModPlugin
         final IJeiHelpers jeiHelpers = registry.getJeiHelpers();
         IRecipeTransferRegistry recipeTransfer = registry.getRecipeTransferRegistry();
 
-        registry.addRecipes(CrusherRecipeMaker.getRecipes(jeiHelpers), RecipeCategories.CRUSHER);
-        registry.addRecipeClickArea(GuiAlloyFurnace.class, 80, 35, 22, 15, RecipeCategories.CRUSHER, RecipeCategories.FUEL);
-        recipeTransfer.addRecipeTransferHandler(ContainerAlloyFurnace.class, RecipeCategories.CRUSHER, 0, 2, 4, 36);
-        recipeTransfer.addRecipeTransferHandler(ContainerAlloyFurnace.class, RecipeCategories.FUEL, 2, 1, 4, 36);
-        registry.addRecipeCatalyst(new ItemStack(BlockInit.CRUSHER), RecipeCategories.CRUSHER);
-        registry.addRecipeCatalyst(new ItemStack(BlockInit.CRUSHER), RecipeCategories.FUEL);
+        registry.addRecipes(AlloyFurnaceRecipeMaker.getRecipes(jeiHelpers), RecipeCategories.ALLOY_FURNACE);
+        registry.addRecipeClickArea(GuiAlloyFurnace.class, 82, 36, 22, 15, RecipeCategories.ALLOY_FURNACE);
+        recipeTransfer.addRecipeTransferHandler(ContainerAlloyFurnace.class, RecipeCategories.ALLOY_FURNACE, 0, 2, 4, 36);
+        registry.addRecipeCatalyst(new ItemStack(BlockInit.ALLOY_FURNACE), RecipeCategories.ALLOY_FURNACE);
     }
 
     public static String translateToLocal(String key)

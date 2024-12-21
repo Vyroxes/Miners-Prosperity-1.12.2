@@ -1,6 +1,7 @@
 package net.vyroxes.minersprosperity.objects.guis;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +21,7 @@ import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 public class GuiAlloyFurnace extends GuiContainer
 {
-	private static final ResourceLocation CRUSHER_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png");
+	private static final ResourceLocation ALLOY_FURNACE_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png");
 	private final TileEntityAlloyFurnace tileEntity;
 	private int redstoneControlButtonState;
 	
@@ -39,21 +40,22 @@ public class GuiAlloyFurnace extends GuiContainer
 	    
 	    this.buttonList.clear();
 
-		this.redstoneControlButtonState = this.tileEntity.redstoneControlButtonState;
+		this.redstoneControlButtonState = this.tileEntity.getRedstoneControlButtonState();
 
 		if (this.redstoneControlButtonState == 0)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 176, 31, I18n.format("gui.redstone_ignored.name")));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 176, 17, I18n.format("gui.redstone_ignored.name")));
 		}
 		else if (redstoneControlButtonState == 1)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 194, 31, I18n.format("gui.redstone_low_signal.name")));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 194, 17, I18n.format("gui.redstone_low_signal.name")));
 		}
 		else if (redstoneControlButtonState == 2)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 7, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 212, 31, I18n.format("gui.redstone_high_signal.name")));
+			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 212, 17, I18n.format("gui.redstone_high_signal.name")));
 		}
-		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 7, guiTop + 27, 18, 18, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png"), 230, 31, I18n.format("gui.slots_configuration.name")));
+		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 151, guiTop + 27, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 230, 17, I18n.format("gui.slots_configuration.name")));
+		this.addButton(new GuiSlotsConfigurationButton(2, guiLeft + 151, guiTop + 48, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 176, 53, I18n.format("gui.upgrades.name")));
 	}
 
 	@Override
@@ -63,13 +65,12 @@ public class GuiAlloyFurnace extends GuiContainer
 		{
 			if (this.redstoneControlButtonState < 2)
 			{
-				++this.tileEntity.redstoneControlButtonState;
+				this.tileEntity.setRedstoneControlButtonState(this.tileEntity.getRedstoneControlButtonState() + 1);
 			}
 			else
 			{
-				this.tileEntity.redstoneControlButtonState = 0;
+				this.tileEntity.setRedstoneControlButtonState(0);
 			}
-			this.tileEntity.setRedstoneControlButtonState();
 		}
 		if (guiButton.id == 1)
 		{
@@ -92,15 +93,13 @@ public class GuiAlloyFurnace extends GuiContainer
 					{
 						if (this.redstoneControlButtonState > 0)
 						{
-							--this.tileEntity.redstoneControlButtonState;
+							this.tileEntity.setRedstoneControlButtonState(this.tileEntity.getRedstoneControlButtonState() - 1);
 						}
 						else
 						{
-							this.tileEntity.redstoneControlButtonState = 2;
+							this.tileEntity.setRedstoneControlButtonState(2);
 						}
 					}
-
-					this.tileEntity.setRedstoneControlButtonState();
 					Minecraft.getMinecraft().player.playSound(net.minecraft.init.SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
 					this.initGui();
 					return;
@@ -116,10 +115,8 @@ public class GuiAlloyFurnace extends GuiContainer
 				{
 					if (guiButton.id == 0)
 					{
-						this.tileEntity.redstoneControlButtonState = 0;
+						this.tileEntity.setRedstoneControlButtonState(0);
 					}
-
-					this.tileEntity.setRedstoneControlButtonState();
 					Minecraft.getMinecraft().player.playSound(net.minecraft.init.SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
 					this.initGui();
 					return;
@@ -158,6 +155,26 @@ public class GuiAlloyFurnace extends GuiContainer
 			}
 	    }
 
+		int energyBarX = this.guiLeft + 8;
+		int energyBarY = this.guiTop + 7;
+		int energyBarWidth = 16;
+		int energyBarHeight = 41;
+
+		if (mouseX >= energyBarX && mouseX < energyBarX + energyBarWidth && mouseY >= energyBarY && mouseY < energyBarY + energyBarHeight)
+		{
+			float energyStored = (float) this.tileEntity.getEnergyStored() / 1000;
+			String formattedEnergyStored = String.format("%.1f", energyStored);
+			int energyUsage = this.tileEntity.getEnergyUsage();
+			float maxEnergyStored = (float) this.tileEntity.getMaxEnergyStored() / 1000;
+			String formattedMaxEnergyStored = String.format("%.1f", maxEnergyStored);
+			int maxReceive = this.tileEntity.getMaxReceive();
+			List<String> currentTooltip = new ArrayList<>();
+			currentTooltip.add(I18n.format("gui.energy_stored") + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
+			currentTooltip.add(I18n.format("gui.energy_usage") + ": " + energyUsage + " FE/t");
+			currentTooltip.add(I18n.format("gui.max_energy_input") + ": " + maxReceive + " FE/t");
+			GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+		}
+
 	    this.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
@@ -173,37 +190,27 @@ public class GuiAlloyFurnace extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.mc.getTextureManager().bindTexture(CRUSHER_TEXTURE);
-		int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
-		 
-		if (TileEntityAlloyFurnace.isActive(tileEntity))
-		{
-			int k = this.getBurnLeftScaled();
-			this.drawTexturedModalRect(i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
-		}
+		this.mc.getTextureManager().bindTexture(ALLOY_FURNACE_TEXTURE);
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 		
 		int l = this.getCookProgressScaled();
-		this.drawTexturedModalRect(i + 79, j + 34, 176, 14, l + 1, 16);
+		this.drawTexturedModalRect(this.guiLeft + 81, this.guiTop + 35, 176, 0, l + 1, 16);
+
+		int k = this.getEnergyStoredScaled();
+		this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 7, 194, 53, 16, 41 - k);
 	}
 
 	private int getCookProgressScaled()
 	{
-		int i = this.tileEntity.cookTime;
-		int j = this.tileEntity.totalCookTime;
+		int i = this.tileEntity.getField(0);
+		int j = this.tileEntity.getField(1);
 		return j != 0 && i != 0 ? i * 24 / j : 0;
 	}
-	
-	private int getBurnLeftScaled()
+
+	private int getEnergyStoredScaled()
 	{
-		int i = this.tileEntity.currentItemBurnTime;
-
-        if (i == 0)
-        {
-            i = 200;
-        }
-
-        return this.tileEntity.burnTime * 13 / i;
+		int i = this.tileEntity.getField(2);
+		int j = this.tileEntity.getField(3);
+		return i != 0 && j != 0 ? i * 41 / j : 0;
 	}
 }

@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvider
 {	
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
-	public static final PropertyBool ACTIVE = PropertyBool.create("active");
+	public static final PropertyBool POWERED = PropertyBool.create("powered");
 	private static boolean keepInventory;
 	
     public MachineAlloyFurnace(String name)
@@ -54,19 +54,19 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 		setHardness(5.0F);
 		setResistance(10.0F);
 		
-		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ACTIVE, false));
+		setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, false));
     }
 
 	@Override
 	public int getLightValue(IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos)
 	{
-		return state.getValue(ACTIVE) ? 13 : 0;
+		return state.getValue(POWERED) ? 13 : 0;
 	}
 
 	@Override
 	public @NotNull Item getItemDropped(@NotNull IBlockState state, @NotNull Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(BlockInit.CRUSHER);
+		return Item.getItemFromBlock(BlockInit.ALLOY_FURNACE);
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
             IBlockState south = worldIn.getBlockState(pos.south());
             IBlockState west = worldIn.getBlockState(pos.west());
             IBlockState east = worldIn.getBlockState(pos.east());
-            EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
+            EnumFacing enumfacing = state.getValue(FACING);
 
             if (enumfacing == EnumFacing.NORTH && north.isFullBlock() && !south.isFullBlock())
         	{
@@ -110,9 +110,9 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
     @SuppressWarnings("incomplete-switch")
     public void randomDisplayTick(IBlockState stateIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull Random rand)
     {
-		if (stateIn.getValue(ACTIVE))
+		if (stateIn.getValue(POWERED))
         {
-            EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
+            EnumFacing enumfacing = stateIn.getValue(FACING);
             double d0 = (double)pos.getX() + 0.5D;
             double d1 = (double)pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
             double d2 = (double)pos.getZ() + 0.5D;
@@ -120,26 +120,26 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 
             if (rand.nextDouble() < 0.1D)
             {
-                worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+                worldIn.playSound((double)pos.getX() + 0.5D, pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
 
             switch (enumfacing)
             {
                 case WEST:
                     worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
                     break;
                 case EAST:
                     worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+                    worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d0 + 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
                     break;
                 case NORTH:
                     worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - 0.52D, 0.0D, 0.0D, 0.0D);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 - 0.52D, 0.0D, 0.0D, 0.0D);
+                    worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d0 + d4, d1, d2 - 0.52D, 0.0D, 0.0D, 0.0D);
                     break;
                 case SOUTH:
                     worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
-                    worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
+                    worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -160,19 +160,19 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	    return true;
 	}
 	
-	public static boolean getStateActive(World worldIn, BlockPos pos)
+	public static boolean getStatePowered(World worldIn, BlockPos pos)
 	{
 	    IBlockState state = worldIn.getBlockState(pos);
-	    return state.getValue(ACTIVE);
+	    return state.getValue(POWERED);
 	}
 	
-	public static void setStateActive(boolean active, World worldIn, BlockPos pos) 
+	public static void setStatePowered(boolean powered, World worldIn, BlockPos pos)
 	{
 		IBlockState iblockstate = worldIn.getBlockState(pos);
 		TileEntity tileentity = worldIn.getTileEntity(pos);
         keepInventory = true;
 		
-		worldIn.setBlockState(pos, BlockInit.CRUSHER.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(ACTIVE, active), 3);
+		worldIn.setBlockState(pos, BlockInit.ALLOY_FURNACE.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(POWERED, powered), 3);
 		
         keepInventory = false;
 		
@@ -182,12 +182,6 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 			worldIn.setTileEntity(pos, tileentity);
 		}
 	}
-
-//	@Override
-//	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-//	{
-//		return new ItemStack(BlockInit.CRUSHER);
-//	}
 	
 	@Override
 	public boolean hasTileEntity(@NotNull IBlockState state)
@@ -263,29 +257,29 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	@Override
 	protected @NotNull BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, ACTIVE, FACING);
+		return new BlockStateContainer(this, POWERED, FACING);
 	}
 	
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
 		EnumFacing facing = EnumFacing.byIndex(meta & 7);
-	    boolean active = (meta & 8) != 0;
+	    boolean powered = (meta & 8) != 0;
 
 	    if (facing.getAxis() == EnumFacing.Axis.Y) 
 	    {
 	        facing = EnumFacing.NORTH;
 	    }
 
-	    return this.getDefaultState().withProperty(FACING, facing).withProperty(ACTIVE, active);
+	    return this.getDefaultState().withProperty(FACING, facing).withProperty(POWERED, powered);
 	}
 	
 	@Override
 	public int getMetaFromState(IBlockState state) 
 	{
-	    int meta = ((EnumFacing) state.getValue(FACING)).getIndex();
+	    int meta = (state.getValue(FACING)).getIndex();
 	    
-		if (state.getValue(ACTIVE)) 
+		if (state.getValue(POWERED))
 	    {
 	        meta |= 8;
 	    }

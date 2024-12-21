@@ -1,4 +1,4 @@
-package net.vyroxes.minersprosperity.util.compat.jei.crusher;
+package net.vyroxes.minersprosperity.util.compat.jei.alloy_furnace;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +10,14 @@ import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 
-public class CrusherRecipeMaker
+public class AlloyFurnaceRecipeMaker
 {
-    public static List<CrusherRecipe> getRecipes(IJeiHelpers helpers)
+    public static List<AlloyFurnaceRecipe> getRecipes(IJeiHelpers helpers)
     {
         IStackHelper stackHelper = helpers.getStackHelper();
         RecipesAlloyFurnace instance = RecipesAlloyFurnace.getInstance();
         Table<ItemStack, ItemStack, RecipesAlloyFurnace.RecipeData> recipes = instance.getRecipesList();
-        List<CrusherRecipe> jeiRecipes = new ArrayList<>();
+        List<AlloyFurnaceRecipe> jeiRecipes = new ArrayList<>();
 
         for (Map.Entry<ItemStack, Map<ItemStack, RecipesAlloyFurnace.RecipeData>> entry : recipes.columnMap().entrySet())
         {
@@ -29,12 +29,13 @@ public class CrusherRecipeMaker
 
                 ItemStack output = recipeData.getResult();
                 int cookTime = recipeData.getCookTime();
+                int energy = recipeData.getEnergyUsage();
 
                 List<ItemStack> inputs = new ArrayList<>();
                 inputs.add(input1);
                 inputs.add(input2);
 
-                CrusherRecipe recipe = new CrusherRecipe(inputs, output, cookTime);
+                AlloyFurnaceRecipe recipe = new AlloyFurnaceRecipe(inputs, output, cookTime, energy);
                 jeiRecipes.add(recipe);
             }
         }

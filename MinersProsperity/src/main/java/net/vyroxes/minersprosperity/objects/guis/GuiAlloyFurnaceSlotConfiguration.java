@@ -16,10 +16,13 @@ import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 
 public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
@@ -33,7 +36,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		super(new ContainerInventory(player, tileEntity));
 		this.tileEntity = tileEntity;
 	}
-	
+
 	@Override
 	public void initGui() 
 	{
@@ -44,234 +47,68 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
-        int[] input1State = this.tileEntity.input1State;
-        int[] input2State = this.tileEntity.input2State;
-        int[] fuelState = this.tileEntity.fuelState;
-        int[] outputState = this.tileEntity.outputState;
+        Map<String, int[]> slotStates = new HashMap<>();
+        slotStates.put("Input 1", this.tileEntity.getInput1State());
+        slotStates.put("Input 2", this.tileEntity.getInput2State());
+        slotStates.put("Fuel", this.tileEntity.getEnergyState());
+        slotStates.put("Output", this.tileEntity.getOutputState());
 
-        String slot = this.tileEntity.slot;
+        Map<Integer, String> faceNames = new HashMap<>();
+        faceNames.put(0, I18n.format("gui.side_front.name"));
+        faceNames.put(1, I18n.format("gui.side_back.name"));
+        faceNames.put(2, I18n.format("gui.side_left.name"));
+        faceNames.put(3, I18n.format("gui.side_right.name"));
+        faceNames.put(4, I18n.format("gui.side_top.name"));
+        faceNames.put(5, I18n.format("gui.side_bottom.name"));
 
-        String front = I18n.format("gui.side_front.name");
-        String back = I18n.format("gui.side_back.name");
-        String left = I18n.format("gui.side_left.name");
-        String right = I18n.format("gui.side_right.name");
-        String top = I18n.format("gui.side_top.name");
-        String bottom = I18n.format("gui.side_bottom.name");
+        Map<String, String> slotNames = new HashMap<>();
+        slotNames.put("Input 1", "Input 1 Slot");
+        slotNames.put("Input 2", "Input 2 Slot");
+        slotNames.put("Fuel", "Fuel Slot");
+        slotNames.put("Output", "Output Slot");
 
-        String input1 = "Input 1 Slot";
-        String input2 = "Input 2 Slot";
-        String fuel = "Fuel Slot";
-        String output = "Output Slot";
+        String currentSlot = this.tileEntity.getSlot();
+        int[] currentState = slotStates.getOrDefault(currentSlot, new int[6]);
 
-        switch (slot) {
-            case "Input 1" -> {
-                if (input1State[0] == 0) {
-                    textureX = 176;
-                } else if (input1State[0] == 1) {
-                    textureX = 192;
-                } else if (input1State[0] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, input1, input1State[0]));
+        for (int i = 0; i < currentState.length; i++)
+        {
+            int textureX = switch (currentState[i])
+            {
+                case 1 -> 192;
+                case 2 -> 208;
+                default -> 176;
+            };
 
-                if (input1State[1] == 0) {
-                    textureX = 176;
-                } else if (input1State[1] == 1) {
-                    textureX = 192;
-                } else if (input1State[1] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, input1, input1State[1]));
+            int xOffset = switch (i)
+            {
+                case 0, 4, 5 -> 80;
+                case 1, 3 -> 98;
+                case 2 -> 62;
+                default -> 80;
+            };
 
-                if (input1State[2] == 0) {
-                    textureX = 176;
-                } else if (input1State[2] == 1) {
-                    textureX = 192;
-                } else if (input1State[2] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, input1, input1State[2]));
+            int yOffset = switch (i)
+            {
+                case 4 -> 17;
+                case 5 -> 53;
+                case 0, 3 -> 35;
+                case 1 -> 53;
+                case 2 -> 35;
+                default -> 35;
+            };
 
-                if (input1State[3] == 0) {
-                    textureX = 176;
-                } else if (input1State[3] == 1) {
-                    textureX = 192;
-                } else if (input1State[3] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, input1, input1State[3]));
-
-                if (input1State[4] == 0) {
-                    textureX = 176;
-                } else if (input1State[4] == 1) {
-                    textureX = 192;
-                } else if (input1State[4] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, input1, input1State[4]));
-
-                if (input1State[5] == 0) {
-                    textureX = 176;
-                } else if (input1State[5] == 1) {
-                    textureX = 192;
-                } else if (input1State[5] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, input1, input1State[5]));
-            }
-            case "Input 2" -> {
-                if (input2State[0] == 0) {
-                    textureX = 176;
-                } else if (input2State[0] == 1) {
-                    textureX = 192;
-                } else if (input2State[0] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, input2, input2State[0]));
-
-                if (input2State[1] == 0) {
-                    textureX = 176;
-                } else if (input2State[1] == 1) {
-                    textureX = 192;
-                } else if (input2State[1] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, input2, input2State[1]));
-
-                if (input2State[2] == 0) {
-                    textureX = 176;
-                } else if (input2State[2] == 1) {
-                    textureX = 192;
-                } else if (input2State[2] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, input2, input2State[2]));
-
-                if (input2State[3] == 0) {
-                    textureX = 176;
-                } else if (input2State[3] == 1) {
-                    textureX = 192;
-                } else if (input2State[3] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, input2, input2State[3]));
-
-                if (input2State[4] == 0) {
-                    textureX = 176;
-                } else if (input2State[4] == 1) {
-                    textureX = 192;
-                } else if (input2State[4] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, input2, input2State[4]));
-
-                if (input2State[5] == 0) {
-                    textureX = 176;
-                } else if (input2State[5] == 1) {
-                    textureX = 192;
-                } else if (input2State[5] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, input2, input2State[5]));
-            }
-            case "Fuel" -> {
-                if (fuelState[0] == 0) {
-                    textureX = 176;
-                } else if (fuelState[0] == 1) {
-                    textureX = 192;
-                } else if (fuelState[0] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, fuel, fuelState[0]));
-
-                if (fuelState[1] == 0) {
-                    textureX = 176;
-                } else if (fuelState[1] == 1) {
-                    textureX = 192;
-                } else if (fuelState[1] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, fuel, fuelState[1]));
-
-                if (fuelState[2] == 0) {
-                    textureX = 176;
-                } else if (fuelState[2] == 1) {
-                    textureX = 192;
-                } else if (fuelState[2] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, fuel, fuelState[2]));
-
-                if (fuelState[3] == 0) {
-                    textureX = 176;
-                } else if (fuelState[3] == 1) {
-                    textureX = 192;
-                } else if (fuelState[3] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, fuel, fuelState[3]));
-
-                if (fuelState[4] == 0) {
-                    textureX = 176;
-                } else if (fuelState[4] == 1) {
-                    textureX = 192;
-                } else if (fuelState[4] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, fuel, fuelState[4]));
-
-                if (fuelState[5] == 0) {
-                    textureX = 176;
-                } else if (fuelState[5] == 1) {
-                    textureX = 192;
-                } else if (fuelState[5] == 2) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, fuel, fuelState[5]));
-            }
-            case "Output" -> {
-                if (outputState[0] == 0) {
-                    textureX = 176;
-                } else if (outputState[0] == 1) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(0, guiLeft + 80, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, front, output, outputState[0]));
-
-                if (outputState[1] == 0) {
-                    textureX = 176;
-                } else if (outputState[1] == 1) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(1, guiLeft + 98, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, back, output, outputState[1]));
-
-                if (outputState[2] == 0) {
-                    textureX = 176;
-                } else if (outputState[2] == 1) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(2, guiLeft + 62, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, left, output, outputState[2]));
-
-                if (outputState[3] == 0) {
-                    textureX = 176;
-                } else if (outputState[3] == 1) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(3, guiLeft + 98, guiTop + 35, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, right, output, outputState[3]));
-
-                if (outputState[4] == 0) {
-                    textureX = 176;
-                } else if (outputState[4] == 1) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(4, guiLeft + 80, guiTop + 17, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, top, output, outputState[4]));
-
-                if (outputState[5] == 0) {
-                    textureX = 176;
-                } else if (outputState[5] == 1) {
-                    textureX = 208;
-                }
-                this.addButton(new GuiFaceButton(5, guiLeft + 80, guiTop + 53, 16, 16, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()), textureX, 0, bottom, output, outputState[5]));
-            }
+            this.addButton(new GuiFaceButton(
+                    i,
+                    guiLeft + xOffset,
+                    guiTop + yOffset,
+                    16, 16,
+                    new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()),
+                    textureX,
+                    0,
+                    faceNames.get(i),
+                    slotNames.get(currentSlot),
+                    currentState[i]
+            ));
         }
 
 		this.addButton(new GuiBackButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slots_configuration.png"), 238, 0, I18n.format("gui.back.name")));
@@ -280,161 +117,43 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 	@Override
 	public void actionPerformed(@NotNull GuiButton guiButton)
 	{
-        switch (this.tileEntity.slot) {
-            case "Input 1" -> {
-                if (guiButton.id == 0) {
-                    if (this.tileEntity.input1State[0] < 2) {
-                        ++this.tileEntity.input1State[0];
-                    } else {
-                        this.tileEntity.input1State[0] = 0;
-                    }
-                } else if (guiButton.id == 1) {
-                    if (this.tileEntity.input1State[1] < 2) {
-                        ++this.tileEntity.input1State[1];
-                    } else {
-                        this.tileEntity.input1State[1] = 0;
-                    }
-                } else if (guiButton.id == 2) {
-                    if (this.tileEntity.input1State[2] < 2) {
-                        ++this.tileEntity.input1State[2];
-                    } else {
-                        this.tileEntity.input1State[2] = 0;
-                    }
-                } else if (guiButton.id == 3) {
-                    if (this.tileEntity.input1State[3] < 2) {
-                        ++this.tileEntity.input1State[3];
-                    } else {
-                        this.tileEntity.input1State[3] = 0;
-                    }
-                } else if (guiButton.id == 4) {
-                    if (this.tileEntity.input1State[4] < 2) {
-                        ++this.tileEntity.input1State[4];
-                    } else {
-                        this.tileEntity.input1State[4] = 0;
-                    }
-                } else if (guiButton.id == 5) {
-                    if (this.tileEntity.input1State[5] < 2) {
-                        ++this.tileEntity.input1State[5];
-                    } else {
-                        this.tileEntity.input1State[5] = 0;
-                    }
+        int[] input1State = this.tileEntity.getInput1State();
+        int[] input2State = this.tileEntity.getInput2State();
+        int[] energyState = this.tileEntity.getEnergyState();
+        int[] outputState = this.tileEntity.getOutputState();
+
+        switch (this.tileEntity.getSlot())
+        {
+            case "Input 1" ->
+            {
+                if (guiButton.id >= 0 && guiButton.id < input1State.length)
+                {
+                    int newValue = (input1State[guiButton.id] + 1) % 3;
+                    this.tileEntity.setInput1State(guiButton.id, newValue);
                 }
             }
-            case "Input 2" -> {
-                if (guiButton.id == 0) {
-                    if (this.tileEntity.input2State[0] < 2) {
-                        ++this.tileEntity.input2State[0];
-                    } else {
-                        this.tileEntity.input2State[0] = 0;
-                    }
-                } else if (guiButton.id == 1) {
-                    if (this.tileEntity.input2State[1] < 2) {
-                        ++this.tileEntity.input2State[1];
-                    } else {
-                        this.tileEntity.input2State[1] = 0;
-                    }
-                } else if (guiButton.id == 2) {
-                    if (this.tileEntity.input2State[2] < 2) {
-                        ++this.tileEntity.input2State[2];
-                    } else {
-                        this.tileEntity.input2State[2] = 0;
-                    }
-                } else if (guiButton.id == 3) {
-                    if (this.tileEntity.input2State[3] < 2) {
-                        ++this.tileEntity.input2State[3];
-                    } else {
-                        this.tileEntity.input2State[3] = 0;
-                    }
-                } else if (guiButton.id == 4) {
-                    if (this.tileEntity.input2State[4] < 2) {
-                        ++this.tileEntity.input2State[4];
-                    } else {
-                        this.tileEntity.input2State[4] = 0;
-                    }
-                } else if (guiButton.id == 5) {
-                    if (this.tileEntity.input2State[5] < 2) {
-                        ++this.tileEntity.input2State[5];
-                    } else {
-                        this.tileEntity.input2State[5] = 0;
-                    }
+            case "Input 2" ->
+            {
+                if (guiButton.id >= 0 && guiButton.id < input2State.length)
+                {
+                    int newValue = (input2State[guiButton.id] + 1) % 3;
+                    this.tileEntity.setInput2State(guiButton.id, newValue);
                 }
             }
-            case "Fuel" -> {
-                if (guiButton.id == 0) {
-                    if (this.tileEntity.fuelState[0] < 2) {
-                        ++this.tileEntity.fuelState[0];
-                    } else {
-                        this.tileEntity.fuelState[0] = 0;
-                    }
-                } else if (guiButton.id == 1) {
-                    if (this.tileEntity.fuelState[1] < 2) {
-                        ++this.tileEntity.fuelState[1];
-                    } else {
-                        this.tileEntity.fuelState[1] = 0;
-                    }
-                } else if (guiButton.id == 2) {
-                    if (this.tileEntity.fuelState[2] < 2) {
-                        ++this.tileEntity.fuelState[2];
-                    } else {
-                        this.tileEntity.fuelState[2] = 0;
-                    }
-                } else if (guiButton.id == 3) {
-                    if (this.tileEntity.fuelState[3] < 2) {
-                        ++this.tileEntity.fuelState[3];
-                    } else {
-                        this.tileEntity.fuelState[3] = 0;
-                    }
-                } else if (guiButton.id == 4) {
-                    if (this.tileEntity.fuelState[4] < 2) {
-                        ++this.tileEntity.fuelState[4];
-                    } else {
-                        this.tileEntity.fuelState[4] = 0;
-                    }
-                } else if (guiButton.id == 5) {
-                    if (this.tileEntity.fuelState[5] < 2) {
-                        ++this.tileEntity.fuelState[5];
-                    } else {
-                        this.tileEntity.fuelState[5] = 0;
-                    }
+            case "Fuel" ->
+            {
+                if (guiButton.id >= 0 && guiButton.id < energyState.length)
+                {
+                    int newValue = (energyState[guiButton.id] + 1) % 3;
+                    this.tileEntity.setEnergyState(guiButton.id, newValue);
                 }
             }
-            case "Output" -> {
-                if (guiButton.id == 0) {
-                    if (this.tileEntity.outputState[0] < 1) {
-                        ++this.tileEntity.outputState[0];
-                    } else {
-                        this.tileEntity.outputState[0] = 0;
-                    }
-                } else if (guiButton.id == 1) {
-                    if (this.tileEntity.outputState[1] < 1) {
-                        ++this.tileEntity.outputState[1];
-                    } else {
-                        this.tileEntity.outputState[1] = 0;
-                    }
-                } else if (guiButton.id == 2) {
-                    if (this.tileEntity.outputState[2] < 1) {
-                        ++this.tileEntity.outputState[2];
-                    } else {
-                        this.tileEntity.outputState[2] = 0;
-                    }
-                } else if (guiButton.id == 3) {
-                    if (this.tileEntity.outputState[3] < 1) {
-                        ++this.tileEntity.outputState[3];
-                    } else {
-                        this.tileEntity.outputState[3] = 0;
-                    }
-                } else if (guiButton.id == 4) {
-                    if (this.tileEntity.outputState[4] < 1) {
-                        ++this.tileEntity.outputState[4];
-                    } else {
-                        this.tileEntity.outputState[4] = 0;
-                    }
-                } else if (guiButton.id == 5) {
-                    if (this.tileEntity.outputState[5] < 1) {
-                        ++this.tileEntity.outputState[5];
-                    } else {
-                        this.tileEntity.outputState[5] = 0;
-                    }
+            case "Output" ->
+            {
+                if (guiButton.id >= 0 && guiButton.id < outputState.length)
+                {
+                    int newValue = (outputState[guiButton.id] + 1) % 2;
+                    this.tileEntity.setOutputState(guiButton.id, newValue);
                 }
             }
         }
@@ -447,6 +166,19 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		this.initGui();
 	}
 
+    private void adjustState(Supplier<int[]> getter, BiConsumer<Integer, Integer> setter, int index, int maxValue)
+    {
+        int[] state = getter.get();
+        if (state[index] > 0)
+        {
+            setter.accept(index, state[index] - 1);
+        }
+        else
+        {
+            setter.accept(index, maxValue);
+        }
+    }
+
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
 	{
@@ -457,163 +189,12 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			{
 				if (guiButton instanceof GuiFaceButton && ((GuiFaceButton) guiButton).isHovered(mouseX, mouseY))
 				{
-                    switch (this.tileEntity.slot) {
-                        case "Input 1" -> {
-                            if (guiButton.id == 0) {
-                                if (this.tileEntity.input1State[0] > 0) {
-                                    --this.tileEntity.input1State[0];
-                                } else {
-                                    this.tileEntity.input1State[0] = 2;
-                                }
-                            } else if (guiButton.id == 1) {
-                                if (this.tileEntity.input1State[1] > 0) {
-                                    --this.tileEntity.input1State[1];
-                                } else {
-                                    this.tileEntity.input1State[1] = 2;
-                                }
-                            } else if (guiButton.id == 2) {
-                                if (this.tileEntity.input1State[2] > 0) {
-                                    --this.tileEntity.input1State[2];
-                                } else {
-                                    this.tileEntity.input1State[2] = 2;
-                                }
-                            } else if (guiButton.id == 3) {
-                                if (this.tileEntity.input1State[3] > 0) {
-                                    --this.tileEntity.input1State[3];
-                                } else {
-                                    this.tileEntity.input1State[3] = 2;
-                                }
-                            } else if (guiButton.id == 4) {
-                                if (this.tileEntity.input1State[4] > 0) {
-                                    --this.tileEntity.input1State[4];
-                                } else {
-                                    this.tileEntity.input1State[4] = 2;
-                                }
-                            } else if (guiButton.id == 5) {
-                                if (this.tileEntity.input1State[5] > 0) {
-                                    --this.tileEntity.input1State[5];
-                                } else {
-                                    this.tileEntity.input1State[5] = 2;
-                                }
-                            }
-                        }
-                        case "Input 2" -> {
-                            if (guiButton.id == 0) {
-                                if (this.tileEntity.input2State[0] > 0) {
-                                    --this.tileEntity.input2State[0];
-                                } else {
-                                    this.tileEntity.input2State[0] = 2;
-                                }
-                            } else if (guiButton.id == 1) {
-                                if (this.tileEntity.input2State[1] > 0) {
-                                    --this.tileEntity.input2State[1];
-                                } else {
-                                    this.tileEntity.input2State[1] = 2;
-                                }
-                            } else if (guiButton.id == 2) {
-                                if (this.tileEntity.input2State[2] > 0) {
-                                    --this.tileEntity.input2State[2];
-                                } else {
-                                    this.tileEntity.input2State[2] = 2;
-                                }
-                            } else if (guiButton.id == 3) {
-                                if (this.tileEntity.input2State[3] > 0) {
-                                    --this.tileEntity.input2State[3];
-                                } else {
-                                    this.tileEntity.input2State[3] = 2;
-                                }
-                            } else if (guiButton.id == 4) {
-                                if (this.tileEntity.input2State[4] > 0) {
-                                    --this.tileEntity.input2State[4];
-                                } else {
-                                    this.tileEntity.input2State[4] = 2;
-                                }
-                            } else if (guiButton.id == 5) {
-                                if (this.tileEntity.input2State[5] > 0) {
-                                    --this.tileEntity.input2State[5];
-                                } else {
-                                    this.tileEntity.input2State[5] = 2;
-                                }
-                            }
-                        }
-                        case "Fuel" -> {
-                            if (guiButton.id == 0) {
-                                if (this.tileEntity.fuelState[0] > 0) {
-                                    --this.tileEntity.fuelState[0];
-                                } else {
-                                    this.tileEntity.fuelState[0] = 2;
-                                }
-                            } else if (guiButton.id == 1) {
-                                if (this.tileEntity.fuelState[1] > 0) {
-                                    --this.tileEntity.fuelState[1];
-                                } else {
-                                    this.tileEntity.fuelState[1] = 2;
-                                }
-                            } else if (guiButton.id == 2) {
-                                if (this.tileEntity.fuelState[2] > 0) {
-                                    --this.tileEntity.fuelState[2];
-                                } else {
-                                    this.tileEntity.fuelState[2] = 2;
-                                }
-                            } else if (guiButton.id == 3) {
-                                if (this.tileEntity.fuelState[3] > 0) {
-                                    --this.tileEntity.fuelState[3];
-                                } else {
-                                    this.tileEntity.fuelState[3] = 2;
-                                }
-                            } else if (guiButton.id == 4) {
-                                if (this.tileEntity.fuelState[4] > 0) {
-                                    --this.tileEntity.fuelState[4];
-                                } else {
-                                    this.tileEntity.fuelState[4] = 2;
-                                }
-                            } else if (guiButton.id == 5) {
-                                if (this.tileEntity.fuelState[5] > 0) {
-                                    --this.tileEntity.fuelState[5];
-                                } else {
-                                    this.tileEntity.fuelState[5] = 2;
-                                }
-                            }
-                        }
-                        case "Output" -> {
-                            if (guiButton.id == 0) {
-                                if (this.tileEntity.outputState[0] > 0) {
-                                    --this.tileEntity.outputState[0];
-                                } else {
-                                    this.tileEntity.outputState[0] = 1;
-                                }
-                            } else if (guiButton.id == 1) {
-                                if (this.tileEntity.outputState[1] > 0) {
-                                    --this.tileEntity.outputState[1];
-                                } else {
-                                    this.tileEntity.outputState[1] = 1;
-                                }
-                            } else if (guiButton.id == 2) {
-                                if (this.tileEntity.outputState[2] > 0) {
-                                    --this.tileEntity.outputState[2];
-                                } else {
-                                    this.tileEntity.outputState[2] = 1;
-                                }
-                            } else if (guiButton.id == 3) {
-                                if (this.tileEntity.outputState[3] > 0) {
-                                    --this.tileEntity.outputState[3];
-                                } else {
-                                    this.tileEntity.outputState[3] = 1;
-                                }
-                            } else if (guiButton.id == 4) {
-                                if (this.tileEntity.outputState[4] > 0) {
-                                    --this.tileEntity.outputState[4];
-                                } else {
-                                    this.tileEntity.outputState[4] = 1;
-                                }
-                            } else if (guiButton.id == 5) {
-                                if (this.tileEntity.outputState[5] > 0) {
-                                    --this.tileEntity.outputState[5];
-                                } else {
-                                    this.tileEntity.outputState[5] = 1;
-                                }
-                            }
-                        }
+                    switch (this.tileEntity.getSlot())
+                    {
+                        case "Input 1" -> adjustState(this.tileEntity::getInput1State, this.tileEntity::setInput1State, guiButton.id, 2);
+                        case "Input 2" -> adjustState(this.tileEntity::getInput2State, this.tileEntity::setInput2State, guiButton.id, 2);
+                        case "Fuel" -> adjustState(this.tileEntity::getEnergyState, this.tileEntity::setEnergyState, guiButton.id, 2);
+                        case "Output" -> adjustState(this.tileEntity::getOutputState, this.tileEntity::setOutputState, guiButton.id, 1);
                     }
 
 					this.tileEntity.setSlotsState();
@@ -630,70 +211,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			{
 				if (guiButton instanceof GuiFaceButton && ((GuiFaceButton) guiButton).isHovered(mouseX, mouseY))
 				{
-                    switch (this.tileEntity.slot) {
-                        case "Input 1" -> {
-                            if (guiButton.id == 0) {
-                                this.tileEntity.input1State[0] = 0;
-                            } else if (guiButton.id == 1) {
-                                this.tileEntity.input1State[1] = 0;
-                            } else if (guiButton.id == 2) {
-                                this.tileEntity.input1State[2] = 0;
-                            } else if (guiButton.id == 3) {
-                                this.tileEntity.input1State[3] = 0;
-                            } else if (guiButton.id == 4) {
-                                this.tileEntity.input1State[4] = 0;
-                            } else if (guiButton.id == 5) {
-                                this.tileEntity.input1State[5] = 0;
-                            }
-                        }
-                        case "Input 2" -> {
-                            if (guiButton.id == 0) {
-                                this.tileEntity.input2State[0] = 0;
-                            } else if (guiButton.id == 1) {
-                                this.tileEntity.input2State[1] = 0;
-                            } else if (guiButton.id == 2) {
-                                this.tileEntity.input2State[2] = 0;
-                            } else if (guiButton.id == 3) {
-                                this.tileEntity.input2State[3] = 0;
-                            } else if (guiButton.id == 4) {
-                                this.tileEntity.input2State[4] = 0;
-                            } else if (guiButton.id == 5) {
-                                this.tileEntity.input2State[5] = 0;
-                            }
-                        }
-                        case "Fuel" -> {
-                            if (guiButton.id == 0) {
-                                this.tileEntity.fuelState[0] = 0;
-                            } else if (guiButton.id == 1) {
-                                this.tileEntity.fuelState[1] = 0;
-                            } else if (guiButton.id == 2) {
-                                this.tileEntity.fuelState[2] = 0;
-                            } else if (guiButton.id == 3) {
-                                this.tileEntity.fuelState[3] = 0;
-                            } else if (guiButton.id == 4) {
-                                this.tileEntity.fuelState[4] = 0;
-                            } else if (guiButton.id == 5) {
-                                this.tileEntity.fuelState[5] = 0;
-                            }
-                        }
-                        case "Output" -> {
-                            if (guiButton.id == 0) {
-                                this.tileEntity.outputState[0] = 0;
-                            } else if (guiButton.id == 1) {
-                                this.tileEntity.outputState[1] = 0;
-                            } else if (guiButton.id == 2) {
-                                this.tileEntity.outputState[2] = 0;
-                            } else if (guiButton.id == 3) {
-                                this.tileEntity.outputState[3] = 0;
-                            } else if (guiButton.id == 4) {
-                                this.tileEntity.outputState[4] = 0;
-                            } else if (guiButton.id == 5) {
-                                this.tileEntity.outputState[5] = 0;
-                            }
-                        }
-                    }
-
-					this.tileEntity.setSlotsState();
+                    resetState(this.tileEntity.getSlot(), guiButton.id);
+                    this.tileEntity.setSlotsState();
 					Minecraft.getMinecraft().player.playSound(net.minecraft.init.SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
 					this.initGui();
 					return;
@@ -705,6 +224,17 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
 	}
+
+    private void resetState(String slot, int id)
+    {
+        switch (slot)
+        {
+            case "Input 1" -> this.tileEntity.setInput1State(id, 0);
+            case "Input 2" -> this.tileEntity.setInput2State(id, 0);
+            case "Fuel" -> this.tileEntity.setEnergyState(id, 0);
+            case "Output" -> this.tileEntity.setOutputState(id, 0);
+        }
+    }
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) 

@@ -69,10 +69,10 @@ public class MessageSlotsState implements IMessage
             TileEntityAlloyFurnace tileEntity = (TileEntityAlloyFurnace) ctx.getServerHandler().player.world.getTileEntity(message.pos);
             if (tileEntity != null)
             {
-                tileEntity.input1State = message.slotsState[0];
-                tileEntity.input2State = message.slotsState[1];
-                tileEntity.fuelState = message.slotsState[2];
-                tileEntity.outputState = message.slotsState[3];
+                tileEntity.setInput1State(message.slotsState[0]);
+                tileEntity.setInput2State(message.slotsState[1]);
+                tileEntity.setEnergyState(message.slotsState[2]);
+                tileEntity.setOutputState(message.slotsState[3]);
 
                 tileEntity.markDirty();
             }

@@ -4,13 +4,11 @@ import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
@@ -18,10 +16,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import net.vyroxes.minersprosperity.objects.blocks.energy.CustomEnergyStorage;
 import net.vyroxes.minersprosperity.objects.blocks.machines.MachineAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
@@ -29,21 +27,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 {
-	public static final PropertyBool ACTIVE = PropertyBool.create("active");
-    public int burnTime;
-    public int currentItemBurnTime;
-    public int cookTime;
-    public int totalCookTime;
-    public String customName;
-    public int redstoneControlButtonState;
-    public int[] input1State = new int[6];;
-    public int[] input2State = new int[6];;
-    public int[] fuelState = new int[6];;
-    public int[] outputState = new int[6];;
-    public String slot;
-    public EnumFacing facing;
-    public int currentFace;
-    public EnumFacing machineFacing;
+    private static final PropertyBool ACTIVE = PropertyBool.create("active");
+    private final CustomEnergyStorage storage = new CustomEnergyStorage(20000, 200, 0, 0);
+    private int cookTime;
+    private int totalCookTime;
+    private String customName;
+    private int redstoneControlButtonState;
+    private int[] input1State = new int[6];;
+    private int[] input2State = new int[6];;
+    private int[] energyState = new int[6];;
+    private int[] outputState = new int[6];;
+    private String slot;
+    private EnumFacing facing;
+    private int currentFace;
 
     private final ItemStackHandler machineItemStacks = new ItemStackHandler(4)
     {
@@ -68,7 +64,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
                 return super.insertItem(1, stack, simulate);
             }
 
-            if (fuelState[currentFace] == 1 && isItemFuel(stack))
+            if (energyState[currentFace] == 1)
             {
                 return super.insertItem(2, stack, simulate);
             }
@@ -105,7 +101,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
                 }
             }
 
-            if (fuelState[currentFace] == 2)
+            if (energyState[currentFace] == 2)
             {
                 if (!slot2.isEmpty())
                 {
@@ -155,15 +151,14 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         return !currentSlot.isEmpty() && currentSlot.getItem().equals(stack.getItem());
     }
 
-    public void setSlot(String slot)
-    {
-        this.slot = slot;
-    }
-
     @Override
     public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing)
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        {
+            return true;
+        }
+        if (capability == CapabilityEnergy.ENERGY)
         {
             return true;
         }
@@ -179,7 +174,41 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             this.currentFace(facing);
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.machineItemStacks);
         }
+        if (capability == CapabilityEnergy.ENERGY)
+        {
+            return CapabilityEnergy.ENERGY.cast(this.storage);
+        }
         return super.getCapability(capability, facing);
+    }
+
+    public int getEnergyStored()
+    {
+        return this.storage.getEnergyStored();
+    }
+
+    public int getMaxEnergyStored()
+    {
+        return this.storage.getMaxEnergyStored();
+    }
+
+    public int getMaxReceive()
+    {
+        return this.storage.getMaxReceive();
+    }
+
+    public int getEnergyUsage()
+    {
+        return this.storage.getEnergyUsage();
+    }
+
+    public String getSlot()
+    {
+        return this.slot;
+    }
+
+    public void setSlot(String slot)
+    {
+        this.slot = slot;
     }
 
     public void currentFace(EnumFacing facing)
@@ -195,7 +224,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             return;
         }
 
-        machineFacing = state.getValue(BlockHorizontal.FACING);
+        EnumFacing machineFacing = state.getValue(BlockHorizontal.FACING);
 
         if (facing == null)
         {
@@ -249,9 +278,34 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             currentFace = -1;
         }
     }
-    
-    public void setRedstoneControlButtonState()
+
+    public boolean isItemEnergy(ItemStack stack)
     {
+        NBTTagCompound tag = stack.getTagCompound();
+
+        if (tag != null)
+        {
+            if (tag.hasKey("mekData"))
+            {
+                NBTTagCompound mekData = tag.getCompoundTag("mekData");
+
+                return mekData.hasKey("energyStored");
+            }
+            else return tag.hasKey("Energy") || tag.hasKey("energy");
+        }
+
+        return false;
+    }
+
+    public int getRedstoneControlButtonState()
+    {
+        return this.redstoneControlButtonState;
+    }
+
+    public void setRedstoneControlButtonState(int redstoneControlButtonState)
+    {
+        this.redstoneControlButtonState = redstoneControlButtonState;
+
 		this.markDirty();
 		
 		NetworkHandler.sendButtonStateUpdate(this.redstoneControlButtonState, this.pos);
@@ -259,7 +313,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
     public void setSlotsState()
     {
-        int[][] slotsState = {this.input1State, this.input2State, this.fuelState, this.outputState};
+        int[][] slotsState = {this.input1State, this.input2State, this.energyState, this.outputState};
 
         this.markDirty();
 
@@ -274,6 +328,8 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     public void setCustomName(String customName)
     {
         this.customName = customName;
+
+        this.markDirty();
     }
 
     @Override
@@ -286,6 +342,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     public void onDataPacket(@NotNull NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         this.readFromNBT(pkt.getNbtCompound());
+
         this.markDirty();
     }
     
@@ -302,10 +359,11 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     {
         NBTTagCompound tag = super.writeToNBT(new NBTTagCompound());
         tag.setTag("Inventory", this.machineItemStacks.serializeNBT());
-        tag.setInteger("BurnTime", this.burnTime);
         tag.setInteger("CookTime", this.cookTime);
         tag.setInteger("TotalCookTime", this.totalCookTime);
-        tag.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
+        tag.setInteger("Energy", this.storage.getEnergyStored());
+        tag.setInteger("EnergyUsage", this.storage.getEnergyUsage());
+        tag.setInteger("MaxReceive", this.storage.getMaxReceive());
         tag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
 
         if (this.hasCustomName())
@@ -323,9 +381,9 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             tag.setInteger("Input2State[" + i + "]", input2State[i]);
         }
 
-        for (int i = 0; i < fuelState.length; i++)
+        for (int i = 0; i < energyState.length; i++)
         {
-            tag.setInteger("FuelState[" + i + "]", fuelState[i]);
+            tag.setInteger("FuelState[" + i + "]", energyState[i]);
         }
 
         for (int i = 0; i < outputState.length; i++)
@@ -341,10 +399,11 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     {
         super.writeToNBT(tag);
         tag.setTag("Inventory", this.machineItemStacks.serializeNBT());
-        tag.setInteger("BurnTime", this.burnTime);
         tag.setInteger("CookTime", this.cookTime);
         tag.setInteger("TotalCookTime", this.totalCookTime);
-        tag.setInteger("CurrentItemBurnTime", this.currentItemBurnTime);
+        tag.setInteger("Energy", this.storage.getEnergyStored());
+        tag.setInteger("EnergyUsage", this.storage.getEnergyUsage());
+        tag.setInteger("MaxReceive", this.storage.getMaxReceive());
         tag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
 
         for (int i = 0; i < input1State.length; i++)
@@ -357,9 +416,9 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             tag.setInteger("Input2State[" + i + "]", input2State[i]);
         }
 
-        for (int i = 0; i < fuelState.length; i++)
+        for (int i = 0; i < energyState.length; i++)
         {
-            tag.setInteger("FuelState[" + i + "]", fuelState[i]);
+            tag.setInteger("FuelState[" + i + "]", energyState[i]);
         }
 
         for (int i = 0; i < outputState.length; i++)
@@ -380,10 +439,11 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     {
         super.readFromNBT(compound);
         this.machineItemStacks.deserializeNBT(compound.getCompoundTag("Inventory"));
-        this.burnTime = compound.getInteger("BurnTime");
         this.cookTime = compound.getInteger("CookTime");
         this.totalCookTime = compound.getInteger("TotalCookTime");
-        this.currentItemBurnTime = compound.getInteger("CurrentItemBurnTime");
+        this.storage.setEnergyStored(compound.getInteger("Energy"));
+        this.storage.setEnergyUsage(compound.getInteger("EnergyUsage"));
+        this.storage.setMaxReceive(compound.getInteger("MaxReceive"));
         this.redstoneControlButtonState = compound.getInteger("RedstoneControlButtonState");
         
         if (compound.hasKey("CustomName", 8)) 
@@ -401,9 +461,9 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             this.input2State[i] = compound.getInteger("Input2State[" + i + "]");
         }
 
-        for (int i = 0; i < fuelState.length; i++)
+        for (int i = 0; i < energyState.length; i++)
         {
-            this.fuelState[i] = compound.getInteger("FuelState[" + i + "]");
+            this.energyState[i] = compound.getInteger("FuelState[" + i + "]");
         }
 
         for (int i = 0; i < outputState.length; i++)
@@ -414,28 +474,70 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         this.markDirty();
     }
     
-    public boolean isActive()
+    public boolean isPowered()
     {
-        return this.burnTime > 0;
+        return this.storage.getEnergyStored() > 0;
     }
 
-    @SideOnly(Side.CLIENT)
-    public static boolean isActive(TileEntityAlloyFurnace tileentity)
+    public void setEnergyStoredFromItem(ItemStack stack)
     {
-        return tileentity.burnTime > 0;
+        NBTTagCompound tag = stack.getTagCompound();
+        int energyStored = this.storage.getEnergyStored();
+        int maxEnergyStored = this.storage.getMaxEnergyStored();
+
+        if (tag != null) {
+            //Tech Reborn
+            if (tag.hasKey("energy"))
+            {
+                int itemEnergyStored = tag.getInteger("energy");
+                int energyToAdd = Math.min(itemEnergyStored, maxEnergyStored - energyStored);
+                this.storage.setEnergyStored(energyStored + energyToAdd);
+                itemEnergyStored -= energyToAdd;
+                tag.setInteger("energy", itemEnergyStored);
+            }
+
+            //Thermal
+            if (tag.hasKey("Energy"))
+            {
+                int itemEnergyStored = tag.getInteger("Energy");
+                int energyToAdd = Math.min(itemEnergyStored, maxEnergyStored - energyStored);
+                this.storage.setEnergyStored(energyStored + energyToAdd);
+                itemEnergyStored -= energyToAdd;
+                tag.setInteger("Energy", itemEnergyStored);
+            }
+
+            //Mekanism
+            else if (tag.hasKey("mekData"))
+            {
+                NBTTagCompound mekData = tag.getCompoundTag("mekData");
+                if (mekData.hasKey("energyStored"))
+                {
+                    int itemEnergyStored = (int) (mekData.getDouble("energyStored") / 2.5);
+                    if (itemEnergyStored == 2147483647)
+                    {
+                        this.storage.setEnergyStored(this.storage.getMaxEnergyStored());
+                    }
+                    else
+                    {
+                        double energyToAdd = Math.min(itemEnergyStored, maxEnergyStored - energyStored);
+                        this.storage.setEnergyStored((int)(energyStored + energyToAdd));
+                        itemEnergyStored -= (int) energyToAdd;
+                        mekData.setDouble("energyStored", itemEnergyStored * 2.5);
+                    }
+                }
+            }
+        }
+
+        this.markDirty();
     }
 
     @Override
     public void update()
     {
-        boolean wasActive = this.isActive();
-        boolean stateChanged = false;
+        System.out.println("Energy Stored: " + this.storage.getEnergyStored());
 
-        if (this.burnTime > 0)
-        {
-            --this.burnTime;
-            this.markDirty();
-        }
+        boolean wasActive = this.isPowered();
+        boolean stateChanged = false;
 
         if (!this.world.isRemote)
         {
@@ -444,33 +546,40 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
             ItemStack input1 = machineItemStacks.getStackInSlot(0);
             ItemStack input2 = machineItemStacks.getStackInSlot(1);
-            ItemStack fuel = machineItemStacks.getStackInSlot(2);
-            ItemStack output = machineItemStacks.getStackInSlot(3);
+            ItemStack energy = machineItemStacks.getStackInSlot(2);
 
-            if (this.shouldSlowDownCooking(canOperate, output))
+            if (!energy.isEmpty() && getEnergyStored() != getMaxEnergyStored())
             {
-                this.decreaseCookTime();
-            }
-
-            if (canOperate && this.canStartBurning(fuel, input1, input2))
-            {
-                this.startBurning(fuel);
+                setEnergyStoredFromItem(energy);
                 stateChanged = true;
             }
 
-            if (this.isActive() && this.canSmelt())
+            if (this.cookTime > 0 && this.canSmelt() && canOperate)
+            {
+                this.storage.setEnergyUsage(RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2));
+                this.storage.setEnergyStored(this.storage.getEnergyStored() - this.storage.getEnergyUsage());
+                stateChanged = true;
+            }
+            else if (this.cookTime > 0 && !this.canSmelt() || this.cookTime > 0 && !canOperate)
+            {
+                this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
+                stateChanged = true;
+            }
+            else if (!canOperate || !canSmelt() || this.cookTime == 0)
+            {
+                this.storage.setEnergyUsage(0);
+                stateChanged = true;
+            }
+
+            if (this.canSmelt() && canOperate)
             {
                 this.processCooking(input1, input2);
                 stateChanged = true;
             }
-            else
-            {
-                this.decreaseCookTime();
-            }
 
-            if (wasActive != this.isActive())
+            if (wasActive != this.isPowered())
             {
-                MachineAlloyFurnace.setStateActive(this.isActive(), world, pos);
+                MachineAlloyFurnace.setStatePowered(this.isPowered(), world, pos);
                 stateChanged = true;
             }
         }
@@ -490,40 +599,6 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             case 2 -> hasRedstoneSignal;
             default -> false;
         };
-    }
-
-    private boolean shouldSlowDownCooking(boolean canOperate, ItemStack output)
-    {
-        return (!canOperate && this.cookTime > 0) || (canOperate && this.cookTime > 0 && output.getCount() == output.getMaxStackSize());
-    }
-
-    private void decreaseCookTime()
-    {
-        this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
-        this.markDirty();
-    }
-
-    private boolean canStartBurning(ItemStack fuel, ItemStack input1, ItemStack input2)
-    {
-        return !this.isActive() && this.canSmelt() && !fuel.isEmpty() && (!input1.isEmpty() || !input2.isEmpty());
-    }
-
-    private void startBurning(ItemStack fuel)
-    {
-        this.burnTime = getItemBurnTime(fuel);
-        this.currentItemBurnTime = this.burnTime;
-
-        if (this.isActive() && !fuel.isEmpty())
-        {
-            Item item = fuel.getItem();
-            fuel.shrink(1);
-
-            if (fuel.isEmpty())
-            {
-                ItemStack containerItem = item.getContainerItem(fuel);
-                machineItemStacks.setStackInSlot(2, containerItem);
-            }
-        }
     }
 
     private void processCooking(ItemStack input1, ItemStack input2)
@@ -549,41 +624,47 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     {
         ItemStack input1 = machineItemStacks.getStackInSlot(0);
         ItemStack input2 = machineItemStacks.getStackInSlot(1);
+        //int energy = RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2) * RecipesAlloyFurnace.getInstance().getCookTime(input1, input2);
+        int energy = RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2);
 
-        if (input1.isEmpty() || input2.isEmpty())
+        if (this.storage.getEnergyStored() > energy)
         {
-            return false;
-        }
-        else
-        {
-            ItemStack result = RecipesAlloyFurnace.getInstance().getResult(input1, input2);
-
-            if (result.isEmpty())
-            {
-                result = RecipesAlloyFurnace.getInstance().getResult(input2, input1);
-            }
-
-            if (result.isEmpty())
+            if (input1.isEmpty() || input2.isEmpty())
             {
                 return false;
             }
             else
             {
-                ItemStack output = machineItemStacks.getStackInSlot(3);
+                ItemStack result = RecipesAlloyFurnace.getInstance().getResult(input1, input2);
 
-                if (output.isEmpty())
+                if (result.isEmpty())
                 {
-                    return true;
+                    result = RecipesAlloyFurnace.getInstance().getResult(input2, input1);
                 }
-                if (!output.isItemEqual(result))
+
+                if (result.isEmpty())
                 {
                     return false;
                 }
+                else
+                {
+                    ItemStack output = machineItemStacks.getStackInSlot(3);
 
-                int res = output.getCount() + result.getCount();
-                return res <= 64 && res <= output.getMaxStackSize();
+                    if (output.isEmpty())
+                    {
+                        return true;
+                    }
+                    if (!output.isItemEqual(result))
+                    {
+                        return false;
+                    }
+
+                    int res = output.getCount() + result.getCount();
+                    return res <= 64 && res <= output.getMaxStackSize();
+                }
             }
         }
+        return false;
     }
 
     private void smeltItem()
@@ -617,16 +698,6 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         }
     }
 
-    public static int getItemBurnTime(ItemStack fuel)
-    {
-        return TileEntityFurnace.getItemBurnTime(fuel);
-    }
-
-    public static boolean isItemFuel(ItemStack fuel)
-    {
-        return getItemBurnTime(fuel) > 0;
-    }
-
     public boolean isUsableByPlayer(EntityPlayer player)
     {
     	if (this.world.getTileEntity(this.pos) != this)
@@ -639,20 +710,105 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         }
     }
 
+    public int[] getInput1State()
+    {
+        return this.input1State;
+    }
+
+    public void setInput1State(int[] input1State)
+    {
+        this.input1State = input1State;
+
+        this.markDirty();
+    }
+
+    public void setInput1State(int id, int input1State)
+    {
+        this.input1State[id] = input1State;
+
+        this.markDirty();
+    }
+
+    public int[] getInput2State()
+    {
+        return this.input2State;
+    }
+
+    public void setInput2State(int id, int input2State)
+    {
+        this.input2State[id] = input2State;
+
+        this.markDirty();
+    }
+
+    public void setInput2State(int[] input2State)
+    {
+        this.input2State = input2State;
+
+        this.markDirty();
+    }
+
+    public int[] getEnergyState()
+    {
+        return this.energyState;
+    }
+
+    public void setEnergyState(int id, int energyState)
+    {
+        this.energyState[id] = energyState;
+
+        this.markDirty();
+    }
+
+    public void setEnergyState(int[] energyState)
+    {
+        this.energyState = energyState;
+
+        this.markDirty();
+    }
+
+    public int[] getOutputState()
+    {
+        return this.outputState;
+    }
+
+    public void setOutputState(int id, int outputState)
+    {
+        this.outputState[id] = outputState;
+
+        this.markDirty();
+    }
+
+    public void setOutputState(int[] outputState)
+    {
+        this.outputState = outputState;
+
+        this.markDirty();
+    }
+
+    public int getField(int id)
+    {
+        int energy = this.storage.getEnergyStored();
+        int maxEnergy = this.storage.getMaxEnergyStored();
+
+        return switch (id)
+        {
+            case 0 -> this.cookTime;
+            case 1 -> this.totalCookTime;
+            case 2 -> energy;
+            case 3 -> maxEnergy;
+            default -> 0;
+        };
+    }
+
     public void setField(int id, int value)
     {
         switch (id)
         {
             case 0:
-                this.burnTime = value;
-                break;
-            case 1:
-                this.currentItemBurnTime = value;
-                break;
-            case 2:
                 this.cookTime = value;
                 break;
-            case 3:
+            case 1:
                 this.totalCookTime = value;
         }
 

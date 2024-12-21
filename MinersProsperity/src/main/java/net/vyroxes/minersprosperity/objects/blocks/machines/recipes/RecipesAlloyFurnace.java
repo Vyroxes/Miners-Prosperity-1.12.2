@@ -3,7 +3,6 @@ package net.vyroxes.minersprosperity.objects.blocks.machines.recipes;
 import java.util.Map;
 import java.util.Map.Entry;
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -14,7 +13,6 @@ public class RecipesAlloyFurnace
 	private static final RecipesAlloyFurnace INSTANCE = new RecipesAlloyFurnace();
 
 	private final Table<ItemStack, ItemStack, RecipeData> recipesList = HashBasedTable.create();
-	private final Map<ItemStack, Float> experienceList = Maps.newHashMap();
 
 	public static RecipesAlloyFurnace getInstance()
 	{
@@ -30,36 +28,48 @@ public class RecipesAlloyFurnace
 	{
 		private final ItemStack result;
 		private final int cookTime;
+		private final int energyUsage;
+		private final float experience;
 		
-		public RecipeData(ItemStack result, float experience, int cookTime)
+		public RecipeData(ItemStack result, int cookTime, int energyUsage, float experience)
 		{
 			this.result = result;
 			this.cookTime = cookTime;
+			this.energyUsage = energyUsage;
+			this.experience = experience;
 		}
-		
+
 		public ItemStack getResult()
 		{
-			return result;
+			return this.result;
 		}
 		
 		public int getCookTime()
 		{
-			return cookTime;
+			return this.cookTime;
+		}
+
+		public int getEnergyUsage()
+		{
+			return this.energyUsage;
+		}
+
+		public float getExperience()
+		{
+			return this.experience;
 		}
 	}
 	
 	private RecipesAlloyFurnace()
 	{
-		addRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 0.7F, 200);
-		addRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), new ItemStack(Items.REDSTONE), 0.1F, 200);
-		addRecipe(new ItemStack(ItemInit.CHAIN), new ItemStack(ItemInit.COAL_GEAR), new ItemStack(Items.APPLE), 1.0F, 200);
+		addRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 100, 20, 0.7F);
+		addRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), new ItemStack(Items.REDSTONE), 100, 20, 0.1F);
 	}
 	
-	public void addRecipe(ItemStack input1, ItemStack input2, ItemStack result, float experience, int cookTime)
+	public void addRecipe(ItemStack input1, ItemStack input2, ItemStack result, int cookTime, int energyUsage, float experience)
 	{
 		if (getResult(input1, input2) != ItemStack.EMPTY) return;
-		this.recipesList.put(input1, input2, new RecipeData(result, experience, cookTime));
-		this.experienceList.put(result, experience);
+		this.recipesList.put(input1, input2, new RecipeData(result, cookTime, energyUsage, experience));
 	}
 	
 	public ItemStack getResult(ItemStack input1, ItemStack input2)
@@ -116,23 +126,6 @@ public class RecipesAlloyFurnace
 	    return false;
 	}
 	
-	public int getCookTime(ItemStack input1, ItemStack input2) 
-	{
-	    RecipeData recipeData = getRecipeData(input1, input2);
-	    if (recipeData != null)
-	    {
-	        return recipeData.getCookTime();
-	    }
-
-	    recipeData = getRecipeData(input2, input1);
-	    if (recipeData != null)
-	    {
-	        return recipeData.getCookTime();
-	    }
-
-	    return 200;
-	}
-	
 	private RecipeData getRecipeData(ItemStack input1, ItemStack input2)
 	{
 	    for (Entry<ItemStack, Map<ItemStack, RecipeData>> entry : this.recipesList.columnMap().entrySet())
@@ -155,16 +148,99 @@ public class RecipesAlloyFurnace
 	{
 		return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
 	}
-	
-	public float getExperience(ItemStack stack)
+
+	public int getCookTime(ItemStack input1, ItemStack input2)
 	{
-		for (Entry<ItemStack, Float> entry : this.experienceList.entrySet()) 
+		RecipeData recipeData = getRecipeData(input1, input2);
+		if (recipeData != null)
 		{
-			if (compareItemStacks(stack, entry.getKey())) 
+			return recipeData.getCookTime();
+		}
+
+		recipeData = getRecipeData(input2, input1);
+		if (recipeData != null)
+		{
+			return recipeData.getCookTime();
+		}
+
+		return 200;
+	}
+
+	public int getCooktime(ItemStack result)
+	{
+		for (Entry<ItemStack, Map<ItemStack, RecipeData>> entry : this.recipesList.columnMap().entrySet())
+		{
+			for (RecipeData recipeData : entry.getValue().values())
 			{
-				return entry.getValue();
+				if (compareItemStacks(recipeData.getResult(), result))
+				{
+					return recipeData.getCookTime();
+				}
 			}
 		}
-		return 0.0F;
+		return 200;
+	}
+
+	public int getEnergyUsage(ItemStack input1, ItemStack input2)
+	{
+		RecipeData recipeData = getRecipeData(input1, input2);
+		if (recipeData != null)
+		{
+			return recipeData.getEnergyUsage();
+		}
+
+		recipeData = getRecipeData(input2, input1);
+		if (recipeData != null)
+		{
+			return recipeData.getEnergyUsage();
+		}
+
+		return 1000;
+	}
+
+	public int getEnergyUsage(ItemStack result)
+	{
+		for (Entry<ItemStack, Map<ItemStack, RecipeData>> entry : this.recipesList.columnMap().entrySet())
+		{
+			for (RecipeData recipeData : entry.getValue().values())
+			{
+				if (compareItemStacks(recipeData.getResult(), result))
+				{
+					return recipeData.getEnergyUsage();
+				}
+			}
+		}
+		return 1000;
+	}
+
+	public float getExperience(ItemStack input1, ItemStack input2)
+	{
+		RecipeData recipeData = getRecipeData(input1, input2);
+		if (recipeData != null)
+		{
+			return recipeData.getExperience();
+		}
+
+		recipeData = getRecipeData(input2, input1);
+		if (recipeData != null)
+		{
+			return recipeData.getExperience();
+		}
+		return 1.0F;
+	}
+
+	public float getExperience(ItemStack result)
+	{
+		for (Entry<ItemStack, Map<ItemStack, RecipeData>> entry : this.recipesList.columnMap().entrySet())
+		{
+			for (RecipeData recipeData : entry.getValue().values())
+			{
+				if (compareItemStacks(recipeData.getResult(), result))
+				{
+					return recipeData.getExperience();
+				}
+			}
+		}
+		return 1.0F;
 	}
 }

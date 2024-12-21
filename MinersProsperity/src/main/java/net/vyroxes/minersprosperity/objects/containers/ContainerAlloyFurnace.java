@@ -7,6 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,15 +23,14 @@ public class ContainerAlloyFurnace extends Container
     private final TileEntityAlloyFurnace tileEntity;
     private int cookTime;
     private int totalCookTime;
-    private int burnTime;
-    private int currentItemBurnTime;
+    private int energy;
 
     public ContainerAlloyFurnace(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntity)
     {
         this.tileEntity = tileEntity;
         IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 0, 43, 17) // Slot wejściowy lewy (1)
+        this.addSlotToContainer(new SlotItemHandler(handler, 0, 38, 35) // Slot wejściowy lewy (1)
         {
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
@@ -40,7 +40,7 @@ public class ContainerAlloyFurnace extends Container
         });
 
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 1, 69, 17) // Slot wejściowy prawy (2)
+        this.addSlotToContainer(new SlotItemHandler(handler, 1, 56, 35) // Slot wejściowy prawy (2)
         {
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
@@ -48,15 +48,15 @@ public class ContainerAlloyFurnace extends Container
                 return RecipesAlloyFurnace.getInstance().isInputInAnyRecipe(stack);
             }
         });
-        this.addSlotToContainer(new SlotItemHandler(handler, 2, 56, 53) // Slot paliwa
+        this.addSlotToContainer(new SlotItemHandler(handler, 2, 8, 53) // Slot energii
         {
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
             {
-                return TileEntityAlloyFurnace.isItemFuel(stack);
+                return tileEntity.isItemEnergy(stack);
             }
         });
-        this.addSlotToContainer(new SlotItemHandler(handler, 3, 116, 35) // Slot wyjściowy
+        this.addSlotToContainer(new SlotItemHandler(handler, 3, 118, 35) // Slot wyjściowy
         {
         	@Override
             public boolean isItemValid(@NotNull ItemStack stack)
@@ -67,7 +67,7 @@ public class ContainerAlloyFurnace extends Container
             @Override
             public @NotNull ItemStack onTake(@NotNull EntityPlayer entityPlayer, @NotNull ItemStack itemStack)
             {
-                float experiencePerItem = RecipesAlloyFurnace.getInstance().getExperience(itemStack);
+                float experiencePerItem = RecipesAlloyFurnace.getInstance().getExperience(itemStack, ItemStack.EMPTY);
                 int totalItemCount = itemStack.getCount();
 
                 if (!entityPlayer.world.isRemote)
@@ -128,35 +128,28 @@ public class ContainerAlloyFurnace extends Container
 
         for (IContainerListener icontainerlistener : this.listeners)
         {
-            if (this.cookTime != this.tileEntity.cookTime)
+            if (this.cookTime != this.tileEntity.getField(0))
             {
-                icontainerlistener.sendWindowProperty(this, 2, this.tileEntity.cookTime);
+                icontainerlistener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
             }
 
-            if (this.burnTime != this.tileEntity.burnTime)
+            if (this.totalCookTime != this.tileEntity.getField(1))
             {
-                icontainerlistener.sendWindowProperty(this, 0, this.tileEntity.burnTime);
+                icontainerlistener.sendWindowProperty(this, 1, this.tileEntity.getField(1));
             }
 
-            if (this.currentItemBurnTime != this.tileEntity.currentItemBurnTime)
+            if (this.energy != this.tileEntity.getEnergyStored())
             {
-                icontainerlistener.sendWindowProperty(this, 1, this.tileEntity.currentItemBurnTime);
-            }
-
-            if (this.totalCookTime != this.tileEntity.totalCookTime)
-            {
-                icontainerlistener.sendWindowProperty(this, 3, this.tileEntity.totalCookTime);
+                icontainerlistener.sendWindowProperty(this, 2, this.tileEntity.getEnergyStored());
             }
         }
         
-        this.cookTime = this.tileEntity.cookTime;
-        this.burnTime = this.tileEntity.burnTime;
-        this.currentItemBurnTime = this.tileEntity.currentItemBurnTime;
-        this.totalCookTime = this.tileEntity.totalCookTime;
+        this.cookTime = this.tileEntity.getField(0);
+        this.totalCookTime = this.tileEntity.getField(1);
+        this.energy = this.tileEntity.getEnergyStored();
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
     public void updateProgressBar(int id, int data) 
     {
         this.tileEntity.setField(id, data);
@@ -273,7 +266,7 @@ public class ContainerAlloyFurnace extends Container
                         }
                     }
                 }
-                else if (TileEntityAlloyFurnace.isItemFuel(itemstack1))
+                else if (this.tileEntity.isItemEnergy(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 2, 3, false))
                     {

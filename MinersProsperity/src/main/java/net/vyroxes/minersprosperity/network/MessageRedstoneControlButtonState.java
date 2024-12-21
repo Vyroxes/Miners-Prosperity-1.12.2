@@ -44,7 +44,7 @@ public class MessageRedstoneControlButtonState implements IMessage
             TileEntityAlloyFurnace tileEntity = (TileEntityAlloyFurnace) ctx.getServerHandler().player.world.getTileEntity(message.pos);
             if (tileEntity != null)
             {
-                tileEntity.redstoneControlButtonState = message.redstoneControlButtonState;
+                tileEntity.setRedstoneControlButtonState(message.redstoneControlButtonState);
                 tileEntity.markDirty();
             }
             return null;

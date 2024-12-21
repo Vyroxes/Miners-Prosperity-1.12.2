@@ -14,6 +14,6 @@ public class TabBlocks extends CreativeTabs
 	@Override
 	public ItemStack createIcon()
 	{
-		return new ItemStack(BlockInit.CRUSHER);
+		return new ItemStack(BlockInit.ALLOY_FURNACE);
 	}
 }

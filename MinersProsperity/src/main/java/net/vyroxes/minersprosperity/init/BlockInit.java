@@ -15,7 +15,7 @@ public class BlockInit
 
 	//BLOCKS
 	//MACHINES
-	public static final Block CRUSHER = new MachineAlloyFurnace("alloy_furnace");
+	public static final Block ALLOY_FURNACE = new MachineAlloyFurnace("alloy_furnace");
 
 	//ORES
 	public static final Block COPPER_ORE = new BlockOres("copper_ore", 1, 5.0F, 10.0F);

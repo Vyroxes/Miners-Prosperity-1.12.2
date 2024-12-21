@@ -5,6 +5,8 @@ import net.minecraftforge.energy.EnergyStorage;
 
 public class CustomEnergyStorage extends EnergyStorage
 {
+    private int energyUsage;
+
     public CustomEnergyStorage(int capacity)
     {
         super(capacity, capacity, capacity, 0);
@@ -20,9 +22,9 @@ public class CustomEnergyStorage extends EnergyStorage
         super(capacity, maxReceive, maxExtract, 0);
     }
 
-    public CustomEnergyStorage(int capacity, int maxReceive, int maxExtract, int energy)
+    public CustomEnergyStorage(int capacity, int maxReceive, int maxExtract, int storedEnergy)
     {
-        super(capacity, maxReceive, maxExtract, energy);
+        super(capacity, maxReceive, maxExtract, storedEnergy);
     }
 
     @Override
@@ -43,10 +45,45 @@ public class CustomEnergyStorage extends EnergyStorage
         return super.getEnergyStored();
     }
 
+    public void setEnergyStored(int energyStored)
+    {
+        this.energy = energyStored;
+    }
+
     @Override
     public int getMaxEnergyStored()
     {
         return super.getMaxEnergyStored();
+    }
+
+    public int getMaxReceive()
+    {
+        return this.maxReceive;
+    }
+
+    public void setMaxReceive(int maxReceive)
+    {
+        this.maxReceive = maxReceive;
+    }
+
+    public int getMaxExtract()
+    {
+        return this.maxExtract;
+    }
+
+    public void setMaxExtract(int maxExtract)
+    {
+        this.maxExtract = maxExtract;
+    }
+
+    public int getEnergyUsage()
+    {
+        return this.energyUsage;
+    }
+
+    public void setEnergyUsage(int energyUsage)
+    {
+        this.energyUsage = energyUsage;
     }
 
     @Override
@@ -67,6 +104,7 @@ public class CustomEnergyStorage extends EnergyStorage
         this.capacity = compound.getInteger("Capacity");
         this.maxReceive = compound.getInteger("MaxReceive");
         this.maxExtract = compound.getInteger("MaxExtract");
+        this.energyUsage = compound.getInteger("EnergyUsage");
     }
 
     public void writeToNBT(NBTTagCompound compound)
@@ -75,5 +113,6 @@ public class CustomEnergyStorage extends EnergyStorage
         compound.setInteger("Capacity", this.capacity);
         compound.setInteger("MaxReceive", this.maxReceive);
         compound.setInteger("MaxExtract", this.maxExtract);
+        compound.setInteger("EnergyUsage", this.energyUsage);
     }
 }
