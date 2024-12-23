@@ -31,6 +31,11 @@ public class GuiAlloyFurnace extends GuiContainer
 		this.tileEntity = tileEntity;
 	}
 
+	public TileEntityAlloyFurnace getTileEntity()
+	{
+		return this.tileEntity;
+	}
+
 	@Override
 	public void initGui() 
 	{
@@ -202,15 +207,15 @@ public class GuiAlloyFurnace extends GuiContainer
 
 	private int getCookProgressScaled()
 	{
-		int i = this.tileEntity.getField(0);
-		int j = this.tileEntity.getField(1);
+		int i = this.tileEntity.getCookTime();
+		int j = this.tileEntity.getTotalCookTime();
 		return j != 0 && i != 0 ? i * 24 / j : 0;
 	}
 
 	private int getEnergyStoredScaled()
 	{
-		int i = this.tileEntity.getField(2);
-		int j = this.tileEntity.getField(3);
+		int i = this.tileEntity.getEnergyStored();
+		int j = this.tileEntity.getMaxEnergyStored();
 		return i != 0 && j != 0 ? i * 41 / j : 0;
-	}
+    }
 }

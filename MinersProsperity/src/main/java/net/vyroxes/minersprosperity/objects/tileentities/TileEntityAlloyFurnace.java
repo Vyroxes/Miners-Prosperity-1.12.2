@@ -1,7 +1,6 @@
 package net.vyroxes.minersprosperity.objects.tileentities;
 
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,6 +16,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.vyroxes.minersprosperity.objects.blocks.energy.CustomEnergyStorage;
@@ -27,8 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 {
-    private static final PropertyBool ACTIVE = PropertyBool.create("active");
-    private final CustomEnergyStorage storage = new CustomEnergyStorage(20000, 200, 0, 0);
+    public final CustomEnergyStorage storage = new CustomEnergyStorage(20000, 200, 0, 0);
     private int cookTime;
     private int totalCookTime;
     private String customName;
@@ -44,8 +45,24 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     private final ItemStackHandler machineItemStacks = new ItemStackHandler(4)
     {
         @Override
+        protected int getStackLimit(int slot, @NotNull ItemStack stack)
+        {
+            return 64;
+        }
+
+        @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
         {
+            //System.out.println(facing);
+
+            if (world.isRemote)
+            {
+                if (facing == null)
+                {
+                    return super.insertItem(slot, stack, simulate);
+                }
+            }
+
             if (facing == null || currentFace < 0 || currentFace >= 6)
             {
                 return super.insertItem(slot, stack, simulate);
@@ -56,17 +73,17 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
             if (input1State[currentFace] == 1 && isValidInputForSlot(stack, slot0, slot1, true))
             {
-                return super.insertItem(0, stack, simulate);
+                return super.insertItem(0, stack, false);
             }
 
             if (input2State[currentFace] == 1 && isValidInputForSlot(stack, slot0, slot1, false))
             {
-                return super.insertItem(1, stack, simulate);
+                return super.insertItem(1, stack, false);
             }
 
             if (energyState[currentFace] == 1)
             {
-                return super.insertItem(2, stack, simulate);
+                return super.insertItem(2, stack, false);
             }
 
             return stack;
@@ -75,6 +92,16 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
         {
+            //System.out.println(facing);
+
+            if (world.isRemote)
+            {
+                if (facing == null)
+                {
+                    return super.extractItem(slot, amount, simulate);
+                }
+            }
+
             if (facing == null || currentFace < 0 || currentFace >= 6)
             {
                 return super.extractItem(slot, amount, simulate);
@@ -109,7 +136,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
                 }
             }
 
-            if (outputState[currentFace] == 1)
+            if (outputState[currentFace] == 2)
             {
                 if (!slot3.isEmpty())
                 {
@@ -178,12 +205,49 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         {
             return CapabilityEnergy.ENERGY.cast(this.storage);
         }
+
+
+//        if (this.world.isRemote)
+//        {
+//            NetworkHandler.sendFacingState(this.facing, this.pos);
+//        }
+//        if (!this.world.isRemote)
+//        {
+//            NetworkHandler.sendTileEntitySync(this.pos, this.facing, this.currentFace);
+//        }
+
+        this.markDirty();
+
         return super.getCapability(capability, facing);
+    }
+
+    public void setFacing(EnumFacing facing)
+    {
+        this.facing = facing;
+
+        if (!this.world.isRemote)
+        {
+            NetworkHandler.sendFacingState(this.facing, this.pos);
+        }
+
+        this.markDirty();
+    }
+
+    public void setCurrentFace(int currentFace)
+    {
+        this.currentFace = currentFace;
+
+        this.markDirty();
     }
 
     public int getEnergyStored()
     {
         return this.storage.getEnergyStored();
+    }
+
+    public void setEnergyStored(int energyStored)
+    {
+        this.storage.setEnergyStored(energyStored);
     }
 
     public int getMaxEnergyStored()
@@ -226,21 +290,21 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
         EnumFacing machineFacing = state.getValue(BlockHorizontal.FACING);
 
-        if (facing == null)
+        if (this.facing == null)
         {
-            currentFace = -1;
+            this.currentFace = -1;
             return;
         }
 
-        if (facing == EnumFacing.UP)
+        if (this.facing == EnumFacing.UP)
         {
-            currentFace = 4;
+            this.currentFace = 4;
             return;
         }
 
-        if (facing == EnumFacing.DOWN)
+        if (this.facing == EnumFacing.DOWN)
         {
-            currentFace = 5;
+            this.currentFace = 5;
             return;
         }
 
@@ -251,7 +315,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
                 {2, 3, 1, 0}  // facing == WEST
         };
 
-        int facingIndex = switch (facing)
+        int facingIndex = switch (this.facing)
         {
             case NORTH -> 0;
             case SOUTH -> 1;
@@ -271,12 +335,19 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
         if (facingIndex != -1 && machineFacingIndex != -1)
         {
-            currentFace = faceMapping[facingIndex][machineFacingIndex];
+            this.currentFace = faceMapping[facingIndex][machineFacingIndex];
         }
         else
         {
-            currentFace = -1;
+            this.currentFace = -1;
         }
+
+        if (!this.world.isRemote)
+        {
+            //NetworkHandler.sendTileEntitySync(this.pos, this.facing, this.currentFace);
+        }
+
+        this.markDirty();
     }
 
     public boolean isItemEnergy(ItemStack stack)
@@ -306,18 +377,24 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     {
         this.redstoneControlButtonState = redstoneControlButtonState;
 
+        if (this.world.isRemote)
+        {
+            NetworkHandler.sendButtonStateUpdate(this.redstoneControlButtonState, this.pos);
+        }
+
 		this.markDirty();
-		
-		NetworkHandler.sendButtonStateUpdate(this.redstoneControlButtonState, this.pos);
     }
 
     public void setSlotsState()
     {
         int[][] slotsState = {this.input1State, this.input2State, this.energyState, this.outputState};
 
-        this.markDirty();
+        if (this.world.isRemote)
+        {
+            NetworkHandler.sendSlotsStateUpdate(slotsState, this.pos);
+        }
 
-        NetworkHandler.sendSlotsStateUpdate(slotsState, this.pos);
+        this.markDirty();
     }
     
     public boolean hasCustomName()
@@ -337,63 +414,49 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     {
         return this.hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation("container.alloy_furnace");
     }
-    
+
+//    @Override
+//    public void markDirty()
+//    {
+//        super.markDirty();
+//        if (this.world != null && !this.world.isRemote && this.world instanceof WorldServer worldServer)
+//        {
+//            worldServer.getPlayerChunkMap().markBlockForUpdate(this.pos);
+//        }
+//    }
+
     @Override
     public void onDataPacket(@NotNull NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         this.readFromNBT(pkt.getNbtCompound());
 
-        this.markDirty();
+//        if (this.world.isRemote)
+//        {
+//            IBlockState state = this.world.getBlockState(getPos());
+//            this.world.notifyBlockUpdate(this.pos, state, state, 3);
+//        }
     }
-    
+
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() 
+    public void handleUpdateTag(@NotNull NBTTagCompound tag)
     {
-        NBTTagCompound tag = new NBTTagCompound();
-        this.writeToNBT(tag);
-        return new SPacketUpdateTileEntity(this.pos, 1, tag);
+        this.readFromNBT(tag);
+    }
+
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket()
+    {
+        //NBTTagCompound tag = new NBTTagCompound();
+        //this.writeToNBT(tag);
+        return new SPacketUpdateTileEntity(this.pos, -1, this.getUpdateTag());
     }
     
     @Override
     public @NotNull NBTTagCompound getUpdateTag()
     {
-        NBTTagCompound tag = super.writeToNBT(new NBTTagCompound());
-        tag.setTag("Inventory", this.machineItemStacks.serializeNBT());
-        tag.setInteger("CookTime", this.cookTime);
-        tag.setInteger("TotalCookTime", this.totalCookTime);
-        tag.setInteger("Energy", this.storage.getEnergyStored());
-        tag.setInteger("EnergyUsage", this.storage.getEnergyUsage());
-        tag.setInteger("MaxReceive", this.storage.getMaxReceive());
-        tag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
-
-        if (this.hasCustomName())
-        {
-            tag.setString("CustomName", this.customName);
-        }
-
-        for (int i = 0; i < input1State.length; i++)
-        {
-            tag.setInteger("Input1State[" + i + "]", input1State[i]);
-        }
-
-        for (int i = 0; i < input2State.length; i++)
-        {
-            tag.setInteger("Input2State[" + i + "]", input2State[i]);
-        }
-
-        for (int i = 0; i < energyState.length; i++)
-        {
-            tag.setInteger("FuelState[" + i + "]", energyState[i]);
-        }
-
-        for (int i = 0; i < outputState.length; i++)
-        {
-            tag.setInteger("OutputState[" + i + "]", outputState[i]);
-        }
-
-        return tag;
+        return this.writeToNBT(new NBTTagCompound());
     }
-    
+
     @Override
     public @NotNull NBTTagCompound writeToNBT(@NotNull NBTTagCompound tag)
     {
@@ -404,127 +467,137 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         tag.setInteger("Energy", this.storage.getEnergyStored());
         tag.setInteger("EnergyUsage", this.storage.getEnergyUsage());
         tag.setInteger("MaxReceive", this.storage.getMaxReceive());
-        tag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
 
-        for (int i = 0; i < input1State.length; i++)
-        {
-            tag.setInteger("Input1State[" + i + "]", input1State[i]);
-        }
-
-        for (int i = 0; i < input2State.length; i++)
-        {
-            tag.setInteger("Input2State[" + i + "]", input2State[i]);
-        }
-
-        for (int i = 0; i < energyState.length; i++)
-        {
-            tag.setInteger("FuelState[" + i + "]", energyState[i]);
-        }
-
-        for (int i = 0; i < outputState.length; i++)
-        {
-            tag.setInteger("OutputState[" + i + "]", outputState[i]);
-        }
-
-        if (this.hasCustomName()) 
+        if (this.hasCustomName())
         {
             tag.setString("CustomName", this.customName);
         }
 
+        tag.setTag("States", createStatesTag());
+
         return tag;
+    }
+
+    private @NotNull NBTTagCompound createStatesTag()
+    {
+        NBTTagCompound statesTag = new NBTTagCompound();
+        statesTag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
+
+        for (int i = 0; i < input1State.length; i++)
+        {
+            statesTag.setInteger("Input1State[" + i + "]", input1State[i]);
+        }
+
+        for (int i = 0; i < input2State.length; i++)
+        {
+            statesTag.setInteger("Input2State[" + i + "]", input2State[i]);
+        }
+
+        for (int i = 0; i < energyState.length; i++)
+        {
+            statesTag.setInteger("EnergyState[" + i + "]", energyState[i]);
+        }
+
+        for (int i = 0; i < outputState.length; i++)
+        {
+            statesTag.setInteger("OutputState[" + i + "]", outputState[i]);
+        }
+
+        return statesTag;
     }
 
     @Override
     public void readFromNBT(@NotNull NBTTagCompound compound)
     {
         super.readFromNBT(compound);
-        this.machineItemStacks.deserializeNBT(compound.getCompoundTag("Inventory"));
-        this.cookTime = compound.getInteger("CookTime");
-        this.totalCookTime = compound.getInteger("TotalCookTime");
-        this.storage.setEnergyStored(compound.getInteger("Energy"));
-        this.storage.setEnergyUsage(compound.getInteger("EnergyUsage"));
-        this.storage.setMaxReceive(compound.getInteger("MaxReceive"));
-        this.redstoneControlButtonState = compound.getInteger("RedstoneControlButtonState");
-        
-        if (compound.hasKey("CustomName", 8)) 
+
+        if (compound.hasKey("Inventory", 10))
+        {
+            this.machineItemStacks.deserializeNBT(compound.getCompoundTag("Inventory"));
+        }
+
+        if (compound.hasKey("CookTime", 3))
+        {
+            this.cookTime = compound.getInteger("CookTime");
+        }
+
+        if (compound.hasKey("TotalCookTime", 3))
+        {
+            this.totalCookTime = compound.getInteger("TotalCookTime");
+        }
+
+        if (compound.hasKey("Energy", 3))
+        {
+            this.storage.setEnergyStored(compound.getInteger("Energy"));
+        }
+
+        if (compound.hasKey("EnergyUsage", 3))
+        {
+            this.storage.setEnergyUsage(compound.getInteger("EnergyUsage"));
+        }
+
+        if (compound.hasKey("MaxReceive", 3))
+        {
+            this.storage.setMaxReceive(compound.getInteger("MaxReceive"));
+        }
+
+        if (compound.hasKey("CustomName", 8))
         {
             this.setCustomName(compound.getString("CustomName"));
         }
 
-        for (int i = 0; i < input1State.length; i++)
+        if (compound.hasKey("States"))
         {
-            this.input1State[i] = compound.getInteger("Input1State[" + i + "]");
-        }
+            NBTTagCompound statesTag = compound.getCompoundTag("States");
 
-        for (int i = 0; i < input2State.length; i++)
-        {
-            this.input2State[i] = compound.getInteger("Input2State[" + i + "]");
-        }
+            this.redstoneControlButtonState = statesTag.getInteger("RedstoneControlButtonState");
 
-        for (int i = 0; i < energyState.length; i++)
-        {
-            this.energyState[i] = compound.getInteger("FuelState[" + i + "]");
-        }
+            for (int i = 0; i < input1State.length; i++)
+            {
+                this.input1State[i] = statesTag.getInteger("Input1State[" + i + "]");
+            }
 
-        for (int i = 0; i < outputState.length; i++)
-        {
-            this.outputState[i] = compound.getInteger("OutputState[" + i + "]");
+            for (int i = 0; i < input2State.length; i++)
+            {
+                this.input2State[i] = statesTag.getInteger("Input2State[" + i + "]");
+            }
+
+            for (int i = 0; i < energyState.length; i++)
+            {
+                this.energyState[i] = statesTag.getInteger("EnergyState[" + i + "]");
+            }
+
+            for (int i = 0; i < outputState.length; i++)
+            {
+                this.outputState[i] = statesTag.getInteger("OutputState[" + i + "]");
+            }
         }
 
         this.markDirty();
     }
-    
+
     public boolean isPowered()
     {
-        return this.storage.getEnergyStored() > 0;
+        return this.cookTime > 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static boolean isPowered(TileEntityAlloyFurnace tileEntity)
+    {
+        return tileEntity.cookTime > 0;
     }
 
     public void setEnergyStoredFromItem(ItemStack stack)
     {
-        NBTTagCompound tag = stack.getTagCompound();
-        int energyStored = this.storage.getEnergyStored();
-        int maxEnergyStored = this.storage.getMaxEnergyStored();
+        if (!stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
+        {
+            IEnergyStorage itemEnergy = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
-        if (tag != null) {
-            //Tech Reborn
-            if (tag.hasKey("energy"))
+            if (itemEnergy != null)
             {
-                int itemEnergyStored = tag.getInteger("energy");
-                int energyToAdd = Math.min(itemEnergyStored, maxEnergyStored - energyStored);
-                this.storage.setEnergyStored(energyStored + energyToAdd);
-                itemEnergyStored -= energyToAdd;
-                tag.setInteger("energy", itemEnergyStored);
-            }
-
-            //Thermal
-            if (tag.hasKey("Energy"))
-            {
-                int itemEnergyStored = tag.getInteger("Energy");
-                int energyToAdd = Math.min(itemEnergyStored, maxEnergyStored - energyStored);
-                this.storage.setEnergyStored(energyStored + energyToAdd);
-                itemEnergyStored -= energyToAdd;
-                tag.setInteger("Energy", itemEnergyStored);
-            }
-
-            //Mekanism
-            else if (tag.hasKey("mekData"))
-            {
-                NBTTagCompound mekData = tag.getCompoundTag("mekData");
-                if (mekData.hasKey("energyStored"))
-                {
-                    int itemEnergyStored = (int) (mekData.getDouble("energyStored") / 2.5);
-                    if (itemEnergyStored == 2147483647)
-                    {
-                        this.storage.setEnergyStored(this.storage.getMaxEnergyStored());
-                    }
-                    else
-                    {
-                        double energyToAdd = Math.min(itemEnergyStored, maxEnergyStored - energyStored);
-                        this.storage.setEnergyStored((int)(energyStored + energyToAdd));
-                        itemEnergyStored -= (int) energyToAdd;
-                        mekData.setDouble("energyStored", itemEnergyStored * 2.5);
-                    }
-                }
+                int energyToExtract = Math.min(itemEnergy.getEnergyStored(), this.storage.getMaxEnergyStored() - this.storage.getEnergyStored());
+                int extractedEnergy = itemEnergy.extractEnergy(energyToExtract, false);
+                this.storage.setEnergyStored(this.storage.getEnergyStored() + extractedEnergy);
             }
         }
 
@@ -534,21 +607,30 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     @Override
     public void update()
     {
-        System.out.println("Energy Stored: " + this.storage.getEnergyStored());
+        System.out.println("Facing: " + this.facing);
 
-        boolean wasActive = this.isPowered();
+        boolean wasPowered = this.isPowered();
         boolean stateChanged = false;
 
         if (!this.world.isRemote)
         {
-            boolean hasRedstoneSignal = this.world.isBlockPowered(this.pos);
-            boolean canOperate = this.canOperateBasedOnRedstone(hasRedstoneSignal);
+            boolean canOperate;
+
+            if (this.redstoneControlButtonState > 0)
+            {
+                boolean hasRedstoneSignal = this.world.isBlockPowered(this.pos);
+                canOperate = this.canOperateBasedOnRedstone(hasRedstoneSignal);
+            }
+            else
+            {
+                canOperate = true;
+            }
 
             ItemStack input1 = machineItemStacks.getStackInSlot(0);
             ItemStack input2 = machineItemStacks.getStackInSlot(1);
             ItemStack energy = machineItemStacks.getStackInSlot(2);
 
-            if (!energy.isEmpty() && getEnergyStored() != getMaxEnergyStored())
+            if (!energy.isEmpty() && this.storage.getEnergyStored() != this.storage.getMaxEnergyStored())
             {
                 setEnergyStoredFromItem(energy);
                 stateChanged = true;
@@ -563,21 +645,18 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             else if (this.cookTime > 0 && !this.canSmelt() || this.cookTime > 0 && !canOperate)
             {
                 this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
-                stateChanged = true;
-            }
-            else if (!canOperate || !canSmelt() || this.cookTime == 0)
-            {
                 this.storage.setEnergyUsage(0);
                 stateChanged = true;
             }
 
             if (this.canSmelt() && canOperate)
             {
+
                 this.processCooking(input1, input2);
                 stateChanged = true;
             }
 
-            if (wasActive != this.isPowered())
+            if (wasPowered != this.isPowered())
             {
                 MachineAlloyFurnace.setStatePowered(this.isPowered(), world, pos);
                 stateChanged = true;
@@ -786,19 +865,14 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         this.markDirty();
     }
 
-    public int getField(int id)
+    public int getCookTime()
     {
-        int energy = this.storage.getEnergyStored();
-        int maxEnergy = this.storage.getMaxEnergyStored();
+        return this.cookTime;
+    }
 
-        return switch (id)
-        {
-            case 0 -> this.cookTime;
-            case 1 -> this.totalCookTime;
-            case 2 -> energy;
-            case 3 -> maxEnergy;
-            default -> 0;
-        };
+    public int getTotalCookTime()
+    {
+        return this.totalCookTime;
     }
 
     public void setField(int id, int value)
@@ -810,6 +884,12 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
                 break;
             case 1:
                 this.totalCookTime = value;
+                break;
+            case 2:
+                this.storage.setEnergyStored(value);
+                break;
+            case 3:
+                this.storage.setEnergyUsage(value);
         }
 
         this.markDirty();

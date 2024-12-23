@@ -73,8 +73,6 @@ public class MessageSlotsState implements IMessage
                 tileEntity.setInput2State(message.slotsState[1]);
                 tileEntity.setEnergyState(message.slotsState[2]);
                 tileEntity.setOutputState(message.slotsState[3]);
-
-                tileEntity.markDirty();
             }
             return null;
         }

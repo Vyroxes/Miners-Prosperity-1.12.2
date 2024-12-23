@@ -89,7 +89,7 @@ item.lapis_lazuli_plate.name=Lapis Lazuli Plate
 #GUI
 gui.input1.name=Input 1 Slot
 gui.input2.name=Input 2 Slot
-gui.fuel.name=Fuel Slot
+gui.energy.name=Energy Slot
 gui.output.name=Output Slot
 gui.back.name=Back
 gui.side_front.name=Front

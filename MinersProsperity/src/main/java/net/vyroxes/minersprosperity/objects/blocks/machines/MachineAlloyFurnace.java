@@ -16,6 +16,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -38,6 +39,7 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvider
 {	
@@ -64,11 +66,133 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 
 	@Override
+	public void harvestBlock(@NotNull World worldIn, @NotNull EntityPlayer player, @NotNull BlockPos pos, @NotNull IBlockState state, @Nullable TileEntity tileEntity, @NotNull ItemStack stack)
+	{
+		if (tileEntity != null)
+		{
+			NBTTagCompound tileEntityData = new NBTTagCompound();
+			tileEntity.writeToNBT(tileEntityData);
+			worldIn.removeTileEntity(pos);
+
+			Item itemDropped = this.getItemDropped(state, worldIn.rand, 0);
+            ItemStack blockStack = new ItemStack(itemDropped, 1, this.damageDropped(state));
+            NBTTagCompound tag = blockStack.getTagCompound();
+            if (tag == null)
+            {
+                tag = new NBTTagCompound();
+                blockStack.setTagCompound(tag);
+            }
+
+			for (String key : tileEntityData.getKeySet())
+			{
+				if (key.equals("Energy") || key.equals("States"))
+				{
+					tag.setTag(key, tileEntityData.getTag(key));
+				}
+			}
+
+            spawnAsEntity(worldIn, pos, blockStack);
+		}
+	}
+
+	@Override
 	public @NotNull Item getItemDropped(@NotNull IBlockState state, @NotNull Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(BlockInit.ALLOY_FURNACE);
 	}
-	
+
+	@Override
+	public void onBlockPlacedBy(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase placer, @NotNull ItemStack stack)
+	{
+		NBTTagCompound tag = stack.getTagCompound();
+
+		TileEntity tileEntity = worldIn.getTileEntity(pos);
+
+		if (tag != null)
+		{
+			if (tileEntity instanceof TileEntityAlloyFurnace alloyFurnace)
+			{
+				if (tag.hasKey("Energy"))
+				{
+					alloyFurnace.setEnergyStored(tag.getInteger("Energy"));
+				}
+
+				if (tag.hasKey("States"))
+				{
+					NBTTagCompound statesTag = tag.getCompoundTag("States");
+
+					if (statesTag.hasKey("RedstoneControlButtonState"))
+					{
+						alloyFurnace.setRedstoneControlButtonState(statesTag.getInteger("RedstoneControlButtonState"));
+					}
+
+					for (int i = 0; i < alloyFurnace.getInput1State().length; i++)
+					{
+						if (statesTag.hasKey("Input1State[" + i + "]"))
+						{
+							alloyFurnace.setInput1State(i, statesTag.getInteger("Input1State[" + i + "]"));
+						}
+					}
+
+					for (int i = 0; i < alloyFurnace.getInput2State().length; i++)
+					{
+						if (statesTag.hasKey("Input2State[" + i + "]"))
+						{
+							alloyFurnace.setInput2State(i, statesTag.getInteger("Input2State[" + i + "]"));
+						}
+					}
+
+					for (int i = 0; i < alloyFurnace.getEnergyState().length; i++)
+					{
+						if (statesTag.hasKey("EnergyState[" + i + "]"))
+						{
+							alloyFurnace.setEnergyState(i, statesTag.getInteger("EnergyState[" + i + "]"));
+						}
+					}
+
+					for (int i = 0; i < alloyFurnace.getOutputState().length; i++)
+					{
+						if (statesTag.hasKey("OutputState[" + i + "]"))
+						{
+							alloyFurnace.setOutputState(i, statesTag.getInteger("OutputState[" + i + "]"));
+						}
+					}
+				}
+			}
+		}
+
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+	}
+
+	@Override
+	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state)
+	{
+		if (!keepInventory)
+		{
+			TileEntity tileentity = worldIn.getTileEntity(pos);
+
+			if (tileentity != null && tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
+			{
+				IItemHandler itemHandler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+				if (itemHandler != null)
+				{
+					for (int i = 0; i < itemHandler.getSlots(); i++)
+					{
+						ItemStack stack = itemHandler.getStackInSlot(i);
+						if (!stack.isEmpty())
+						{
+							InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
+						}
+					}
+				}
+			}
+
+			worldIn.updateComparatorOutputLevel(pos, this);
+		}
+
+		super.breakBlock(worldIn, pos, state);
+	}
+
 	@Override
 	public void onBlockAdded(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state)
 	{
@@ -102,7 +226,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
             	enumfacing = EnumFacing.WEST;
             }
             
-            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing), 2);
+            worldIn.setBlockState(pos, state.withProperty(FACING, enumfacing).withProperty(POWERED, state.getValue(POWERED)), 2);
         }
 	}
 	
@@ -147,17 +271,17 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	@Override
 	public boolean onBlockActivated(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer playerIn, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-	    if (!worldIn.isRemote)
-	    {
-	        if (playerIn.openContainer instanceof ContainerAlloyFurnace)
-	        {
-	        	return false;
-	        }
-	        
-	        playerIn.openGui(MinersProsperity.instance, GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
-	    }
-	    
-	    return true;
+		if (!worldIn.isRemote)
+		{
+			if (playerIn.openContainer instanceof ContainerAlloyFurnace)
+			{
+				return false;
+			}
+
+			playerIn.openGui(MinersProsperity.instance, GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+		}
+
+		return true;
 	}
 	
 	public static boolean getStatePowered(World worldIn, BlockPos pos)
@@ -188,7 +312,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	{
 		return true;
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(@NotNull World worldIn, int meta)
 	{
@@ -200,58 +324,26 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
-
-	@Override
-	public void onBlockPlacedBy(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, EntityLivingBase placer, @NotNull ItemStack stack)
-	{
-		worldIn.setBlockState(pos, this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-	}
 	
 	@Override
-	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state)
-	{
-	    if (!keepInventory)
-	    {
-	        TileEntity tileentity = worldIn.getTileEntity(pos);
-
-	        if (tileentity != null && tileentity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null))
-	        {
-	            IItemHandler itemHandler = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-	            if (itemHandler != null)
-	            {
-	                for (int i = 0; i < itemHandler.getSlots(); i++)
-	                {
-	                    ItemStack stack = itemHandler.getStackInSlot(i);
-	                    if (!stack.isEmpty())
-	                    {
-	                        InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack);
-	                    }
-	                }
-	            }
-	        }
-
-	        worldIn.updateComparatorOutputLevel(pos, this);
-	    }
-
-	    super.breakBlock(worldIn, pos, state);
-	}
-	
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) 
+	@SuppressWarnings("deprecation")
+	public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state)
 	{
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
-	public IBlockState withRotation(IBlockState state, Rotation rot)
+	@SuppressWarnings("deprecation")
+	public @NotNull IBlockState withRotation(IBlockState state, Rotation rot)
 	{
-		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+		return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
 	}
 	
 	@Override
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) 
+	@SuppressWarnings("deprecation")
+	public @NotNull IBlockState withMirror(IBlockState state, Mirror mirrorIn)
 	{
-		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+		return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
 	}
 	
 	@Override
@@ -261,7 +353,8 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta)
+	@SuppressWarnings("deprecation")
+	public @NotNull IBlockState getStateFromMeta(int meta)
 	{
 		EnumFacing facing = EnumFacing.byIndex(meta & 7);
 	    boolean powered = (meta & 8) != 0;

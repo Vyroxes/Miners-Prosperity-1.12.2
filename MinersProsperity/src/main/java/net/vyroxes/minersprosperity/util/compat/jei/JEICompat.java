@@ -40,6 +40,7 @@ public class JEICompat implements IModPlugin
         registry.addRecipeCatalyst(new ItemStack(BlockInit.ALLOY_FURNACE), RecipeCategories.ALLOY_FURNACE);
     }
 
+    @SuppressWarnings("deprecation")
     public static String translateToLocal(String key)
     {
         if(I18n.canTranslate(key)) return I18n.translateToLocal(key);

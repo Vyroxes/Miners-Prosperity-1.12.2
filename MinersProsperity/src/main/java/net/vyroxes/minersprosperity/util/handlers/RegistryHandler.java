@@ -73,12 +73,7 @@ public class RegistryHandler
 	{
 		MinecraftForge.EVENT_BUS.register(MinersProsperity.instance);
 		
-	    //MinecraftForge.EVENT_BUS.register(new TooltipHandler());
-		
 	    MinecraftForge.EVENT_BUS.register(new CraftingHandler());
-	    
-		//KeyInputHandler.registerKeyBindings();
-		//MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
 		
 		ConfigHandler.registerConfig(event);
 		MinecraftForge.EVENT_BUS.register(new ConfigHandler());

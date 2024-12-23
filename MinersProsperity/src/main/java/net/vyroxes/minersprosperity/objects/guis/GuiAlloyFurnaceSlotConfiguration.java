@@ -17,10 +17,7 @@ import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -50,7 +47,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
         Map<String, int[]> slotStates = new HashMap<>();
         slotStates.put("Input 1", this.tileEntity.getInput1State());
         slotStates.put("Input 2", this.tileEntity.getInput2State());
-        slotStates.put("Fuel", this.tileEntity.getEnergyState());
+        slotStates.put("Energy", this.tileEntity.getEnergyState());
         slotStates.put("Output", this.tileEntity.getOutputState());
 
         Map<Integer, String> faceNames = new HashMap<>();
@@ -64,7 +61,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
         Map<String, String> slotNames = new HashMap<>();
         slotNames.put("Input 1", "Input 1 Slot");
         slotNames.put("Input 2", "Input 2 Slot");
-        slotNames.put("Fuel", "Fuel Slot");
+        slotNames.put("Energy", "Energy Slot");
         slotNames.put("Output", "Output Slot");
 
         String currentSlot = this.tileEntity.getSlot();
@@ -140,7 +137,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
                     this.tileEntity.setInput2State(guiButton.id, newValue);
                 }
             }
-            case "Fuel" ->
+            case "Energy" ->
             {
                 if (guiButton.id >= 0 && guiButton.id < energyState.length)
                 {
@@ -152,7 +149,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
             {
                 if (guiButton.id >= 0 && guiButton.id < outputState.length)
                 {
-                    int newValue = (outputState[guiButton.id] + 1) % 2;
+                    int newValue = (outputState[guiButton.id] == 0) ? 2 : 0;
                     this.tileEntity.setOutputState(guiButton.id, newValue);
                 }
             }
@@ -193,8 +190,13 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
                     {
                         case "Input 1" -> adjustState(this.tileEntity::getInput1State, this.tileEntity::setInput1State, guiButton.id, 2);
                         case "Input 2" -> adjustState(this.tileEntity::getInput2State, this.tileEntity::setInput2State, guiButton.id, 2);
-                        case "Fuel" -> adjustState(this.tileEntity::getEnergyState, this.tileEntity::setEnergyState, guiButton.id, 2);
-                        case "Output" -> adjustState(this.tileEntity::getOutputState, this.tileEntity::setOutputState, guiButton.id, 1);
+                        case "Energy" -> adjustState(this.tileEntity::getEnergyState, this.tileEntity::setEnergyState, guiButton.id, 2);
+                        case "Output" -> {
+                            int[] outputState = this.tileEntity.getOutputState();
+                            int currentValue = outputState[guiButton.id];
+                            int newValue = (currentValue == 0) ? 2 : 0;
+                            this.tileEntity.setOutputState(guiButton.id, newValue);
+                        }
                     }
 
 					this.tileEntity.setSlotsState();
@@ -231,7 +233,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
         {
             case "Input 1" -> this.tileEntity.setInput1State(id, 0);
             case "Input 2" -> this.tileEntity.setInput2State(id, 0);
-            case "Fuel" -> this.tileEntity.setEnergyState(id, 0);
+            case "Energy" -> this.tileEntity.setEnergyState(id, 0);
             case "Output" -> this.tileEntity.setOutputState(id, 0);
         }
     }

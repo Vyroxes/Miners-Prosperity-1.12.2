@@ -57,34 +57,19 @@ public class GuiFaceButton extends GuiButton
                 String ignored = I18n.format("gui.slot_ignored.name");
                 String input = I18n.format("gui.slot_input.name");
                 String output = I18n.format("gui.slot_output.name");
-                if (this.slot.equals("Output Slot"))
+                if (this.slotState == 0)
                 {
-                    if(this.slotState == 0)
-                    {
-                        currentTooltip.add(tooltip + ": " + ignored);
-                    }
-                    else if (this.slotState == 1)
-                    {
-                        currentTooltip.add(tooltip + ": " + output);
-                    }
+                    currentTooltip.add(tooltip + ": " + ignored);
                 }
-                else
+                else if (this.slotState == 1)
                 {
-                    if (this.slotState == 0)
-                    {
-                        currentTooltip.add(tooltip + ": " + ignored);
-                    }
-                    else if (this.slotState == 1)
-                    {
-                        currentTooltip.add(tooltip + ": " + input);
-                    }
-                    else if (this.slotState == 2)
-                    {
-                        currentTooltip.add(tooltip + ": " + output);
-                    }
+                    currentTooltip.add(tooltip + ": " + input);
                 }
-
-            }
+                else if (this.slotState == 2)
+                {
+                    currentTooltip.add(tooltip + ": " + output);
+                }
+        }
             else
             {
                 currentTooltip = null;

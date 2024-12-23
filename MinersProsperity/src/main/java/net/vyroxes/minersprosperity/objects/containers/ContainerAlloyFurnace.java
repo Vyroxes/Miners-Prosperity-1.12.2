@@ -23,7 +23,9 @@ public class ContainerAlloyFurnace extends Container
     private final TileEntityAlloyFurnace tileEntity;
     private int cookTime;
     private int totalCookTime;
-    private int energy;
+    private int energyStored;
+    private int maxEnergyStored;
+    private int energyUsage;
 
     public ContainerAlloyFurnace(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntity)
     {
@@ -128,25 +130,31 @@ public class ContainerAlloyFurnace extends Container
 
         for (IContainerListener icontainerlistener : this.listeners)
         {
-            if (this.cookTime != this.tileEntity.getField(0))
+            if (this.cookTime != this.tileEntity.getCookTime())
             {
-                icontainerlistener.sendWindowProperty(this, 0, this.tileEntity.getField(0));
+                icontainerlistener.sendWindowProperty(this, 0, this.tileEntity.getCookTime());
             }
 
-            if (this.totalCookTime != this.tileEntity.getField(1))
+            if (this.totalCookTime != this.tileEntity.getTotalCookTime())
             {
-                icontainerlistener.sendWindowProperty(this, 1, this.tileEntity.getField(1));
+                icontainerlistener.sendWindowProperty(this, 1, this.tileEntity.getTotalCookTime());
             }
 
-            if (this.energy != this.tileEntity.getEnergyStored())
+            if (this.energyStored != this.tileEntity.getEnergyStored())
             {
                 icontainerlistener.sendWindowProperty(this, 2, this.tileEntity.getEnergyStored());
             }
+
+            if (this.energyUsage != this.tileEntity.getEnergyUsage())
+            {
+                icontainerlistener.sendWindowProperty(this, 3, this.tileEntity.getEnergyUsage());
+            }
         }
         
-        this.cookTime = this.tileEntity.getField(0);
-        this.totalCookTime = this.tileEntity.getField(1);
-        this.energy = this.tileEntity.getEnergyStored();
+        this.cookTime = this.tileEntity.getCookTime();
+        this.totalCookTime = this.tileEntity.getTotalCookTime();
+        this.energyStored = this.tileEntity.getEnergyStored();
+        this.energyUsage = this.tileEntity.getEnergyUsage();
     }
     
     @Override

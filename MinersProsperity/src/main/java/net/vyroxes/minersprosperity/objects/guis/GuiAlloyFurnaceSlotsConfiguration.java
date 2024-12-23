@@ -41,10 +41,10 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
-		this.addButton(new GuiSlotButton(0, guiLeft + 42, guiTop + 16, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 176, 0, I18n.format("gui.input1.name")));
-		this.addButton(new GuiSlotButton(1, guiLeft + 68, guiTop + 16, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 176, 0, I18n.format("gui.input2.name")));
-		this.addButton(new GuiSlotButton(2, guiLeft + 55, guiTop + 52, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 194, 0, I18n.format("gui.fuel.name")));
-		this.addButton(new GuiSlotButton(3, guiLeft + 111, guiTop + 30, 26, 26, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 212, 0, I18n.format("gui.output.name")));
+		this.addButton(new GuiSlotButton(0, guiLeft + 37, guiTop + 34, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 176, 0, I18n.format("gui.input1.name")));
+		this.addButton(new GuiSlotButton(1, guiLeft + 55, guiTop + 34, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 176, 0, I18n.format("gui.input2.name")));
+		this.addButton(new GuiSlotButton(2, guiLeft + 7, guiTop + 52, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 194, 0, I18n.format("gui.energy.name")));
+		this.addButton(new GuiSlotButton(3, guiLeft + 113, guiTop + 30, 26, 26, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 212, 0, I18n.format("gui.output.name")));
 		this.addButton(new GuiBackButton(4, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOTS_CONFIGURATION_TEXTURE.getPath()), 238, 0, I18n.format("gui.back.name")));
 	}
 
@@ -63,7 +63,7 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 		}
 		else if (guiButton.id == 2)
 		{
-			this.tileEntity.setSlot("Fuel");
+			this.tileEntity.setSlot("Energy");
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 3)
