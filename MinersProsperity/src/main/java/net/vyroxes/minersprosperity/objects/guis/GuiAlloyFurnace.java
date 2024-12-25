@@ -214,7 +214,8 @@ public class GuiAlloyFurnace extends GuiContainer
 
 	private int getEnergyStoredScaled()
 	{
-		int i = this.tileEntity.getEnergyStored();
+		//int i = this.tileEntity.getEnergyStored();
+		int i = (int) Math.round(this.tileEntity.getEnergyStored() / 100.0) * 100;
 		int j = this.tileEntity.getMaxEnergyStored();
 		return i != 0 && j != 0 ? i * 41 / j : 0;
     }

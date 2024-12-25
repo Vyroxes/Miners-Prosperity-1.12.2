@@ -53,22 +53,22 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 	{
 		if (guiButton.id == 0)
 		{
-			this.tileEntity.setSlot("Input 1");
+			this.tileEntity.setSlotId(0);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 1)
 		{
-			this.tileEntity.setSlot("Input 2");
+			this.tileEntity.setSlotId(1);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 2)
 		{
-			this.tileEntity.setSlot("Energy");
+			this.tileEntity.setSlotId(2);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 3)
 		{
-			this.tileEntity.setSlot("Output");
+			this.tileEntity.setSlotId(3);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 4)

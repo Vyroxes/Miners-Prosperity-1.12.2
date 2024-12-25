@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.vyroxes.minersprosperity.Reference;
@@ -15,18 +16,16 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedItemHandler;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 
 public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 {
 	private static final ResourceLocation ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slot_configuration.png");
 	private final TileEntityAlloyFurnace tileEntity;
-    private int textureX;
 
 	public GuiAlloyFurnaceSlotConfiguration(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
 	{
@@ -44,69 +43,55 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
-        Map<String, int[]> slotStates = new HashMap<>();
-        slotStates.put("Input 1", this.tileEntity.getInput1State());
-        slotStates.put("Input 2", this.tileEntity.getInput2State());
-        slotStates.put("Energy", this.tileEntity.getEnergyState());
-        slotStates.put("Output", this.tileEntity.getOutputState());
+        for (EnumFacing face : EnumFacing.values())
+		{
+			SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(face);
+			Map<Integer, String> faceNames = new HashMap<>();
+			faceNames.put(0, I18n.format("gui.side_bottom.name"));
+			faceNames.put(1, I18n.format("gui.side_top.name"));
+			faceNames.put(2, I18n.format("gui.side_front.name"));
+			faceNames.put(3, I18n.format("gui.side_back.name"));
+			faceNames.put(4, I18n.format("gui.side_left.name"));
+			faceNames.put(5, I18n.format("gui.side_right.name"));
 
-        Map<Integer, String> faceNames = new HashMap<>();
-        faceNames.put(0, I18n.format("gui.side_front.name"));
-        faceNames.put(1, I18n.format("gui.side_back.name"));
-        faceNames.put(2, I18n.format("gui.side_left.name"));
-        faceNames.put(3, I18n.format("gui.side_right.name"));
-        faceNames.put(4, I18n.format("gui.side_top.name"));
-        faceNames.put(5, I18n.format("gui.side_bottom.name"));
+			int slot = tileEntity.getSlotId();
 
-        Map<String, String> slotNames = new HashMap<>();
-        slotNames.put("Input 1", "Input 1 Slot");
-        slotNames.put("Input 2", "Input 2 Slot");
-        slotNames.put("Energy", "Energy Slot");
-        slotNames.put("Output", "Output Slot");
+			SidedItemHandler.SlotState slotState = sidedItemHandler.getSlotState(slot);
 
-        String currentSlot = this.tileEntity.getSlot();
-        int[] currentState = slotStates.getOrDefault(currentSlot, new int[6]);
+			int textureX = switch (slotState)
+			{
+				case DISABLED -> 176;
+				case INPUT -> 192;
+				case OUTPUT -> 208;
+			};
 
-        for (int i = 0; i < currentState.length; i++)
-        {
-            int textureX = switch (currentState[i])
-            {
-                case 1 -> 192;
-                case 2 -> 208;
-                default -> 176;
-            };
+			int xOffset = switch (face)
+			{
+				case UP, NORTH, DOWN -> 80;
+				case WEST -> 62;
+				case SOUTH, EAST -> 98;
+			};
 
-            int xOffset = switch (i)
-            {
-                case 0, 4, 5 -> 80;
-                case 1, 3 -> 98;
-                case 2 -> 62;
-                default -> 80;
-            };
+			int yOffset = switch (face)
+			{
+				case UP -> 17;
+				case WEST, NORTH, EAST -> 35;
+				case DOWN, SOUTH -> 53;
+			};
 
-            int yOffset = switch (i)
-            {
-                case 4 -> 17;
-                case 5 -> 53;
-                case 0, 3 -> 35;
-                case 1 -> 53;
-                case 2 -> 35;
-                default -> 35;
-            };
-
-            this.addButton(new GuiFaceButton(
-                    i,
-                    guiLeft + xOffset,
-                    guiTop + yOffset,
-                    16, 16,
-                    new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()),
-                    textureX,
-                    0,
-                    faceNames.get(i),
-                    slotNames.get(currentSlot),
-                    currentState[i]
-            ));
-        }
+			this.addButton(new GuiFaceButton(
+					face.ordinal(),
+					guiLeft + xOffset,
+					guiTop + yOffset,
+					16, 16,
+					new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()),
+					textureX,
+					0,
+					faceNames.get(face.ordinal()),
+					"Slot " + slot,
+					slotState.ordinal()
+			));
+		}
 
 		this.addButton(new GuiBackButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slots_configuration.png"), 238, 0, I18n.format("gui.back.name")));
 	}
@@ -114,67 +99,46 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 	@Override
 	public void actionPerformed(@NotNull GuiButton guiButton)
 	{
-        int[] input1State = this.tileEntity.getInput1State();
-        int[] input2State = this.tileEntity.getInput2State();
-        int[] energyState = this.tileEntity.getEnergyState();
-        int[] outputState = this.tileEntity.getOutputState();
 
-        switch (this.tileEntity.getSlot())
-        {
-            case "Input 1" ->
-            {
-                if (guiButton.id >= 0 && guiButton.id < input1State.length)
-                {
-                    int newValue = (input1State[guiButton.id] + 1) % 3;
-                    this.tileEntity.setInput1State(guiButton.id, newValue);
-                }
-            }
-            case "Input 2" ->
-            {
-                if (guiButton.id >= 0 && guiButton.id < input2State.length)
-                {
-                    int newValue = (input2State[guiButton.id] + 1) % 3;
-                    this.tileEntity.setInput2State(guiButton.id, newValue);
-                }
-            }
-            case "Energy" ->
-            {
-                if (guiButton.id >= 0 && guiButton.id < energyState.length)
-                {
-                    int newValue = (energyState[guiButton.id] + 1) % 3;
-                    this.tileEntity.setEnergyState(guiButton.id, newValue);
-                }
-            }
-            case "Output" ->
-            {
-                if (guiButton.id >= 0 && guiButton.id < outputState.length)
-                {
-                    int newValue = (outputState[guiButton.id] == 0) ? 2 : 0;
-                    this.tileEntity.setOutputState(guiButton.id, newValue);
-                }
-            }
-        }
-		this.tileEntity.setSlotsState();
+		if (guiButton.id < 6)
+		{
+			int slot = tileEntity.getSlotId();
+			int face = guiButton.id;
+
+			SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
+			SidedItemHandler.SlotState currentState = sidedItemHandler.getSlotState(slot);
+
+			if (sidedItemHandler.isSlotOutput(slot))
+			{
+				SidedItemHandler.SlotState nextState = switch (currentState)
+				{
+					case DISABLED -> SidedItemHandler.SlotState.OUTPUT;
+                    case INPUT -> null;
+                    case OUTPUT -> SidedItemHandler.SlotState.DISABLED;
+				};
+
+				sidedItemHandler.setSlotState(slot, nextState);
+			}
+			else
+			{
+				SidedItemHandler.SlotState nextState = switch (currentState)
+				{
+					case DISABLED -> SidedItemHandler.SlotState.INPUT;
+					case INPUT -> SidedItemHandler.SlotState.OUTPUT;
+					case OUTPUT -> SidedItemHandler.SlotState.DISABLED;
+				};
+
+				sidedItemHandler.setSlotState(slot, nextState);
+			}
+		}
 
 		if (guiButton.id == 6)
 		{
             NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
+
 		this.initGui();
 	}
-
-    private void adjustState(Supplier<int[]> getter, BiConsumer<Integer, Integer> setter, int index, int maxValue)
-    {
-        int[] state = getter.get();
-        if (state[index] > 0)
-        {
-            setter.accept(index, state[index] - 1);
-        }
-        else
-        {
-            setter.accept(index, maxValue);
-        }
-    }
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
@@ -186,21 +150,36 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			{
 				if (guiButton instanceof GuiFaceButton && ((GuiFaceButton) guiButton).isHovered(mouseX, mouseY))
 				{
-                    switch (this.tileEntity.getSlot())
-                    {
-                        case "Input 1" -> adjustState(this.tileEntity::getInput1State, this.tileEntity::setInput1State, guiButton.id, 2);
-                        case "Input 2" -> adjustState(this.tileEntity::getInput2State, this.tileEntity::setInput2State, guiButton.id, 2);
-                        case "Energy" -> adjustState(this.tileEntity::getEnergyState, this.tileEntity::setEnergyState, guiButton.id, 2);
-                        case "Output" -> {
-                            int[] outputState = this.tileEntity.getOutputState();
-                            int currentValue = outputState[guiButton.id];
-                            int newValue = (currentValue == 0) ? 2 : 0;
-                            this.tileEntity.setOutputState(guiButton.id, newValue);
-                        }
-                    }
+					int slot = tileEntity.getSlotId();
+					int face = guiButton.id;
 
-					this.tileEntity.setSlotsState();
-					Minecraft.getMinecraft().player.playSound(net.minecraft.init.SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+					SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
+					SidedItemHandler.SlotState currentState = sidedItemHandler.getSlotState(slot);
+
+					if (sidedItemHandler.isSlotOutput(slot))
+					{
+						SidedItemHandler.SlotState nextState = switch (currentState)
+						{
+							case DISABLED -> SidedItemHandler.SlotState.OUTPUT;
+							case INPUT -> null;
+							case OUTPUT -> SidedItemHandler.SlotState.DISABLED;
+						};
+
+						sidedItemHandler.setSlotState(slot, nextState);
+					}
+					else
+					{
+						SidedItemHandler.SlotState nextState = switch (currentState)
+						{
+							case DISABLED -> SidedItemHandler.SlotState.OUTPUT;
+							case INPUT -> SidedItemHandler.SlotState.DISABLED;
+							case OUTPUT -> SidedItemHandler.SlotState.INPUT;
+						};
+
+						sidedItemHandler.setSlotState(slot, nextState);
+					}
+
+					Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
 					this.initGui();
 					return;
 				}
@@ -213,9 +192,12 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			{
 				if (guiButton instanceof GuiFaceButton && ((GuiFaceButton) guiButton).isHovered(mouseX, mouseY))
 				{
-                    resetState(this.tileEntity.getSlot(), guiButton.id);
-                    this.tileEntity.setSlotsState();
-					Minecraft.getMinecraft().player.playSound(net.minecraft.init.SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+					int slot = tileEntity.getSlotId();
+					int face = guiButton.id;
+
+                    SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(EnumFacing.values()[face]);
+                    sidedItemHandler.setSlotState(slot, SidedItemHandler.SlotState.DISABLED);
+					Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
 					this.initGui();
 					return;
 				}
@@ -226,17 +208,6 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 		}
 	}
-
-    private void resetState(String slot, int id)
-    {
-        switch (slot)
-        {
-            case "Input 1" -> this.tileEntity.setInput1State(id, 0);
-            case "Input 2" -> this.tileEntity.setInput2State(id, 0);
-            case "Energy" -> this.tileEntity.setEnergyState(id, 0);
-            case "Output" -> this.tileEntity.setOutputState(id, 0);
-        }
-    }
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) 

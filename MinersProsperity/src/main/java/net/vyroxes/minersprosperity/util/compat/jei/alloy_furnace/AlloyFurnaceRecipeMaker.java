@@ -7,6 +7,7 @@ import java.util.Map;
 import com.google.common.collect.Table;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.recipe.IStackHelper;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 
@@ -16,28 +17,24 @@ public class AlloyFurnaceRecipeMaker
     {
         IStackHelper stackHelper = helpers.getStackHelper();
         RecipesAlloyFurnace instance = RecipesAlloyFurnace.getInstance();
-        Table<ItemStack, ItemStack, RecipesAlloyFurnace.RecipeData> recipes = instance.getRecipesList();
         List<AlloyFurnaceRecipe> jeiRecipes = new ArrayList<>();
 
-        for (Map.Entry<ItemStack, Map<ItemStack, RecipesAlloyFurnace.RecipeData>> entry : recipes.columnMap().entrySet())
+        for (RecipesAlloyFurnace.Row row : instance.getLookupTable().rows)
         {
-            ItemStack input1 = entry.getKey();
-            for (Map.Entry<ItemStack, RecipesAlloyFurnace.RecipeData> ent : entry.getValue().entrySet())
-            {
-                ItemStack input2 = ent.getKey();
-                RecipesAlloyFurnace.RecipeData recipeData = ent.getValue();
+            ItemStack input1 = row.getRecipe().input1;
+            ItemStack input2 = row.getRecipe().input2;
+            ItemStack output = row.getRecipe().result;
+            int cookTime = row.getRecipe().totalCookTime;
+            int energy = row.getRecipe().energyUsage;
 
-                ItemStack output = recipeData.getResult();
-                int cookTime = recipeData.getCookTime();
-                int energy = recipeData.getEnergyUsage();
+            List<ItemStack> inputs = new ArrayList<>();
+            inputs.add(input1);
+            inputs.add(input2);
 
-                List<ItemStack> inputs = new ArrayList<>();
-                inputs.add(input1);
-                inputs.add(input2);
+            AlloyFurnaceRecipe recipe = new AlloyFurnaceRecipe(inputs, output, cookTime, energy);
 
-                AlloyFurnaceRecipe recipe = new AlloyFurnaceRecipe(inputs, output, cookTime, energy);
-                jeiRecipes.add(recipe);
-            }
+            System.out.println("Receptura: " + recipe);
+            jeiRecipes.add(recipe);
         }
 
         return jeiRecipes;

@@ -17,6 +17,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -28,6 +29,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -38,6 +40,7 @@ import net.vyroxes.minersprosperity.objects.blocks.BlockBase;
 import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,53 +111,45 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 
 		TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-		if (tag != null)
+		if (tag != null && tileEntity instanceof TileEntityAlloyFurnace alloyFurnace)
 		{
-			if (tileEntity instanceof TileEntityAlloyFurnace alloyFurnace)
+			if (tag.hasKey("Energy"))
 			{
-				if (tag.hasKey("Energy"))
+				alloyFurnace.setEnergyStored(tag.getInteger("Energy"));
+			}
+
+			if (tag.hasKey("States"))
+			{
+				NBTTagCompound statesTag = tag.getCompoundTag("States");
+
+				if (statesTag.hasKey("RedstoneControlButtonState"))
 				{
-					alloyFurnace.setEnergyStored(tag.getInteger("Energy"));
+					alloyFurnace.setRedstoneControlButtonState(statesTag.getInteger("RedstoneControlButtonState"));
 				}
 
-				if (tag.hasKey("States"))
+				for (EnumFacing facing : EnumFacing.values())
 				{
-					NBTTagCompound statesTag = tag.getCompoundTag("States");
+					String facingName = facing.getName();
 
-					if (statesTag.hasKey("RedstoneControlButtonState"))
-					{
-						alloyFurnace.setRedstoneControlButtonState(statesTag.getInteger("RedstoneControlButtonState"));
-					}
+					SidedItemHandler sidedHandler = (SidedItemHandler) alloyFurnace.getSidedItemHandler(facing);
 
-					for (int i = 0; i < alloyFurnace.getInput1State().length; i++)
+					if (statesTag.hasKey(facingName + "Inputs"))
 					{
-						if (statesTag.hasKey("Input1State[" + i + "]"))
+						NBTTagList inputList = statesTag.getTagList(facingName + "Inputs", Constants.NBT.TAG_COMPOUND);
+						for (int i = 0; i < inputList.tagCount(); i++)
 						{
-							alloyFurnace.setInput1State(i, statesTag.getInteger("Input1State[" + i + "]"));
+							NBTTagCompound slotsTag = inputList.getCompoundTagAt(i);
+							sidedHandler.getInputs()[i] = SidedItemHandler.SlotState.valueOf(slotsTag.getString("state"));
 						}
 					}
 
-					for (int i = 0; i < alloyFurnace.getInput2State().length; i++)
+					if (statesTag.hasKey(facingName + "Outputs"))
 					{
-						if (statesTag.hasKey("Input2State[" + i + "]"))
+						NBTTagList outputList = statesTag.getTagList(facingName + "Outputs", Constants.NBT.TAG_COMPOUND);
+						for (int i = 0; i < outputList.tagCount(); i++)
 						{
-							alloyFurnace.setInput2State(i, statesTag.getInteger("Input2State[" + i + "]"));
-						}
-					}
-
-					for (int i = 0; i < alloyFurnace.getEnergyState().length; i++)
-					{
-						if (statesTag.hasKey("EnergyState[" + i + "]"))
-						{
-							alloyFurnace.setEnergyState(i, statesTag.getInteger("EnergyState[" + i + "]"));
-						}
-					}
-
-					for (int i = 0; i < alloyFurnace.getOutputState().length; i++)
-					{
-						if (statesTag.hasKey("OutputState[" + i + "]"))
-						{
-							alloyFurnace.setOutputState(i, statesTag.getInteger("OutputState[" + i + "]"));
+							NBTTagCompound slotsTag = outputList.getCompoundTagAt(i);
+							sidedHandler.getOutputs()[i] = SidedItemHandler.SlotState.valueOf(slotsTag.getString("state"));
 						}
 					}
 				}
@@ -317,6 +312,11 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	public TileEntity createNewTileEntity(@NotNull World worldIn, int meta)
 	{
 		return new TileEntityAlloyFurnace();
+	}
+
+	private TileEntityAlloyFurnace getTileEntity(World world, BlockPos pos)
+	{
+		return (TileEntityAlloyFurnace) world.getTileEntity(pos);
 	}
 
 	@Override

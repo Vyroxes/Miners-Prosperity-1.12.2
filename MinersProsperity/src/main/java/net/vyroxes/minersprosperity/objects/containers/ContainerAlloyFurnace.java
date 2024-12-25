@@ -37,7 +37,7 @@ public class ContainerAlloyFurnace extends Container
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
             {
-                return RecipesAlloyFurnace.getInstance().isInputInAnyRecipe(stack);
+                return tileEntity.isValidInputForSlot(stack, tileEntity.getItemStackInSlot(0), tileEntity.getItemStackInSlot(1), true);
             }
         });
 
@@ -47,7 +47,7 @@ public class ContainerAlloyFurnace extends Container
             @Override
             public boolean isItemValid(@NotNull ItemStack stack)
             {
-                return RecipesAlloyFurnace.getInstance().isInputInAnyRecipe(stack);
+                return tileEntity.isValidInputForSlot(stack, tileEntity.getItemStackInSlot(0), tileEntity.getItemStackInSlot(1), false);
             }
         });
         this.addSlotToContainer(new SlotItemHandler(handler, 2, 8, 53) // Slot energii
@@ -56,6 +56,12 @@ public class ContainerAlloyFurnace extends Container
             public boolean isItemValid(@NotNull ItemStack stack)
             {
                 return tileEntity.isItemEnergy(stack);
+            }
+
+            @Override
+            public int getSlotStackLimit()
+            {
+                return 1;
             }
         });
         this.addSlotToContainer(new SlotItemHandler(handler, 3, 118, 35) // Slot wyjściowy
@@ -227,7 +233,7 @@ public class ContainerAlloyFurnace extends Container
             }
             else if (index > 3)
             {        
-                if (RecipesAlloyFurnace.getInstance().isInputInAnyRecipe(itemstack1))
+                if (RecipesAlloyFurnace.getInstance().isIngredientInAnyRecipe(itemstack1))
                 {
                     ItemStack slot0 = this.inventorySlots.get(0).getStack();
                     ItemStack slot1 = this.inventorySlots.get(1).getStack();

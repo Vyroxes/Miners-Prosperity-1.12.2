@@ -1,10 +1,10 @@
 package net.vyroxes.minersprosperity.objects.tileentities;
 
-import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -15,16 +15,19 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.vyroxes.minersprosperity.objects.blocks.energy.CustomEnergyStorage;
 import net.vyroxes.minersprosperity.objects.blocks.machines.MachineAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class TileEntityAlloyFurnace extends TileEntity implements ITickable
@@ -34,56 +37,38 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     private int totalCookTime;
     private String customName;
     private int redstoneControlButtonState;
-    private int[] input1State = new int[6];;
-    private int[] input2State = new int[6];;
-    private int[] energyState = new int[6];;
-    private int[] outputState = new int[6];;
-    private String slot;
-    private EnumFacing facing;
-    private int currentFace;
+    private int slotId;
+    private final SidedItemHandler[] sidedHandlers = new SidedItemHandler[EnumFacing.values().length];
+    public TileEntityAlloyFurnace()
+    {
+        for (EnumFacing facing : EnumFacing.values())
+        {
+            sidedHandlers[facing.ordinal()] = new SidedItemHandler(
+                    this,
+                    machineItemStacks,
+                    3,
+                    1,
+                    facing
+            );
+        }
+    }
+
+    public IItemHandler getSidedItemHandler(EnumFacing side)
+    {
+        return sidedHandlers[side.ordinal()];
+    }
 
     private final ItemStackHandler machineItemStacks = new ItemStackHandler(4)
     {
         @Override
-        protected int getStackLimit(int slot, @NotNull ItemStack stack)
-        {
-            return 64;
-        }
-
-        @Override
         public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
         {
-            //System.out.println(facing);
-
-            if (world.isRemote)
+            if (slot >= 0 && slot <= 2)
             {
-                if (facing == null)
+                if (isItemValid(slot, stack))
                 {
                     return super.insertItem(slot, stack, simulate);
                 }
-            }
-
-            if (facing == null || currentFace < 0 || currentFace >= 6)
-            {
-                return super.insertItem(slot, stack, simulate);
-            }
-
-            ItemStack slot0 = this.getStackInSlot(0);
-            ItemStack slot1 = this.getStackInSlot(1);
-
-            if (input1State[currentFace] == 1 && isValidInputForSlot(stack, slot0, slot1, true))
-            {
-                return super.insertItem(0, stack, false);
-            }
-
-            if (input2State[currentFace] == 1 && isValidInputForSlot(stack, slot0, slot1, false))
-            {
-                return super.insertItem(1, stack, false);
-            }
-
-            if (energyState[currentFace] == 1)
-            {
-                return super.insertItem(2, stack, false);
             }
 
             return stack;
@@ -92,67 +77,49 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
         {
-            //System.out.println(facing);
+            return super.extractItem(slot, amount, simulate);
+        }
 
-            if (world.isRemote)
+        @Override
+        public int getSlotLimit(int slot)
+        {
+            if (slot == 2)
             {
-                if (facing == null)
-                {
-                    return super.extractItem(slot, amount, simulate);
-                }
+                return 1;
             }
 
-            if (facing == null || currentFace < 0 || currentFace >= 6)
+            return super.getSlotLimit(slot);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack)
+        {
+            if (slot == 0)
             {
-                return super.extractItem(slot, amount, simulate);
+                return isValidInputForSlot(stack, getStackInSlot(0), getStackInSlot(1), true);
             }
-
-            ItemStack slot0 = this.getStackInSlot(0);
-            ItemStack slot1 = this.getStackInSlot(1);
-            ItemStack slot2 = this.getStackInSlot(2);
-            ItemStack slot3 = this.getStackInSlot(3);
-
-            if (input1State[currentFace] == 2)
+            else if (slot == 1)
             {
-                if (!slot0.isEmpty())
-                {
-                    return super.extractItem(0, amount, simulate);
-                }
+                return isValidInputForSlot(stack, getStackInSlot(0), getStackInSlot(1), false);
             }
-
-            if (input2State[currentFace] == 2)
+            else if (slot == 2)
             {
-                if (!slot1.isEmpty())
-                {
-                    return super.extractItem(1, amount, simulate);
-                }
+                return isItemEnergy(stack);
             }
-
-            if (energyState[currentFace] == 2)
-            {
-                if (!slot2.isEmpty())
-                {
-                    return super.extractItem(2, amount, simulate);
-                }
-            }
-
-            if (outputState[currentFace] == 2)
-            {
-                if (!slot3.isEmpty())
-                {
-                    return super.extractItem(3, amount, simulate);
-                }
-            }
-
-            return ItemStack.EMPTY;
+            return false;
         }
     };
 
-    private boolean isValidInputForSlot(ItemStack stack, ItemStack slot0, ItemStack slot1, boolean isSlot0)
+    public ItemStack getItemStackInSlot(int slot)
+    {
+        return machineItemStacks.getStackInSlot(slot);
+    }
+
+    public boolean isValidInputForSlot(ItemStack stack, ItemStack slot0, ItemStack slot1, boolean isSlot0)
     {
         RecipesAlloyFurnace recipes = RecipesAlloyFurnace.getInstance();
 
-        if (!recipes.isInputInAnyRecipe(stack))
+        if (stack.isEmpty())
         {
             return false;
         }
@@ -166,12 +133,12 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
         if (isSlot0 && slot0.isEmpty() && !otherSlot.isEmpty())
         {
-            return !recipes.getResult(stack, otherSlot).isEmpty() || !recipes.getResult(otherSlot, stack).isEmpty();
+            return !recipes.findRecipes(stack, otherSlot).isEmpty();
         }
 
         if (!isSlot0 && slot1.isEmpty() && !slot0.isEmpty())
         {
-            return !recipes.getResult(stack, otherSlot).isEmpty() || !recipes.getResult(otherSlot, stack).isEmpty();
+            return !recipes.findRecipes(stack, otherSlot).isEmpty();
         }
 
         ItemStack currentSlot = isSlot0 ? slot0 : slot1;
@@ -181,14 +148,11 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     @Override
     public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing)
     {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY)
         {
             return true;
         }
-        if (capability == CapabilityEnergy.ENERGY)
-        {
-            return true;
-        }
+
         return super.hasCapability(capability, facing);
     }
 
@@ -197,47 +161,33 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
         {
-            this.facing = facing;
-            this.currentFace(facing);
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.machineItemStacks);
+            if (facing == null)
+            {
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.machineItemStacks);
+            }
+
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getSidedItemHandler(getRelativeSide(getMachineFacing(), facing)));
         }
+
         if (capability == CapabilityEnergy.ENERGY)
         {
             return CapabilityEnergy.ENERGY.cast(this.storage);
         }
 
-
-//        if (this.world.isRemote)
-//        {
-//            NetworkHandler.sendFacingState(this.facing, this.pos);
-//        }
-//        if (!this.world.isRemote)
-//        {
-//            NetworkHandler.sendTileEntitySync(this.pos, this.facing, this.currentFace);
-//        }
-
-        this.markDirty();
-
         return super.getCapability(capability, facing);
     }
 
-    public void setFacing(EnumFacing facing)
+    private EnumFacing getMachineFacing()
     {
-        this.facing = facing;
-
-        if (!this.world.isRemote)
+        if (world != null)
         {
-            NetworkHandler.sendFacingState(this.facing, this.pos);
+            IBlockState state = world.getBlockState(pos);
+            if (state.getBlock() instanceof MachineAlloyFurnace)
+            {
+                return state.getValue(MachineAlloyFurnace.FACING);
+            }
         }
-
-        this.markDirty();
-    }
-
-    public void setCurrentFace(int currentFace)
-    {
-        this.currentFace = currentFace;
-
-        this.markDirty();
+        return EnumFacing.NORTH;
     }
 
     public int getEnergyStored()
@@ -265,89 +215,35 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         return this.storage.getEnergyUsage();
     }
 
-    public String getSlot()
+    public int getSlotId()
     {
-        return this.slot;
+        return this.slotId;
     }
 
-    public void setSlot(String slot)
+    public void setSlotId(int slotId)
     {
-        this.slot = slot;
+        this.slotId = slotId;
     }
 
-    public void currentFace(EnumFacing facing)
+    private EnumFacing getRelativeSide(EnumFacing machineFacing, EnumFacing pipeDirection)
     {
-        if (!this.hasWorld())
+        EnumFacing[] rotationMap = switch (machineFacing)
         {
-            return;
-        }
-
-        IBlockState state = this.world.getBlockState(this.pos);
-        if (!(state.getBlock() instanceof MachineAlloyFurnace))
-        {
-            return;
-        }
-
-        EnumFacing machineFacing = state.getValue(BlockHorizontal.FACING);
-
-        if (this.facing == null)
-        {
-            this.currentFace = -1;
-            return;
-        }
-
-        if (this.facing == EnumFacing.UP)
-        {
-            this.currentFace = 4;
-            return;
-        }
-
-        if (this.facing == EnumFacing.DOWN)
-        {
-            this.currentFace = 5;
-            return;
-        }
-
-        int[][] faceMapping = {
-                {0, 1, 3, 2}, // facing == NORTH
-                {1, 0, 2, 3}, // facing == SOUTH
-                {3, 2, 0, 1}, // facing == EAST
-                {2, 3, 1, 0}  // facing == WEST
+            case NORTH -> new EnumFacing[]{EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST};
+            case SOUTH -> new EnumFacing[]{EnumFacing.SOUTH, EnumFacing.NORTH, EnumFacing.WEST, EnumFacing.EAST};
+            case WEST -> new EnumFacing[]{EnumFacing.WEST, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.NORTH};
+            case EAST -> new EnumFacing[]{EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.SOUTH};
+            default -> new EnumFacing[]{EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH};
         };
 
-        int facingIndex = switch (this.facing)
+        return switch (pipeDirection)
         {
-            case NORTH -> 0;
-            case SOUTH -> 1;
-            case EAST -> 2;
-            case WEST -> 3;
-            default -> -1;
+            case NORTH -> rotationMap[0];
+            case SOUTH -> rotationMap[1];
+            case EAST -> rotationMap[2];
+            case WEST -> rotationMap[3];
+            default -> pipeDirection;
         };
-
-        int machineFacingIndex = switch (machineFacing)
-        {
-            case NORTH -> 0;
-            case SOUTH -> 1;
-            case EAST -> 2;
-            case WEST -> 3;
-            default -> -1;
-        };
-
-        if (facingIndex != -1 && machineFacingIndex != -1)
-        {
-            this.currentFace = faceMapping[facingIndex][machineFacingIndex];
-        }
-        else
-        {
-            this.currentFace = -1;
-        }
-
-        if (!this.world.isRemote)
-        {
-            //NetworkHandler.sendTileEntitySync(this.pos, this.facing, this.currentFace);
-        }
-
-        this.markDirty();
     }
 
     public boolean isItemEnergy(ItemStack stack)
@@ -384,18 +280,6 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
 		this.markDirty();
     }
-
-    public void setSlotsState()
-    {
-        int[][] slotsState = {this.input1State, this.input2State, this.energyState, this.outputState};
-
-        if (this.world.isRemote)
-        {
-            NetworkHandler.sendSlotsStateUpdate(slotsState, this.pos);
-        }
-
-        this.markDirty();
-    }
     
     public boolean hasCustomName()
     {
@@ -415,26 +299,10 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         return this.hasCustomName() ? new TextComponentString(this.customName) : new TextComponentTranslation("container.alloy_furnace");
     }
 
-//    @Override
-//    public void markDirty()
-//    {
-//        super.markDirty();
-//        if (this.world != null && !this.world.isRemote && this.world instanceof WorldServer worldServer)
-//        {
-//            worldServer.getPlayerChunkMap().markBlockForUpdate(this.pos);
-//        }
-//    }
-
     @Override
-    public void onDataPacket(@NotNull NetworkManager net, SPacketUpdateTileEntity pkt)
+    public void onDataPacket(@NotNull NetworkManager net, SPacketUpdateTileEntity packet)
     {
-        this.readFromNBT(pkt.getNbtCompound());
-
-//        if (this.world.isRemote)
-//        {
-//            IBlockState state = this.world.getBlockState(getPos());
-//            this.world.notifyBlockUpdate(this.pos, state, state, 3);
-//        }
+        this.readFromNBT(packet.getNbtCompound());
     }
 
     @Override
@@ -446,9 +314,9 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     @Override
     public SPacketUpdateTileEntity getUpdatePacket()
     {
-        //NBTTagCompound tag = new NBTTagCompound();
-        //this.writeToNBT(tag);
-        return new SPacketUpdateTileEntity(this.pos, -1, this.getUpdateTag());
+        NBTTagCompound tag = new NBTTagCompound();
+        this.writeToNBT(tag);
+        return new SPacketUpdateTileEntity(this.getPos(), -1, tag);
     }
     
     @Override
@@ -483,24 +351,27 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         NBTTagCompound statesTag = new NBTTagCompound();
         statesTag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
 
-        for (int i = 0; i < input1State.length; i++)
+        for (EnumFacing facing : EnumFacing.values())
         {
-            statesTag.setInteger("Input1State[" + i + "]", input1State[i]);
-        }
+            SidedItemHandler sidedHandler = this.sidedHandlers[facing.ordinal()];
 
-        for (int i = 0; i < input2State.length; i++)
-        {
-            statesTag.setInteger("Input2State[" + i + "]", input2State[i]);
-        }
+            NBTTagList inputStates = new NBTTagList();
+            for (SidedItemHandler.SlotState inputState : sidedHandler.getInputs())
+            {
+                NBTTagCompound inputStateTag = new NBTTagCompound();
+                inputStateTag.setString("state", inputState.name());
+                inputStates.appendTag(inputStateTag);
+            }
+            statesTag.setTag(facing.getName() + "Inputs", inputStates);
 
-        for (int i = 0; i < energyState.length; i++)
-        {
-            statesTag.setInteger("EnergyState[" + i + "]", energyState[i]);
-        }
-
-        for (int i = 0; i < outputState.length; i++)
-        {
-            statesTag.setInteger("OutputState[" + i + "]", outputState[i]);
+            NBTTagList outputStates = new NBTTagList();
+            for (SidedItemHandler.SlotState outputState : sidedHandler.getOutputs())
+            {
+                NBTTagCompound outputStateTag = new NBTTagCompound();
+                outputStateTag.setString("state", outputState.name());
+                outputStates.appendTag(outputStateTag);
+            }
+            statesTag.setTag(facing.getName() + "Outputs", outputStates);
         }
 
         return statesTag;
@@ -552,33 +423,50 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
             this.redstoneControlButtonState = statesTag.getInteger("RedstoneControlButtonState");
 
-            for (int i = 0; i < input1State.length; i++)
+            for (EnumFacing facing : EnumFacing.values())
             {
-                this.input1State[i] = statesTag.getInteger("Input1State[" + i + "]");
-            }
+                String facingName = facing.getName();
 
-            for (int i = 0; i < input2State.length; i++)
-            {
-                this.input2State[i] = statesTag.getInteger("Input2State[" + i + "]");
-            }
+                if (statesTag.hasKey(facingName + "Inputs"))
+                {
+                    NBTTagList inputList = statesTag.getTagList(facingName + "Inputs", Constants.NBT.TAG_COMPOUND);
+                    SidedItemHandler sidedHandler = this.sidedHandlers[facing.ordinal()];
+                    for (int i = 0; i < inputList.tagCount(); i++)
+                    {
+                        NBTTagCompound tag = inputList.getCompoundTagAt(i);
+                        sidedHandler.getInputs()[i] = SidedItemHandler.SlotState.valueOf(tag.getString("state"));
+                    }
+                }
 
-            for (int i = 0; i < energyState.length; i++)
-            {
-                this.energyState[i] = statesTag.getInteger("EnergyState[" + i + "]");
-            }
-
-            for (int i = 0; i < outputState.length; i++)
-            {
-                this.outputState[i] = statesTag.getInteger("OutputState[" + i + "]");
+                if (statesTag.hasKey(facingName + "Outputs"))
+                {
+                    NBTTagList outputList = statesTag.getTagList(facingName + "Outputs", Constants.NBT.TAG_COMPOUND);
+                    SidedItemHandler sidedHandler = this.sidedHandlers[facing.ordinal()];
+                    for (int i = 0; i < outputList.tagCount(); i++)
+                    {
+                        NBTTagCompound tag = outputList.getCompoundTagAt(i);
+                        sidedHandler.getOutputs()[i] = SidedItemHandler.SlotState.valueOf(tag.getString("state"));
+                    }
+                }
             }
         }
 
         this.markDirty();
     }
 
-    public boolean isPowered()
+    private boolean isPowered()
     {
-        return this.cookTime > 0;
+        boolean canOperate;
+        if (this.redstoneControlButtonState > 0)
+        {
+            boolean hasRedstoneSignal = this.world.isBlockPowered(this.pos);
+            canOperate = this.canOperateBasedOnRedstone(hasRedstoneSignal);
+        }
+        else
+        {
+            canOperate = true;
+        }
+        return (this.canSmelt() && canOperate) || this.cookTime > 0;
     }
 
     @SideOnly(Side.CLIENT)
@@ -587,7 +475,18 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         return tileEntity.cookTime > 0;
     }
 
-    public void setEnergyStoredFromItem(ItemStack stack)
+    private boolean canOperateBasedOnRedstone(boolean hasRedstoneSignal)
+    {
+        return switch (this.redstoneControlButtonState)
+        {
+            case 0 -> true;
+            case 1 -> !hasRedstoneSignal;
+            case 2 -> hasRedstoneSignal;
+            default -> false;
+        };
+    }
+
+    private void setEnergyStoredFromItem(ItemStack stack)
     {
         if (!stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
         {
@@ -607,9 +506,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     @Override
     public void update()
     {
-        System.out.println("Facing: " + this.facing);
-
-        boolean wasPowered = this.isPowered();
+        boolean wasPowered = MachineAlloyFurnace.getStatePowered(this.world, this.pos);
         boolean stateChanged = false;
 
         if (!this.world.isRemote)
@@ -667,17 +564,6 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         {
             this.markDirty();
         }
-    }
-
-    private boolean canOperateBasedOnRedstone(boolean hasRedstoneSignal)
-    {
-        return switch (this.redstoneControlButtonState)
-        {
-            case 0 -> true;
-            case 1 -> !hasRedstoneSignal;
-            case 2 -> hasRedstoneSignal;
-            default -> false;
-        };
     }
 
     private void processCooking(ItemStack input1, ItemStack input2)
@@ -787,82 +673,6 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         {
             return player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
         }
-    }
-
-    public int[] getInput1State()
-    {
-        return this.input1State;
-    }
-
-    public void setInput1State(int[] input1State)
-    {
-        this.input1State = input1State;
-
-        this.markDirty();
-    }
-
-    public void setInput1State(int id, int input1State)
-    {
-        this.input1State[id] = input1State;
-
-        this.markDirty();
-    }
-
-    public int[] getInput2State()
-    {
-        return this.input2State;
-    }
-
-    public void setInput2State(int id, int input2State)
-    {
-        this.input2State[id] = input2State;
-
-        this.markDirty();
-    }
-
-    public void setInput2State(int[] input2State)
-    {
-        this.input2State = input2State;
-
-        this.markDirty();
-    }
-
-    public int[] getEnergyState()
-    {
-        return this.energyState;
-    }
-
-    public void setEnergyState(int id, int energyState)
-    {
-        this.energyState[id] = energyState;
-
-        this.markDirty();
-    }
-
-    public void setEnergyState(int[] energyState)
-    {
-        this.energyState = energyState;
-
-        this.markDirty();
-    }
-
-    public int[] getOutputState()
-    {
-        return this.outputState;
-    }
-
-    public void setOutputState(int id, int outputState)
-    {
-        this.outputState[id] = outputState;
-
-        this.markDirty();
-    }
-
-    public void setOutputState(int[] outputState)
-    {
-        this.outputState = outputState;
-
-        this.markDirty();
     }
 
     public int getCookTime()

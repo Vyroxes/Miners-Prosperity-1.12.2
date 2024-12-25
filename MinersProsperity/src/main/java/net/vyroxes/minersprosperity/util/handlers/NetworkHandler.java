@@ -19,11 +19,8 @@ public class NetworkHandler
     	NETWORK.registerMessage(MessageRedstoneControlButtonState.Handler.class, MessageRedstoneControlButtonState.class, id++, Side.SERVER);
         NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.CLIENT);
         NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.SERVER);
-        NETWORK.registerMessage(MessageFacingState.Handler.class, MessageFacingState.class, id++, Side.CLIENT);
-        NETWORK.registerMessage(MessageFacingState.Handler.class, MessageFacingState.class, id++, Side.SERVER);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.CLIENT);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.SERVER);
-        NETWORK.registerMessage(PacketSyncTileEntity.Handler.class, PacketSyncTileEntity.class, id++, Side.CLIENT);
     }
 
     public static void sendButtonStateUpdate(int redstoneControlButtonState, BlockPos pos)
@@ -31,19 +28,9 @@ public class NetworkHandler
         NETWORK.sendToServer(new MessageRedstoneControlButtonState(redstoneControlButtonState, pos));
     }
 
-    public static void sendFacingState(EnumFacing facing, BlockPos pos)
+    public static void sendSlotsStateUpdate(EnumFacing side, int id, SidedItemHandler.SlotState slotsState, BlockPos pos)
     {
-        NETWORK.sendToServer(new MessageFacingState(facing, pos));
-    }
-
-    public static void sendTileEntitySync(BlockPos pos, EnumFacing facing, int currentFace)
-    {
-        NETWORK.sendToAll(new PacketSyncTileEntity(pos, facing, currentFace));
-    }
-
-    public static void sendSlotsStateUpdate(int[][] slotsState, BlockPos pos)
-    {
-        NETWORK.sendToServer(new MessageSlotsState(slotsState, pos));
+        NETWORK.sendToServer(new MessageSlotsState(side, id, slotsState, pos));
     }
 
     public static void sendOpenGuiUpdate(int guiId, BlockPos pos)
