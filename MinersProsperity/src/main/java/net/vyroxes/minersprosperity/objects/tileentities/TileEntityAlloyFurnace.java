@@ -4,7 +4,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +14,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -128,18 +126,18 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             return false;
         }
 
-        if (slot0.isEmpty() && slot1.isEmpty() && recipes.isIngredientInAnyRecipe(stack))
+        if (slot0.isEmpty() && slot1.isEmpty() && !recipes.findRecipes(stack).isEmpty())
         {
             return true;
         }
 
         ItemStack otherSlot = isSlot0 ? slot1 : slot0;
 
-        if (isSlot0 && !slot0.isEmpty() && otherSlot.isEmpty() && recipes.isIngredientInAnyRecipe(stack))
+        if (isSlot0 && !slot0.isEmpty() && otherSlot.isEmpty() && !recipes.findRecipes(stack).isEmpty())
         {
             return true;
         }
-        else if (!isSlot0 && !slot1.isEmpty() && otherSlot.isEmpty() && recipes.isIngredientInAnyRecipe(stack))
+        else if (!isSlot0 && !slot1.isEmpty() && otherSlot.isEmpty() && !recipes.findRecipes(stack).isEmpty())
         {
             return true;
         }

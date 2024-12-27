@@ -258,17 +258,20 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	@NonnullByDefault
 	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
 	{
-		if (playerIn.isSneaking())
+		if (playerIn.getHeldItemMainhand().isEmpty() && playerIn.getHeldItemOffhand().isEmpty())
 		{
-			TileEntityAlloyFurnace tileEntity = getTileEntity(worldIn, pos);
-			if (tileEntity != null)
+			if (playerIn.isSneaking())
 			{
-				for (EnumFacing face : EnumFacing.values())
+				TileEntityAlloyFurnace tileEntity = getTileEntity(worldIn, pos);
+				if (tileEntity != null)
 				{
-					SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-					for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+					for (EnumFacing face : EnumFacing.values())
 					{
-						sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+						SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+						for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+						{
+							sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+						}
 					}
 				}
 			}
@@ -281,19 +284,23 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	@NonnullByDefault
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (playerIn.isSneaking())
+		if (playerIn.getHeldItemMainhand().isEmpty() && playerIn.getHeldItemOffhand().isEmpty())
 		{
-			TileEntityAlloyFurnace tileEntity = getTileEntity(worldIn, pos);
-			if (tileEntity != null)
+			if (playerIn.isSneaking())
 			{
-				EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(side);
-				for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+				TileEntityAlloyFurnace tileEntity = getTileEntity(worldIn, pos);
+				if (tileEntity != null)
 				{
-					sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+					EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
+					SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(side);
+					for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+					{
+						sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+					}
 				}
 			}
 		}
+
 		if (!worldIn.isRemote)
 		{
 			if (playerIn.openContainer instanceof ContainerAlloyFurnace)

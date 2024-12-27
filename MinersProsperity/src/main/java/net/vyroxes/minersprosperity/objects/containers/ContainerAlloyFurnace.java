@@ -193,7 +193,7 @@ public class ContainerAlloyFurnace extends Container
             }
             else if (index > 3)
             {        
-                if (RecipesAlloyFurnace.getInstance().isIngredientInAnyRecipe(itemstack1))
+                if (!RecipesAlloyFurnace.getInstance().findRecipes(itemstack1).isEmpty())
                 {
                     ItemStack slot0 = this.inventorySlots.get(0).getStack();
                     ItemStack slot1 = this.inventorySlots.get(1).getStack();
