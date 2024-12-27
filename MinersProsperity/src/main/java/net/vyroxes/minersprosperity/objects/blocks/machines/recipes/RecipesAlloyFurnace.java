@@ -66,11 +66,13 @@ public class RecipesAlloyFurnace
 	{
 		private final Object2ObjectOpenCustomHashMap<ItemStack, IntOpenHashSet> recipeKeyToIndices;
 		private final List<Recipe> recipes;
+		private final List<Recipe> unmodifiableRecipes;
 
 		public LookupTable()
 		{
 			this.recipeKeyToIndices = new Object2ObjectOpenCustomHashMap<>(new ItemStackHashStrategy());
 			this.recipes = new ArrayList<>();
+			this.unmodifiableRecipes = Collections.unmodifiableList(recipes);
 		}
 
 		public void addRow(Recipe recipe)
@@ -89,7 +91,7 @@ public class RecipesAlloyFurnace
 
 		public List<Recipe> getRecipes()
 		{
-			return new ArrayList<>(recipes);
+			return unmodifiableRecipes;
 		}
 
 		public List<Recipe> findRecipes(ItemStack... inputs)
@@ -123,34 +125,10 @@ public class RecipesAlloyFurnace
 			List<Recipe> matchingRecipes = new ArrayList<>();
 			for (int index : matchingIndices)
 			{
-				Recipe recipe = recipes.get(index);
-				if (matchesRecipe(recipe, inputs))
-				{
-					matchingRecipes.add(recipe);
-				}
+				matchingRecipes.add(recipes.get(index));
 			}
 
 			return matchingRecipes;
-		}
-
-		private boolean matchesRecipe(Recipe recipe, ItemStack... inputs)
-		{
-			Set<ItemStack> recipeInputs = new HashSet<>(Arrays.asList(recipe.input1, recipe.input2));
-
-			for (ItemStack input : inputs)
-			{
-				if (input == null || input.isEmpty()) continue;
-
-				boolean foundMatch = recipeInputs.stream().anyMatch(r -> ItemStack.areItemsEqual(r, input));
-				if (!foundMatch)
-				{
-					return false;
-				}
-
-				recipeInputs.removeIf(r -> ItemStack.areItemsEqual(r, input));
-			}
-
-			return true;
 		}
 	}
 

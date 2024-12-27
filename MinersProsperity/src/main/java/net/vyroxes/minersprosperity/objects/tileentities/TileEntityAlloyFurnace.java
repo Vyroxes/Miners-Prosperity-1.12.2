@@ -592,10 +592,10 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
             {
                 ItemStack result = RecipesAlloyFurnace.getInstance().getResult(input1, input2);
 
-                if (result.isEmpty())
-                {
-                    result = RecipesAlloyFurnace.getInstance().getResult(input2, input1);
-                }
+//                if (result.isEmpty())
+//                {
+//                    result = RecipesAlloyFurnace.getInstance().getResult(input2, input1);
+//                }
 
                 if (result.isEmpty())
                 {
