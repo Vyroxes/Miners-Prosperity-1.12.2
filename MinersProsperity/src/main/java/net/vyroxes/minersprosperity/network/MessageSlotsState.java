@@ -7,18 +7,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
-import net.vyroxes.minersprosperity.util.handlers.SidedItemHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
 
 public class MessageSlotsState implements IMessage
 {
     private EnumFacing side;
     private int id;
-    private SidedItemHandler.SlotState slotsState;
+    private SidedItemStackHandler.SlotState slotsState;
     private BlockPos pos;
 
     public MessageSlotsState() {}
 
-    public MessageSlotsState(EnumFacing side, int id, SidedItemHandler.SlotState slotsState, BlockPos pos)
+    public MessageSlotsState(EnumFacing side, int id, SidedItemStackHandler.SlotState slotsState, BlockPos pos)
     {
         this.side = side;
         this.id = id;
@@ -31,7 +31,12 @@ public class MessageSlotsState implements IMessage
     {
         this.side = EnumFacing.values()[buf.readInt()];
         this.id = buf.readInt();
-        this.slotsState = SidedItemHandler.SlotState.values()[buf.readInt()];
+        SidedItemStackHandler.SlotState.SlotType slotType = SidedItemStackHandler.SlotState.SlotType.values()[buf.readInt()];
+        SidedItemStackHandler.SlotState.IngredientType ingredientType = SidedItemStackHandler.SlotState.IngredientType.values()[buf.readInt()];
+        SidedItemStackHandler.SlotState.SlotMode slotMode = SidedItemStackHandler.SlotState.SlotMode.values()[buf.readInt()];
+        SidedItemStackHandler.SlotState.SlotAutoMode slotAutoMode = SidedItemStackHandler.SlotState.SlotAutoMode.values()[buf.readInt()];
+        SidedItemStackHandler.SlotState.SlotOutputMode slotOutputMode = SidedItemStackHandler.SlotState.SlotOutputMode.values()[buf.readInt()];
+        this.slotsState = new SidedItemStackHandler.SlotState(slotType, ingredientType, slotMode, slotAutoMode, slotOutputMode);
         this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
     }
 
@@ -40,7 +45,11 @@ public class MessageSlotsState implements IMessage
     {
         buf.writeInt(this.side.ordinal());
         buf.writeInt(this.id);
-        buf.writeInt(this.slotsState.ordinal());
+        buf.writeInt(this.slotsState.getSlotType().ordinal());
+        buf.writeInt(this.slotsState.getIngredientType().ordinal());
+        buf.writeInt(this.slotsState.getSlotMode().ordinal());
+        buf.writeInt(this.slotsState.getSlotAutoMode().ordinal());
+        buf.writeInt(this.slotsState.getSlotOutputMode().ordinal());
         buf.writeInt(this.pos.getX());
         buf.writeInt(this.pos.getY());
         buf.writeInt(this.pos.getZ());
@@ -54,10 +63,10 @@ public class MessageSlotsState implements IMessage
             TileEntityAlloyFurnace tileEntity = (TileEntityAlloyFurnace) ctx.getServerHandler().player.world.getTileEntity(message.pos);
             if (tileEntity != null)
             {
-                SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(message.side);
-                if (sidedItemHandler != null)
+                SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(message.side);
+                if (sidedItemStackHandler != null)
                 {
-                    sidedItemHandler.setSlotState(message.id, message.slotsState);
+                    sidedItemStackHandler.setSlotState(message.id, message.slotsState);
                 }
             }
             return null;

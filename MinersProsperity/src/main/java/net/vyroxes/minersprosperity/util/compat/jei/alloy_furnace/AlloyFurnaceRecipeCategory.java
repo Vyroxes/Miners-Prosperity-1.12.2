@@ -8,9 +8,10 @@ import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.vyroxes.minersprosperity.Reference;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.init.BlockInit;
 import net.vyroxes.minersprosperity.util.compat.jei.RecipeCategories;
+import org.jetbrains.annotations.NotNull;
 
 public class AlloyFurnaceRecipeCategory extends AbstractAlloyFurnaceRecipeCategory<AlloyFurnaceRecipe>
 {
@@ -33,37 +34,37 @@ public class AlloyFurnaceRecipeCategory extends AbstractAlloyFurnaceRecipeCatego
     }
 
     @Override
-    public IDrawable getBackground()
+    public @NotNull IDrawable getBackground()
     {
         return background;
     }
 
     @Override
-    public void drawExtras(Minecraft minecraft)
+    public void drawExtras(@NotNull Minecraft minecraft)
     {
         animatedArrow.draw(minecraft, 48, 15);
     }
 
     @Override
-    public String getTitle()
+    public @NotNull String getTitle()
     {
         return name;
     }
 
     @Override
-    public String getModName()
+    public @NotNull String getModName()
     {
-        return Reference.NAME;
+        return Tags.MODNAME;
     }
 
     @Override
-    public String getUid()
+    public @NotNull String getUid()
     {
         return RecipeCategories.ALLOY_FURNACE;
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, AlloyFurnaceRecipe recipeWrapper, IIngredients ingredients)
+    public void setRecipe(IRecipeLayout recipeLayout, @NotNull AlloyFurnaceRecipe recipeWrapper, @NotNull IIngredients ingredients)
     {
         IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
         stacks.init(input1, true, 4, 13);

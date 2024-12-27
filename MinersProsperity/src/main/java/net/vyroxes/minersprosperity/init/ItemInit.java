@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
-import net.vyroxes.minersprosperity.Reference;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.objects.armour.ArmourEmerald;
 import net.vyroxes.minersprosperity.objects.armour.ArmourStone;
 import net.vyroxes.minersprosperity.objects.armour.ArmourWood;
@@ -29,9 +29,9 @@ public class ItemInit
 	public static final ToolMaterial EMERALD_TOOL = EnumHelper.addToolMaterial("emerald tool", 4, 1892, 10.0F, 4.0F, 8);
 
 	//ARMOUR MATERIALS
-	public static final ArmorMaterial WOOD_ARMOUR = EnumHelper.addArmorMaterial("wood armor", Reference.MODID + ":wood", 5, new int[]{1, 2, 3, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0F);
-	public static final ArmorMaterial STONE_ARMOUR = EnumHelper.addArmorMaterial("stone armor", Reference.MODID + ":stone", 8, new int[]{2, 3, 4, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0F);
-	public static final ArmorMaterial EMERALD_ARMOUR = EnumHelper.addArmorMaterial("emerald armor", Reference.MODID + ":emerald", 40, new int[]{4, 7, 9, 4}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0F);
+	public static final ArmorMaterial WOOD_ARMOUR = EnumHelper.addArmorMaterial("wood armor", Tags.MODID + ":wood", 5, new int[]{1, 2, 3, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0F);
+	public static final ArmorMaterial STONE_ARMOUR = EnumHelper.addArmorMaterial("stone armor", Tags.MODID + ":stone", 8, new int[]{2, 3, 4, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0F);
+	public static final ArmorMaterial EMERALD_ARMOUR = EnumHelper.addArmorMaterial("emerald armor", Tags.MODID + ":emerald", 40, new int[]{4, 7, 9, 4}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0F);
 
 	//TOOLS
 	public static final Item EMERALD_SWORD = new SwordEmerald("emerald_sword", EMERALD_TOOL);

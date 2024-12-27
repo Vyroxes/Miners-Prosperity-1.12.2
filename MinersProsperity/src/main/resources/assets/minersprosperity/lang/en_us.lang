@@ -103,10 +103,15 @@ gui.redstone_low_signal.name=Low Signal
 gui.redstone_high_signal.name=High Signal
 gui.slots_configuration.name=Slots Configuration
 gui.upgrades.name=Upgrades
+gui.set_all_disabled.name=Set All Sides in All Slots to Disabled
+gui.set_all_default.name=Set All Sides in All Slots to Default
+gui.set_disabled.name=Set All Sides to Disabled
+gui.set_input.name=Set All Sides to Input
+gui.set_output.name=Set All Sides to Output
 gui.energy_stored=Energy Stored
 gui.energy_usage=Energy Usage
 gui.max_energy_input=Max Energy Input
-gui.slot_ignored.name=Ignored
+gui.slot_disabled.name=Disabled
 gui.slot_input.name=Input
 gui.slot_output.name=Output
 

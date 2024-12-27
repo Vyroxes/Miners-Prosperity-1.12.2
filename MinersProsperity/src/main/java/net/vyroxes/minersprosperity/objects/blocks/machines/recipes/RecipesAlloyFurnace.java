@@ -1,7 +1,7 @@
 package net.vyroxes.minersprosperity.objects.blocks.machines.recipes;
 
+import com.github.bsideup.jabel.Desugar;
 import it.unimi.dsi.fastutil.Hash;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -62,55 +62,24 @@ public class RecipesAlloyFurnace
 		}
 	}
 
-	public static class Row
-	{
-		private final ItemStack[] ingredients;
-		private final Recipe recipe;
-
-		public Row(ItemStack[] ingredients, Recipe recipe)
-		{
-			this.ingredients = ingredients;
-			this.recipe = recipe;
-		}
-
-		public ItemStack[] getIngredients()
-		{
-			return ingredients;
-		}
-
-		public Recipe getRecipe()
-		{
-			return recipe;
-		}
-	}
-
 	public static class LookupTable
 	{
-		public final List<Row> rows = new ArrayList<>();
-		private final Map<ItemStack, Set<Integer>>[] ingredientIndices;
+		private final Map<RecipeKey, Recipe> recipeMap;
 
-		@SuppressWarnings("unchecked")
 		public LookupTable()
 		{
-			ingredientIndices = new Map[2];
-			for (int i = 0; i < 2; i++)
-			{
-				ingredientIndices[i] = new Object2ObjectOpenCustomHashMap<>(new ItemStackHashStrategy());
-			}
+			this.recipeMap = new Object2ObjectOpenCustomHashMap<>(new RecipeKeyHashStrategy());
 		}
 
-		public void addRow(Recipe recipe) {
-			int index = rows.size();
-			Row row = new Row(new ItemStack[]{recipe.input1, recipe.input2}, recipe);
-			rows.add(row);
+		public void addRow(Recipe recipe)
+		{
+			RecipeKey key = new RecipeKey(recipe.input1, recipe.input2);
+			recipeMap.put(key, recipe);
+		}
 
-			for (int i = 0; i < row.ingredients.length; i++)
-			{
-				ItemStack ingredient = row.ingredients[i];
-				ingredientIndices[i]
-						.computeIfAbsent(ingredient, k -> new IntOpenHashSet())
-						.add(index);
-			}
+		public List<Recipe> getRecipes()
+		{
+			return new ArrayList<>(recipeMap.values());
 		}
 
 		public List<Recipe> findRecipes(ItemStack... inputs)
@@ -120,38 +89,58 @@ public class RecipesAlloyFurnace
 				throw new IllegalArgumentException("Exactly two inputs are required.");
 			}
 
-			Set<Integer> matchingIndices = new IntOpenHashSet();
+			RecipeKey key = new RecipeKey(inputs[0], inputs[1]);
+			Recipe recipe = recipeMap.get(key);
 
-			Set<Integer> matches1 = ingredientIndices[0].getOrDefault(inputs[0], Collections.emptySet());
-			Set<Integer> matches2 = ingredientIndices[1].getOrDefault(inputs[1], Collections.emptySet());
+			return recipe != null ? Collections.singletonList(recipe) : Collections.emptyList();
+		}
+	}
 
-			matchingIndices.addAll(matches1);
-			matchingIndices.retainAll(matches2);
-
-			if (matchingIndices.isEmpty())
+	@Desugar
+	private record RecipeKey(ItemStack ingredient1, ItemStack ingredient2)
+	{
+			private RecipeKey(ItemStack ingredient1, ItemStack ingredient2)
 			{
-				Set<Integer> matches3 = ingredientIndices[0].getOrDefault(inputs[1], Collections.emptySet());
-				Set<Integer> matches4 = ingredientIndices[1].getOrDefault(inputs[0], Collections.emptySet());
-
-				matchingIndices.addAll(matches3);
-				matchingIndices.retainAll(matches4);
+				if (compareStacks(ingredient1, ingredient2) <= 0)
+				{
+					this.ingredient1 = ingredient1;
+					this.ingredient2 = ingredient2;
+				}
+				else
+				{
+					this.ingredient1 = ingredient2;
+					this.ingredient2 = ingredient1;
+				}
 			}
 
-			List<Recipe> matchingRecipes = new ArrayList<>();
-			for (int index : matchingIndices)
+			private static int compareStacks(ItemStack a, ItemStack b)
 			{
-				matchingRecipes.add(rows.get(index).recipe);
+				return Objects.requireNonNull(a.getItem().getRegistryName()).compareTo(Objects.requireNonNull(b.getItem().getRegistryName()));
 			}
+	}
 
-			return matchingRecipes;
+	private static class RecipeKeyHashStrategy implements Hash.Strategy<RecipeKey>
+	{
+		@Override
+		public int hashCode(RecipeKey key)
+		{
+			return Objects.hash(key.ingredient1().getItem(), key.ingredient1().getMetadata(), key.ingredient2().getItem(), key.ingredient2().getMetadata());
+		}
+
+		@Override
+		public boolean equals(RecipeKey a, RecipeKey b)
+		{
+			if (a == b) return true;
+			if (a == null || b == null) return false;
+			return ItemStack.areItemsEqual(a.ingredient1(), b.ingredient1()) && ItemStack.areItemsEqual(a.ingredient2(), b.ingredient2());
 		}
 	}
 
 	public boolean isIngredientInAnyRecipe(ItemStack itemStack)
 	{
-		for (Row row : lookupTable.rows)
+		for (RecipeKey key : lookupTable.recipeMap.keySet())
 		{
-			if (ItemStack.areItemStacksEqual(row.recipe.input1, itemStack) || ItemStack.areItemStacksEqual(row.recipe.input2, itemStack))
+			if (ItemStack.areItemsEqual(key.ingredient1(), itemStack) || ItemStack.areItemsEqual(key.ingredient2(), itemStack))
 			{
 				return true;
 			}
@@ -201,29 +190,14 @@ public class RecipesAlloyFurnace
 
 	public float getExperience(ItemStack result)
 	{
-		for (Row row : lookupTable.rows)
+		for (RecipeKey key : lookupTable.recipeMap.keySet())
 		{
-			if (ItemStack.areItemStacksEqual(row.recipe.result, result))
+			Recipe recipe = lookupTable.recipeMap.get(key);
+			if (ItemStack.areItemsEqual(recipe.result, result))
 			{
-				return row.recipe.experience;
+				return recipe.experience;
 			}
 		}
 		return 0.0f;
-	}
-
-	private static class ItemStackHashStrategy implements Hash.Strategy<ItemStack>
-	{
-		@Override
-		public int hashCode(ItemStack itemStack)
-		{
-			return Objects.hash(itemStack.getItem(), itemStack.getMetadata());
-		}
-
-		@Override
-		public boolean equals(ItemStack a, ItemStack b)
-		{
-			if (a == null || b == null) return false;
-			return a.getItem() == b.getItem() && a.getMetadata() == b.getMetadata();
-		}
 	}
 }

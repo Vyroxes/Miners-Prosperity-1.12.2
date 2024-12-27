@@ -3,6 +3,7 @@ package net.vyroxes.minersprosperity.objects.containers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
@@ -10,11 +11,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContainerInventory extends Container
 {
-    private final TileEntityAlloyFurnace tileEntityAlloyFurnace;
+    private final TileEntityAlloyFurnace tileEntity;
+    private int cookTime;
+    private int totalCookTime;
 
-    public ContainerInventory(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntityAlloyFurnace)
+    public ContainerInventory(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntity)
     {
-        this.tileEntityAlloyFurnace = tileEntityAlloyFurnace;
+        this.tileEntity = tileEntity;
         
         for (int i = 0; i < 3; ++i)
         {
@@ -34,12 +37,33 @@ public class ContainerInventory extends Container
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
+
+        for (IContainerListener icontainerlistener : this.listeners)
+        {
+            if (this.cookTime != this.tileEntity.getCookTime())
+            {
+                icontainerlistener.sendWindowProperty(this, 0, this.tileEntity.getCookTime());
+            }
+            if (this.totalCookTime != this.tileEntity.getTotalCookTime())
+            {
+                icontainerlistener.sendWindowProperty(this, 1, this.tileEntity.getTotalCookTime());
+            }
+        }
+
+        this.cookTime = this.tileEntity.getCookTime();
+        this.totalCookTime = this.tileEntity.getTotalCookTime();
+    }
+
+    @Override
+    public void updateProgressBar(int id, int data)
+    {
+        this.tileEntity.setField(id, data);
     }
 
     @Override
     public boolean canInteractWith(@NotNull EntityPlayer playerIn)
     {
-        return this.tileEntityAlloyFurnace.isUsableByPlayer(playerIn);
+        return this.tileEntity.isUsableByPlayer(playerIn);
     }
 
     @Override

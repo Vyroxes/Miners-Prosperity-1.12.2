@@ -39,8 +39,10 @@ import net.vyroxes.minersprosperity.init.BlockInit;
 import net.vyroxes.minersprosperity.objects.blocks.BlockBase;
 import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.util.annotations.NonnullByDefault;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
-import net.vyroxes.minersprosperity.util.handlers.SidedItemHandler;
+import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,13 +65,14 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
     }
 
 	@Override
-	public int getLightValue(IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos)
+	@NonnullByDefault
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
 	{
 		return state.getValue(POWERED) ? 13 : 0;
 	}
 
 	@Override
-	public void harvestBlock(@NotNull World worldIn, @NotNull EntityPlayer player, @NotNull BlockPos pos, @NotNull IBlockState state, @Nullable TileEntity tileEntity, @NotNull ItemStack stack)
+	public void harvestBlock(@NotNull World worldIn, @NotNull EntityPlayer player, @NotNull BlockPos pos, @NotNull IBlockState state, TileEntity tileEntity, @NotNull ItemStack stack)
 	{
 		if (tileEntity != null)
 		{
@@ -99,13 +102,15 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 
 	@Override
-	public @NotNull Item getItemDropped(@NotNull IBlockState state, @NotNull Random rand, int fortune)
+	@NonnullByDefault
+	public @NotNull Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
 		return Item.getItemFromBlock(BlockInit.ALLOY_FURNACE);
 	}
 
 	@Override
-	public void onBlockPlacedBy(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase placer, @NotNull ItemStack stack)
+	@NonnullByDefault
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
 		NBTTagCompound tag = stack.getTagCompound();
 
@@ -130,26 +135,22 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 				for (EnumFacing facing : EnumFacing.values())
 				{
 					String facingName = facing.getName();
-
-					SidedItemHandler sidedHandler = (SidedItemHandler) alloyFurnace.getSidedItemHandler(facing);
-
-					if (statesTag.hasKey(facingName + "Inputs"))
+					if (statesTag.hasKey(facingName + "SlotStates"))
 					{
-						NBTTagList inputList = statesTag.getTagList(facingName + "Inputs", Constants.NBT.TAG_COMPOUND);
-						for (int i = 0; i < inputList.tagCount(); i++)
-						{
-							NBTTagCompound slotsTag = inputList.getCompoundTagAt(i);
-							sidedHandler.getInputs()[i] = SidedItemHandler.SlotState.valueOf(slotsTag.getString("state"));
-						}
-					}
+						NBTTagList slotStates = statesTag.getTagList(facingName + "SlotStates", Constants.NBT.TAG_COMPOUND);
+						SidedItemStackHandler sidedHandler = (SidedItemStackHandler) alloyFurnace.getSidedItemHandler(facing);
 
-					if (statesTag.hasKey(facingName + "Outputs"))
-					{
-						NBTTagList outputList = statesTag.getTagList(facingName + "Outputs", Constants.NBT.TAG_COMPOUND);
-						for (int i = 0; i < outputList.tagCount(); i++)
+						for (int i = 0; i < slotStates.tagCount(); i++)
 						{
-							NBTTagCompound slotsTag = outputList.getCompoundTagAt(i);
-							sidedHandler.getOutputs()[i] = SidedItemHandler.SlotState.valueOf(slotsTag.getString("state"));
+							NBTTagCompound slotStateTag = slotStates.getCompoundTagAt(i);
+							SidedItemStackHandler.SlotState.SlotType slotType = SidedItemStackHandler.SlotState.SlotType.valueOf(slotStateTag.getString("slotType"));
+							SidedItemStackHandler.SlotState.IngredientType ingredientType = SidedItemStackHandler.SlotState.IngredientType.valueOf(slotStateTag.getString("ingredientType"));
+							SidedItemStackHandler.SlotState.SlotMode slotMode = SidedItemStackHandler.SlotState.SlotMode.valueOf(slotStateTag.getString("slotMode"));
+							SidedItemStackHandler.SlotState.SlotAutoMode slotAutoMode = SidedItemStackHandler.SlotState.SlotAutoMode.valueOf(slotStateTag.getString("slotAutoMode"));
+							SidedItemStackHandler.SlotState.SlotOutputMode slotOutputMode = SidedItemStackHandler.SlotState.SlotOutputMode.valueOf(slotStateTag.getString("slotOutputMode"));
+
+							SidedItemStackHandler.SlotState slotState = new SidedItemStackHandler.SlotState(slotType, ingredientType, slotMode, slotAutoMode, slotOutputMode);
+							sidedHandler.setSlotState(i, slotState);
 						}
 					}
 				}
@@ -160,7 +161,8 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 
 	@Override
-	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state)
+	@NonnullByDefault
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
 	{
 		if (!keepInventory)
 		{
@@ -189,7 +191,8 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 
 	@Override
-	public void onBlockAdded(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state)
+	@NonnullByDefault
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)
 	{
 		this.setDefaultFacing(worldIn, pos, state);
 	}
@@ -226,8 +229,9 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 	
 	@SideOnly(Side.CLIENT)
+	@NonnullByDefault
     @SuppressWarnings("incomplete-switch")
-    public void randomDisplayTick(IBlockState stateIn, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull Random rand)
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
 		if (stateIn.getValue(POWERED))
         {
@@ -262,10 +266,47 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
             }
         }
     }
-	
+
 	@Override
-	public boolean onBlockActivated(World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer playerIn, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ)
+	@NonnullByDefault
+	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
 	{
+		if (playerIn.isSneaking())
+		{
+			TileEntityAlloyFurnace tileEntity = getTileEntity(worldIn, pos);
+			if (tileEntity != null)
+			{
+				for (EnumFacing face : EnumFacing.values())
+				{
+					SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+					for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+					{
+						sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+					}
+				}
+			}
+		}
+
+		super.onBlockClicked(worldIn, pos, playerIn);
+	}
+
+	@Override
+	@NonnullByDefault
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+		if (playerIn.isSneaking())
+		{
+			TileEntityAlloyFurnace tileEntity = getTileEntity(worldIn, pos);
+			if (tileEntity != null)
+			{
+				EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
+				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(side);
+				for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+				{
+					sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+				}
+			}
+		}
 		if (!worldIn.isRemote)
 		{
 			if (playerIn.openContainer instanceof ContainerAlloyFurnace)
@@ -273,7 +314,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 				return false;
 			}
 
-			playerIn.openGui(MinersProsperity.instance, GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+			playerIn.openGui(MinersProsperity.INSTANCE, GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
 		}
 
 		return true;
@@ -303,13 +344,15 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 	
 	@Override
-	public boolean hasTileEntity(@NotNull IBlockState state)
+	@NonnullByDefault
+	public boolean hasTileEntity(IBlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(@NotNull World worldIn, int meta)
+	@NonnullByDefault
+	public TileEntity createNewTileEntity(World worldIn, int meta)
 	{
 		return new TileEntityAlloyFurnace();
 	}
@@ -320,14 +363,16 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 	}
 
 	@Override
-	public @NotNull IBlockState getStateForPlacement(@NotNull World world, @NotNull BlockPos pos, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, @NotNull EnumHand hand)
+	@NonnullByDefault
+	public @NotNull IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
 	{
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 	
 	@Override
+	@NonnullByDefault
 	@SuppressWarnings("deprecation")
-	public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state)
+	public @NotNull EnumBlockRenderType getRenderType(IBlockState state)
 	{
 		return EnumBlockRenderType.MODEL;
 	}

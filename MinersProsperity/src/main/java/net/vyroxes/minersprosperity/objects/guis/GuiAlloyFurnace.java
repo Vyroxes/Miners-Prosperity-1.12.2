@@ -12,8 +12,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.vyroxes.minersprosperity.Reference;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
@@ -21,7 +22,8 @@ import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 public class GuiAlloyFurnace extends GuiContainer
 {
-	private static final ResourceLocation ALLOY_FURNACE_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace.png");
+	private static final ResourceLocation GUI_ELEMENTS = new ResourceLocation(Tags.MODID, "textures/gui/gui_elements.png");
+	private static final ResourceLocation ALLOY_FURNACE = new ResourceLocation(Tags.MODID, "textures/gui/alloy_furnace.png");
 	private final TileEntityAlloyFurnace tileEntity;
 	private int redstoneControlButtonState;
 	
@@ -49,18 +51,18 @@ public class GuiAlloyFurnace extends GuiContainer
 
 		if (this.redstoneControlButtonState == 0)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 176, 17, I18n.format("gui.redstone_ignored.name")));
+			this.addButton(new GuiDefaultButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 16, 0, 18, I18n.format("gui.redstone_ignored.name")));
 		}
 		else if (redstoneControlButtonState == 1)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 194, 17, I18n.format("gui.redstone_low_signal.name")));
+			this.addButton(new GuiDefaultButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 34, 0, 18, I18n.format("gui.redstone_low_signal.name")));
 		}
 		else if (redstoneControlButtonState == 2)
 		{
-			this.addButton(new GuiRedstoneControlButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 212, 17, I18n.format("gui.redstone_high_signal.name")));
+			this.addButton(new GuiDefaultButton(0, guiLeft + 151, guiTop + 6, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 52, 0, 18, I18n.format("gui.redstone_high_signal.name")));
 		}
-		this.addButton(new GuiSlotsConfigurationButton(1, guiLeft + 151, guiTop + 27, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 230, 17, I18n.format("gui.slots_configuration.name")));
-		this.addButton(new GuiSlotsConfigurationButton(2, guiLeft + 151, guiTop + 48, 18, 18, new ResourceLocation(Reference.MODID, ALLOY_FURNACE_TEXTURE.getPath()), 176, 53, I18n.format("gui.upgrades.name")));
+		this.addButton(new GuiDefaultButton(1, guiLeft + 151, guiTop + 27, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 70, 0, 18, I18n.format("gui.slots_configuration.name")));
+		this.addButton(new GuiDefaultButton(2, guiLeft + 151, guiTop + 48, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 0, 18, I18n.format("gui.upgrades.name")));
 	}
 
 	@Override
@@ -92,7 +94,7 @@ public class GuiAlloyFurnace extends GuiContainer
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 			for (GuiButton guiButton : this.buttonList)
 			{
-				if (guiButton instanceof GuiRedstoneControlButton && ((GuiRedstoneControlButton) guiButton).isHovered(mouseX, mouseY))
+				if (guiButton instanceof GuiDefaultButton && ((GuiDefaultButton) guiButton).isHovered(mouseX, mouseY))
 				{
 					if (guiButton.id == 0)
 					{
@@ -116,7 +118,7 @@ public class GuiAlloyFurnace extends GuiContainer
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 			for (GuiButton guiButton : this.buttonList)
 			{
-				if (guiButton instanceof GuiRedstoneControlButton && ((GuiRedstoneControlButton) guiButton).isHovered(mouseX, mouseY))
+				if (guiButton instanceof GuiDefaultButton && ((GuiDefaultButton) guiButton).isHovered(mouseX, mouseY))
 				{
 					if (guiButton.id == 0)
 					{
@@ -142,22 +144,14 @@ public class GuiAlloyFurnace extends GuiContainer
 
 	    for (GuiButton button : this.buttonList) 
 	    {
-	        if (button instanceof GuiRedstoneControlButton) 
+	        if (button instanceof GuiDefaultButton)
 	        {
-	            List<String> redstoneControlButtonTooltip = ((GuiRedstoneControlButton) button).getCurrentTooltip();
-	            if (redstoneControlButtonTooltip != null)
+	            List<String> guiButtonTooltip = ((GuiDefaultButton) button).getCurrentTooltip();
+	            if (guiButtonTooltip != null)
 	            {
-	                GuiUtils.drawHoveringText(redstoneControlButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+	                GuiUtils.drawHoveringText(guiButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 	            }
 	        }
-			if (button instanceof GuiSlotsConfigurationButton)
-			{
-				List<String> slotsConfigurationButtonTooltip = ((GuiSlotsConfigurationButton) button).getCurrentTooltip();
-				if (slotsConfigurationButtonTooltip != null)
-				{
-					GuiUtils.drawHoveringText(slotsConfigurationButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
-				}
-			}
 	    }
 
 		int energyBarX = this.guiLeft + 8;
@@ -174,9 +168,9 @@ public class GuiAlloyFurnace extends GuiContainer
 			String formattedMaxEnergyStored = String.format("%.1f", maxEnergyStored);
 			int maxReceive = this.tileEntity.getMaxReceive();
 			List<String> currentTooltip = new ArrayList<>();
-			currentTooltip.add(I18n.format("gui.energy_stored") + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
-			currentTooltip.add(I18n.format("gui.energy_usage") + ": " + energyUsage + " FE/t");
-			currentTooltip.add(I18n.format("gui.max_energy_input") + ": " + maxReceive + " FE/t");
+			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
+			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_usage") + TextFormatting.GRAY + ": " + energyUsage + " FE/t");
+			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_input") + TextFormatting.GRAY + ": " + maxReceive + " FE/t");
 			GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 		}
 
@@ -195,14 +189,15 @@ public class GuiAlloyFurnace extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.mc.getTextureManager().bindTexture(ALLOY_FURNACE_TEXTURE);
+		this.mc.getTextureManager().bindTexture(ALLOY_FURNACE);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-		
+
+		this.mc.getTextureManager().bindTexture(GUI_ELEMENTS);
 		int l = this.getCookProgressScaled();
-		this.drawTexturedModalRect(this.guiLeft + 81, this.guiTop + 35, 176, 0, l + 1, 16);
+		this.drawTexturedModalRect(this.guiLeft + 82, this.guiTop + 35, 232, 0, l + 1, 16);
 
 		int k = this.getEnergyStoredScaled();
-		this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 7, 194, 53, 16, 41 - k);
+		this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 7, 0, 0, 16, 41 - k);
 	}
 
 	private int getCookProgressScaled()

@@ -7,11 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
@@ -24,54 +20,18 @@ public class ContainerAlloyFurnace extends Container
     private int cookTime;
     private int totalCookTime;
     private int energyStored;
-    private int maxEnergyStored;
     private int energyUsage;
 
     public ContainerAlloyFurnace(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntity)
     {
         this.tileEntity = tileEntity;
-        IItemHandler handler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler handler = this.tileEntity.getItemStackHandler();
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 0, 38, 35) // Slot wejściowy lewy (1)
+        this.addSlotToContainer(new SlotItemHandler(handler, 0, 37, 35)); // Slot wejściowy lewy (1)
+        this.addSlotToContainer(new SlotItemHandler(handler, 1, 57, 35)); // Slot wejściowy prawy (2)
+        this.addSlotToContainer(new SlotItemHandler(handler, 2, 8, 53)); // Slot energii
+        this.addSlotToContainer(new SlotItemHandler(handler, 3, 119, 35) // Slot wyjściowy
         {
-            @Override
-            public boolean isItemValid(@NotNull ItemStack stack)
-            {
-                return tileEntity.isValidInputForSlot(stack, tileEntity.getItemStackInSlot(0), tileEntity.getItemStackInSlot(1), true);
-            }
-        });
-
-
-        this.addSlotToContainer(new SlotItemHandler(handler, 1, 56, 35) // Slot wejściowy prawy (2)
-        {
-            @Override
-            public boolean isItemValid(@NotNull ItemStack stack)
-            {
-                return tileEntity.isValidInputForSlot(stack, tileEntity.getItemStackInSlot(0), tileEntity.getItemStackInSlot(1), false);
-            }
-        });
-        this.addSlotToContainer(new SlotItemHandler(handler, 2, 8, 53) // Slot energii
-        {
-            @Override
-            public boolean isItemValid(@NotNull ItemStack stack)
-            {
-                return tileEntity.isItemEnergy(stack);
-            }
-
-            @Override
-            public int getSlotStackLimit()
-            {
-                return 1;
-            }
-        });
-        this.addSlotToContainer(new SlotItemHandler(handler, 3, 118, 35) // Slot wyjściowy
-        {
-        	@Override
-            public boolean isItemValid(@NotNull ItemStack stack)
-            {
-                return false;
-            }
-
             @Override
             public @NotNull ItemStack onTake(@NotNull EntityPlayer entityPlayer, @NotNull ItemStack itemStack)
             {

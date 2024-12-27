@@ -42,11 +42,6 @@ public class RegistryHandler
 	@SideOnly(Side.CLIENT)
 	public static void onModelRegister(ModelRegistryEvent event)
 	{
-		MinecraftForge.EVENT_BUS.register(new TooltipHandler());
-
-		KeyInputHandler.registerKeyBindings();
-		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
-
 		for(Item item : ItemInit.ITEMS)
 		{
 			if(item instanceof IHasModel)
@@ -62,6 +57,10 @@ public class RegistryHandler
 				((IHasModel)block).registerModels();
 			}
 		}
+
+		MinecraftForge.EVENT_BUS.register(new TooltipHandler());
+		KeyInputHandler.registerKeyBindings();
+		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
 	}
 
 	public static void otherRegistries()
@@ -71,12 +70,11 @@ public class RegistryHandler
 
 	public static void preInitRegistries(FMLPreInitializationEvent event)
 	{
-		MinecraftForge.EVENT_BUS.register(MinersProsperity.instance);
+		MinecraftForge.EVENT_BUS.register(MinersProsperity.INSTANCE);
 		
 	    MinecraftForge.EVENT_BUS.register(new CraftingHandler());
 		
 		ConfigHandler.registerConfig(event);
-		MinecraftForge.EVENT_BUS.register(new ConfigHandler());
 	}
 	
 	public static void initRegistries(FMLInitializationEvent event)
@@ -85,7 +83,7 @@ public class RegistryHandler
 		
 		NetworkHandler.init(event);
 		
-		NetworkRegistry.INSTANCE.registerGuiHandler(MinersProsperity.instance, new GuiHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(MinersProsperity.INSTANCE, new GuiHandler());
 
 		MinecraftForge.EVENT_BUS.register(new PickupHandler());
 	}

@@ -10,13 +10,14 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.vyroxes.minersprosperity.Reference;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
-import net.vyroxes.minersprosperity.util.handlers.SidedItemHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
@@ -24,7 +25,8 @@ import java.util.*;
 
 public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 {
-	private static final ResourceLocation ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE = new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slot_configuration.png");
+	private static final ResourceLocation GUI_ELEMENTS = new ResourceLocation(Tags.MODID, "textures/gui/gui_elements.png");
+	private static final ResourceLocation ALLOY_FURNACE_SLOT_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/alloy_furnace_slot_configuration.png");
 	private final TileEntityAlloyFurnace tileEntity;
 
 	public GuiAlloyFurnaceSlotConfiguration(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
@@ -45,7 +47,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
         for (EnumFacing face : EnumFacing.values())
 		{
-			SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(face);
+			SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
 			Map<Integer, String> faceNames = new HashMap<>();
 			faceNames.put(0, I18n.format("gui.side_bottom.name"));
 			faceNames.put(1, I18n.format("gui.side_top.name"));
@@ -56,13 +58,13 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 			int slot = tileEntity.getSlotId();
 
-			SidedItemHandler.SlotState slotState = sidedItemHandler.getSlotState(slot);
+			SidedItemStackHandler.SlotState.SlotMode slotState = sidedItemStackHandler.getSlotMode(slot);
 
 			int textureX = switch (slotState)
 			{
-				case DISABLED -> 176;
-				case INPUT -> 192;
-				case OUTPUT -> 208;
+				case DISABLED -> 184;
+				case INPUT -> 200;
+				case OUTPUT -> 216;
 			};
 
 			int xOffset = switch (face)
@@ -79,62 +81,123 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 				case DOWN, SOUTH -> 53;
 			};
 
-			this.addButton(new GuiFaceButton(
+			String disabled = I18n.format("gui.slot_disabled.name");
+			String input = I18n.format("gui.slot_input.name");
+			String output = I18n.format("gui.slot_output.name");
+			String tooltip;
+
+			if (slotState.ordinal() == 0)
+			{
+				tooltip = faceNames.get(face.ordinal()) + ": " + disabled;
+			}
+			else if (slotState.ordinal() == 1)
+			{
+				tooltip = faceNames.get(face.ordinal()) + ": " + input;
+			}
+			else
+			{
+				tooltip = faceNames.get(face.ordinal()) + ": " + output;
+			}
+
+			this.addButton(new GuiDefaultButton(
 					face.ordinal(),
 					guiLeft + xOffset,
 					guiTop + yOffset,
-					16, 16,
-					new ResourceLocation(Reference.MODID, ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE.getPath()),
+					16,
+					16,
+					new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()),
 					textureX,
 					0,
-					faceNames.get(face.ordinal()),
-					"Slot " + slot,
-					slotState.ordinal()
+					16,
+					tooltip
 			));
 		}
 
-		this.addButton(new GuiBackButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Reference.MODID, "textures/gui/alloy_furnace_slots_configuration.png"), 238, 0, I18n.format("gui.back.name")));
+		this.addButton(new GuiDefaultButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 36, 9, I18n.format("gui.back.name")));
+		this.addButton(new GuiDefaultButton(7, guiLeft + 7, guiTop + 18, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 106, 0, 16, I18n.format("gui.set_disabled.name")));
+
+		if (tileEntity.isSlotOutput(tileEntity.getSlotId()))
+		{
+			this.addButton(new GuiDefaultButton(9, guiLeft + 7, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 138, 0, 16, I18n.format("gui.set_output.name")));
+		}
+		else
+		{
+			this.addButton(new GuiDefaultButton(8, guiLeft + 7, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 122, 0, 16, I18n.format("gui.set_input.name")));
+			this.addButton(new GuiDefaultButton(9, guiLeft + 7, guiTop + 54, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 138, 0, 16, I18n.format("gui.set_output.name")));
+		}
+
+		String description = TextFormatting.AQUA + "Shift + left click" + TextFormatting.GRAY + " on the machine disables input and output for all slots on every side\n" + TextFormatting.AQUA + "Shift + right click" + TextFormatting.GRAY + " on the machine from a specific side disables input and output for all slots on that specific side.";
+		GuiButton descButton = new GuiDefaultButton(10, guiLeft + 163, guiTop + 6, 6, 8, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 41, 8, description);
+		descButton.enabled = false;
+		this.addButton(descButton);
 	}
 
 	@Override
 	public void actionPerformed(@NotNull GuiButton guiButton)
 	{
+		int slot = tileEntity.getSlotId();
 
 		if (guiButton.id < 6)
 		{
-			int slot = tileEntity.getSlotId();
 			int face = guiButton.id;
 
-			SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
-			SidedItemHandler.SlotState currentState = sidedItemHandler.getSlotState(slot);
+			SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
+			SidedItemStackHandler.SlotState.SlotMode currentState = sidedItemStackHandler.getSlotMode(slot);
 
-			if (sidedItemHandler.isSlotOutput(slot))
+			if (sidedItemStackHandler.isSlotOutput(slot))
 			{
-				SidedItemHandler.SlotState nextState = switch (currentState)
+				SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
 				{
-					case DISABLED -> SidedItemHandler.SlotState.OUTPUT;
+					case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
                     case INPUT -> null;
-                    case OUTPUT -> SidedItemHandler.SlotState.DISABLED;
+                    case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
 				};
 
-				sidedItemHandler.setSlotState(slot, nextState);
+				sidedItemStackHandler.setSlotMode(slot, nextState);
 			}
 			else
 			{
-				SidedItemHandler.SlotState nextState = switch (currentState)
+				SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
 				{
-					case DISABLED -> SidedItemHandler.SlotState.INPUT;
-					case INPUT -> SidedItemHandler.SlotState.OUTPUT;
-					case OUTPUT -> SidedItemHandler.SlotState.DISABLED;
+					case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.INPUT;
+					case INPUT -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
+					case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
 				};
 
-				sidedItemHandler.setSlotState(slot, nextState);
+				sidedItemStackHandler.setSlotMode(slot, nextState);
 			}
 		}
 
 		if (guiButton.id == 6)
 		{
             NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+		}
+
+		if (guiButton.id == 7)
+		{
+			for (EnumFacing face : EnumFacing.values())
+			{
+				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+				sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+			}
+		}
+
+		if (guiButton.id == 8)
+		{
+			for (EnumFacing face : EnumFacing.values())
+			{
+				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+				sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.INPUT);
+			}
+		}
+
+		if (guiButton.id == 9)
+		{
+			for (EnumFacing face : EnumFacing.values())
+			{
+				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+				sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.OUTPUT);
+			}
 		}
 
 		this.initGui();
@@ -148,40 +211,43 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 			for (GuiButton guiButton : this.buttonList)
 			{
-				if (guiButton instanceof GuiFaceButton && ((GuiFaceButton) guiButton).isHovered(mouseX, mouseY))
+				if (guiButton instanceof GuiDefaultButton && ((GuiDefaultButton) guiButton).isHovered(mouseX, mouseY))
 				{
-					int slot = tileEntity.getSlotId();
-					int face = guiButton.id;
-
-					SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
-					SidedItemHandler.SlotState currentState = sidedItemHandler.getSlotState(slot);
-
-					if (sidedItemHandler.isSlotOutput(slot))
+					if (guiButton.id < 6)
 					{
-						SidedItemHandler.SlotState nextState = switch (currentState)
+						int slot = tileEntity.getSlotId();
+						int face = guiButton.id;
+
+						SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
+						SidedItemStackHandler.SlotState.SlotMode currentState = sidedItemStackHandler.getSlotMode(slot);
+
+						if (sidedItemStackHandler.isSlotOutput(slot))
 						{
-							case DISABLED -> SidedItemHandler.SlotState.OUTPUT;
-							case INPUT -> null;
-							case OUTPUT -> SidedItemHandler.SlotState.DISABLED;
-						};
+							SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
+							{
+								case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
+								case INPUT -> null;
+								case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
+							};
 
-						sidedItemHandler.setSlotState(slot, nextState);
-					}
-					else
-					{
-						SidedItemHandler.SlotState nextState = switch (currentState)
+							sidedItemStackHandler.setSlotMode(slot, nextState);
+						}
+						else
 						{
-							case DISABLED -> SidedItemHandler.SlotState.OUTPUT;
-							case INPUT -> SidedItemHandler.SlotState.DISABLED;
-							case OUTPUT -> SidedItemHandler.SlotState.INPUT;
-						};
+							SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
+							{
+								case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
+								case INPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
+								case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.INPUT;
+							};
 
-						sidedItemHandler.setSlotState(slot, nextState);
+							sidedItemStackHandler.setSlotMode(slot, nextState);
+						}
+
+						Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+						this.initGui();
+						return;
 					}
-
-					Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
-					this.initGui();
-					return;
 				}
 			}
 		}
@@ -190,16 +256,19 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			super.mouseClicked(mouseX, mouseY, mouseButton);
 			for (GuiButton guiButton : this.buttonList)
 			{
-				if (guiButton instanceof GuiFaceButton && ((GuiFaceButton) guiButton).isHovered(mouseX, mouseY))
+				if (guiButton instanceof GuiDefaultButton && ((GuiDefaultButton) guiButton).isHovered(mouseX, mouseY))
 				{
-					int slot = tileEntity.getSlotId();
-					int face = guiButton.id;
+					if (guiButton.id < 6)
+					{
+						int slot = tileEntity.getSlotId();
+						int face = guiButton.id;
 
-                    SidedItemHandler sidedItemHandler = (SidedItemHandler) tileEntity.getSidedItemHandler(EnumFacing.values()[face]);
-                    sidedItemHandler.setSlotState(slot, SidedItemHandler.SlotState.DISABLED);
-					Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
-					this.initGui();
-					return;
+						SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(EnumFacing.values()[face]);
+						sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+						Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+						this.initGui();
+						return;
+					}
 				}
 			}
 		}
@@ -218,21 +287,12 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 		for (GuiButton button : this.buttonList)
 		{
-			if (button instanceof GuiFaceButton)
+			if (button instanceof GuiDefaultButton)
 			{
-				List<String> guiFaceButtonTooltip = ((GuiFaceButton) button).getCurrentTooltip();
-				if (guiFaceButtonTooltip != null)
+				List<String> guiButtonTooltip = ((GuiDefaultButton) button).getCurrentTooltip();
+				if (guiButtonTooltip != null)
 				{
-					GuiUtils.drawHoveringText(guiFaceButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
-				}
-			}
-
-			if (button instanceof GuiBackButton)
-			{
-				List<String> guiBackButtonTooltip = ((GuiBackButton) button).getCurrentTooltip();
-				if (guiBackButtonTooltip != null)
-				{
-					GuiUtils.drawHoveringText(guiBackButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+					GuiUtils.drawHoveringText(guiButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 				}
 			}
 		}
@@ -252,7 +312,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.mc.getTextureManager().bindTexture(ALLOY_FURNACE_SLOT_CONFIGURATION_TEXTURE);
+		this.mc.getTextureManager().bindTexture(ALLOY_FURNACE_SLOT_CONFIGURATION);
 		int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
@@ -261,7 +321,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 	@Override
 	public void keyTyped(char typedChar, int keyCode)
 	{
-		if (keyCode == 1)
+		if (keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode())
 		{
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());

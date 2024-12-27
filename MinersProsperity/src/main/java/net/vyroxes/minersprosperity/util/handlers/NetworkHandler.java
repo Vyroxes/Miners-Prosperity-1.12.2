@@ -28,7 +28,7 @@ public class NetworkHandler
         NETWORK.sendToServer(new MessageRedstoneControlButtonState(redstoneControlButtonState, pos));
     }
 
-    public static void sendSlotsStateUpdate(EnumFacing side, int id, SidedItemHandler.SlotState slotsState, BlockPos pos)
+    public static void sendSlotsStateUpdate(EnumFacing side, int id, SidedItemStackHandler.SlotState slotsState, BlockPos pos)
     {
         NETWORK.sendToServer(new MessageSlotsState(side, id, slotsState, pos));
     }

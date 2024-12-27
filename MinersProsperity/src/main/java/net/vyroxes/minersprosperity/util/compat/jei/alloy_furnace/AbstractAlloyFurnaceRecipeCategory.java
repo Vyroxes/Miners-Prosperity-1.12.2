@@ -6,11 +6,11 @@ import mezz.jei.api.gui.IDrawableStatic;
 import mezz.jei.api.recipe.IRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.util.ResourceLocation;
-import net.vyroxes.minersprosperity.Reference;
+import net.vyroxes.minersprosperity.Tags;
 
 public abstract class AbstractAlloyFurnaceRecipeCategory<T extends IRecipeWrapper> implements IRecipeCategory<T>
 {
-    protected static final ResourceLocation TEXTURES = new ResourceLocation(Reference.MODID + ":textures/gui/alloy_furnace.png");
+    protected static final ResourceLocation TEXTURES = new ResourceLocation(Tags.MODID + ":textures/gui/alloy_furnace.png");
 
     protected static final int input1 = 0;
     protected static final int input2 = 1;

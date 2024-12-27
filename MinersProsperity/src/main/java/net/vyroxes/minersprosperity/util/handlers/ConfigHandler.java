@@ -5,7 +5,7 @@ import java.io.File;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.vyroxes.minersprosperity.MinersProsperity;
-import net.vyroxes.minersprosperity.Reference;
+import net.vyroxes.minersprosperity.Tags;
 
 public class ConfigHandler
 {
@@ -79,8 +79,8 @@ public class ConfigHandler
     
     public static void registerConfig(FMLPreInitializationEvent event)
     {
-    	MinersProsperity.config = new File(event.getModConfigurationDirectory() + "/" + Reference.MODID);
+    	MinersProsperity.config = new File(event.getModConfigurationDirectory() + "/" + Tags.MODID);
     	MinersProsperity.config.mkdirs();
-    	init(new File(MinersProsperity.config.getPath(), Reference.MODID + ".cfg"));
+    	init(new File(MinersProsperity.config.getPath(), Tags.MODID + ".cfg"));
     }
 }

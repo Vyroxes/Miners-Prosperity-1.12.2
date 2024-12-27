@@ -18,15 +18,15 @@ import net.vyroxes.minersprosperity.objects.tabs.TabTools;
 import net.vyroxes.minersprosperity.proxy.ServerProxy;
 import net.vyroxes.minersprosperity.util.handlers.RegistryHandler;
 
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION)
+@Mod(modid = Tags.MODID, name = Tags.MODNAME, version = Tags.VERSION, acceptedMinecraftVersions = "[1.12.2]")
 public class MinersProsperity
 {	
 	public static File config;
 	
-	@Instance
-	public static MinersProsperity instance;
+	@Mod.Instance
+	public static MinersProsperity INSTANCE;
 	
-	@SidedProxy(clientSide = Reference.CLIENT, serverSide = Reference.SERVER)
+	@SidedProxy(clientSide = Tags.MODGROUP + ".proxy.ClientProxy", serverSide = Tags.MODGROUP + ".proxy.ServerProxy")
 	public static ServerProxy proxy;
 	
 	public static final CreativeTabs tools_tab = new TabTools("tools_tab");

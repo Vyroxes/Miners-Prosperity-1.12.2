@@ -2,26 +2,27 @@ package net.vyroxes.minersprosperity.objects.guis;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiSlotButton extends GuiButton
+public class GuiDefaultButton extends GuiButton
 {
 	private final ResourceLocation texture;
 	private final int textureX;
 	private final int textureY;
+    private final int offset;
     private final String tooltip;
     private List<String> currentTooltip = null;
 
-	public GuiSlotButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, String tooltip)
+	public GuiDefaultButton(int buttonId, int x, int y, int width, int height, ResourceLocation texture, int textureX, int textureY, int offset, String tooltip)
     {
         super(buttonId, x, y, width, height, "");
         this.texture = texture;
         this.textureX = textureX;
         this.textureY = textureY;
+        this.offset = offset;
         this.tooltip = tooltip;
     }
 
@@ -36,21 +37,13 @@ public class GuiSlotButton extends GuiButton
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) 
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
     {
     	if (this.visible) 
         {
-            boolean isHovered = mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
+            boolean isHovered = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
 
-            int yOffset;
-            if(this.tooltip.equals(I18n.format("gui.output.name")))
-            {
-                yOffset = isHovered ? 26 : 0;
-            }
-            else
-            {
-                yOffset = isHovered ? 18 : 0;
-            }
+            int yOffset = isHovered ? this.offset : 0;
 
             mc.getTextureManager().bindTexture(this.texture);
             this.drawTexturedModalRect(this.x, this.y, this.textureX, this.textureY + yOffset, this.width, this.height);

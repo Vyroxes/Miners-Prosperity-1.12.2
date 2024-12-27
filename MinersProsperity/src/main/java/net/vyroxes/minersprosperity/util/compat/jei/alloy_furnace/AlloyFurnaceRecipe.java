@@ -48,7 +48,7 @@ public class AlloyFurnaceRecipe implements IRecipeWrapper
         int cookTimeStringWidth = renderer.getStringWidth(cookTimeString);
         renderer.drawString(cookTimeString, 1 + (recipeWidth - cookTimeStringWidth)/2, 37, Color.GRAY.getRGB());
 
-        String energyString = energy + " FE";
+        String energyString = energy + " FE/t";
         int energyStringWidth = renderer.getStringWidth(energyString);
         renderer.drawString(energyString, 1 + (recipeWidth - energyStringWidth)/2, 47, Color.GRAY.getRGB());
     }

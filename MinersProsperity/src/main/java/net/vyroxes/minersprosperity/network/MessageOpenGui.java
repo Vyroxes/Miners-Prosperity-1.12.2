@@ -44,7 +44,7 @@ public class MessageOpenGui implements IMessage
         {
             EntityPlayerMP player = ctx.getServerHandler().player;
             player.getServerWorld().addScheduledTask(() -> {
-                        player.openGui(MinersProsperity.instance,
+                        player.openGui(MinersProsperity.INSTANCE,
                         message.openGui,
                         player.world,
                         message.pos.getX(),
