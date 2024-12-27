@@ -1,13 +1,13 @@
 package net.vyroxes.minersprosperity.util.handlers;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
 
 public class SidedItemStackHandler implements IItemHandler
 {
@@ -33,15 +33,9 @@ public class SidedItemStackHandler implements IItemHandler
         {
             DISABLED,
             INPUT,
-            OUTPUT
-        }
-
-        public enum SlotAutoMode
-        {
-            DISABLED,
             AUTO_INPUT,
-            AUTO_OUTPUT,
-            BOTH
+            OUTPUT,
+            AUTO_OUTPUT
         }
 
         public enum SlotOutputMode
@@ -54,15 +48,13 @@ public class SidedItemStackHandler implements IItemHandler
         private SlotType slotType;
         private IngredientType ingredientType;
         private SlotMode slotMode;
-        private SlotAutoMode slotAutoMode;
         private SlotOutputMode slotOutputMode;
 
-        public SlotState(SlotType slotType, IngredientType ingredientType, SlotMode slotMode, SlotAutoMode slotAutoMode, SlotOutputMode slotOutputMode)
+        public SlotState(SlotType slotType, IngredientType ingredientType, SlotMode slotMode, SlotOutputMode slotOutputMode)
         {
             this.slotType = slotType;
             this.ingredientType = ingredientType;
             this.slotMode = slotMode;
-            this.slotAutoMode = slotAutoMode;
             this.slotOutputMode = slotOutputMode;
         }
 
@@ -96,16 +88,6 @@ public class SidedItemStackHandler implements IItemHandler
             this.slotMode = slotMode;
         }
 
-        public SlotAutoMode getSlotAutoMode()
-        {
-            return this.slotAutoMode;
-        }
-
-        public void setSlotAutoMode(SlotAutoMode slotAutoMode)
-        {
-            this.slotAutoMode = slotAutoMode;
-        }
-
         public SlotOutputMode getSlotOutputMode()
         {
             return this.slotOutputMode;
@@ -114,6 +96,34 @@ public class SidedItemStackHandler implements IItemHandler
         public void setSlotOutputMode(SlotOutputMode slotOutputMode)
         {
             this.slotOutputMode = slotOutputMode;
+        }
+
+        public void writeToNBT(@NotNull NBTTagCompound tag)
+        {
+            tag.setString("SlotType", getSlotType().name());
+            tag.setString("IngredientType", getIngredientType().name());
+            tag.setString("SlotMode", getSlotMode().name());
+            tag.setString("SlotOutputMode", getSlotOutputMode().name());
+        }
+
+        public void readFromNBT(@NotNull NBTTagCompound tag)
+        {
+            if (tag.hasKey("SlotType"))
+            {
+                this.slotType = SlotType.valueOf(tag.getString("SlotType"));
+            }
+            if (tag.hasKey("IngredientType"))
+            {
+                this.ingredientType = IngredientType.valueOf(tag.getString("IngredientType"));
+            }
+            if (tag.hasKey("SlotMode"))
+            {
+                this.slotMode = SlotMode.valueOf(tag.getString("SlotMode"));
+            }
+            if (tag.hasKey("SlotOutputMode"))
+            {
+                this.slotOutputMode = SlotOutputMode.valueOf(tag.getString("SlotOutputMode"));
+            }
         }
     }
 
@@ -128,11 +138,11 @@ public class SidedItemStackHandler implements IItemHandler
 
         for (int i = 0; i < inputs; i++)
         {
-            this.slotStates[i] = new SlotState(SlotState.SlotType.INPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.INPUT, SlotState.SlotAutoMode.DISABLED, SlotState.SlotOutputMode.DEFAULT);
+            this.slotStates[i] = new SlotState(SlotState.SlotType.INPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.INPUT, SlotState.SlotOutputMode.DEFAULT);
         }
         for (int i = inputs; i < inputs + outputs; i++)
         {
-            this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.OUTPUT, SlotState.SlotAutoMode.AUTO_OUTPUT, SlotState.SlotOutputMode.DEFAULT);
+            this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.OUTPUT, SlotState.SlotOutputMode.DEFAULT);
         }
     }
 
@@ -148,7 +158,7 @@ public class SidedItemStackHandler implements IItemHandler
 
     public SlotState getSlotState(int id)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             return this.slotStates[id];
         }
@@ -158,22 +168,22 @@ public class SidedItemStackHandler implements IItemHandler
 
     public void setSlotState(int id, SlotState slotState)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             this.slotStates[id] = slotState;
-        }
 
-        if (this.tileEntity.getWorld().isRemote)
-        {
-            NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
-        }
+            if (this.tileEntity.getWorld().isRemote)
+            {
+                NetworkHandler.sendSlotsStateUpdate(this.facing, id, slotState, this.tileEntity.getPos());
+            }
 
-        this.tileEntity.markDirty();
+            this.tileEntity.markDirty();
+        }
     }
 
     public SlotState.SlotType getSlotType(int id)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             return this.slotStates[id].getSlotType();
         }
@@ -183,22 +193,22 @@ public class SidedItemStackHandler implements IItemHandler
 
     public void setSlotType(int id, SlotState.SlotType slotType)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             this.slotStates[id].setSlotType(slotType);
-        }
 
-        if (this.tileEntity.getWorld().isRemote)
-        {
-            NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
-        }
+            if (this.tileEntity.getWorld().isRemote)
+            {
+                NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
+            }
 
-        this.tileEntity.markDirty();
+            this.tileEntity.markDirty();
+        }
     }
 
     public SlotState.IngredientType getIngredientType(int id)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             return this.slotStates[id].getIngredientType();
         }
@@ -208,22 +218,22 @@ public class SidedItemStackHandler implements IItemHandler
 
     public void setIngredientType(int id, SlotState.IngredientType ingredientType)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             this.slotStates[id].setIngredientType(ingredientType);
-        }
 
-        if (this.tileEntity.getWorld().isRemote)
-        {
-            NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
-        }
+            if (this.tileEntity.getWorld().isRemote)
+            {
+                NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
+            }
 
-        this.tileEntity.markDirty();
+            this.tileEntity.markDirty();
+        }
     }
 
     public SlotState.SlotMode getSlotMode(int id)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             return this.slotStates[id].getSlotMode();
         }
@@ -233,47 +243,22 @@ public class SidedItemStackHandler implements IItemHandler
 
     public void setSlotMode(int id, SlotState.SlotMode slotMode)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             this.slotStates[id].setSlotMode(slotMode);
+
+            if (this.tileEntity.getWorld().isRemote)
+            {
+                NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
+            }
+
+            this.tileEntity.markDirty();
         }
-
-        if (this.tileEntity.getWorld().isRemote)
-        {
-            NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
-        }
-
-        this.tileEntity.markDirty();
-    }
-
-    public SlotState.SlotAutoMode getSlotAutoMode(int id)
-    {
-        if (id >= 0 && id < this.slotStates.length)
-        {
-            return this.slotStates[id].getSlotAutoMode();
-        }
-
-        return null;
-    }
-
-    public void setSlotAutoMode(int id, SlotState.SlotAutoMode slotAutoMode)
-    {
-        if (id >= 0 && id < this.slotStates.length)
-        {
-            this.slotStates[id].setSlotAutoMode(slotAutoMode);
-        }
-
-        if (this.tileEntity.getWorld().isRemote)
-        {
-            NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
-        }
-
-        this.tileEntity.markDirty();
     }
 
     public SlotState.SlotOutputMode getSlotOutputMode(int id)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             return this.slotStates[id].getSlotOutputMode();
         }
@@ -283,17 +268,17 @@ public class SidedItemStackHandler implements IItemHandler
 
     public void setSlotOutputMode(int id, SlotState.SlotOutputMode slotOutputMode)
     {
-        if (id >= 0 && id < this.slotStates.length)
+        if (id >= 0 && id < this.slotStates.length && this.slotStates[id] != null)
         {
             this.slotStates[id].setSlotOutputMode(slotOutputMode);
-        }
 
-        if (this.tileEntity.getWorld().isRemote)
-        {
-            NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
-        }
+            if (this.tileEntity.getWorld().isRemote)
+            {
+                NetworkHandler.sendSlotsStateUpdate(this.facing, id, this.slotStates[id], this.tileEntity.getPos());
+            }
 
-        this.tileEntity.markDirty();
+            this.tileEntity.markDirty();
+        }
     }
 
     @Override
@@ -311,7 +296,7 @@ public class SidedItemStackHandler implements IItemHandler
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
     {
-        if (getSlotState(slot).slotMode != SlotState.SlotMode.INPUT)
+        if (getSlotState(slot).slotMode != SlotState.SlotMode.INPUT && getSlotState(slot).slotMode != SlotState.SlotMode.AUTO_INPUT)
         {
             return stack;
         }
@@ -326,7 +311,7 @@ public class SidedItemStackHandler implements IItemHandler
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
     {
-        if (getSlotState(slot).slotMode != SlotState.SlotMode.OUTPUT)
+        if (getSlotState(slot).slotMode != SlotState.SlotMode.OUTPUT && getSlotState(slot).slotMode != SlotState.SlotMode.AUTO_OUTPUT)
         {
             return ItemStack.EMPTY;
         }
@@ -338,5 +323,38 @@ public class SidedItemStackHandler implements IItemHandler
     public int getSlotLimit(int slot)
     {
         return this.itemStackHandler.getSlotLimit(slot);
+    }
+
+    public void writeToNBT(@NotNull NBTTagCompound tag)
+    {
+        NBTTagList slotsTagList = new NBTTagList();
+
+        for (SlotState slotState : this.slotStates)
+        {
+            NBTTagCompound slotTag = new NBTTagCompound();
+            if (slotState != null)
+            {
+                slotState.writeToNBT(slotTag);
+            }
+            slotsTagList.appendTag(slotTag);
+        }
+
+        tag.setTag(this.facing.toString() + "SlotStates", slotsTagList);
+    }
+
+    public void readFromNBT(@NotNull NBTTagCompound tag)
+    {
+        if (tag.hasKey(this.facing.toString() + "SlotStates", 9))
+        {
+            NBTTagList slotsTagList = tag.getTagList(this.facing.toString() + "SlotStates", 10);
+            for (int i = 0; i < slotsTagList.tagCount(); i++)
+            {
+                NBTTagCompound slotTag = slotsTagList.getCompoundTagAt(i);
+                if (i < this.slotStates.length)
+                {
+                    this.slotStates[i].readFromNBT(slotTag);
+                }
+            }
+        }
     }
 }

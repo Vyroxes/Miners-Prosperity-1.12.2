@@ -380,20 +380,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         {
             SidedItemStackHandler sidedHandler = this.sidedItemStackHandlers[facing.ordinal()];
 
-            NBTTagList slotStates = new NBTTagList();
-            for (int i = 0; i < sidedHandler.getSlots(); i++)
-            {
-                System.out.println(i);
-                SidedItemStackHandler.SlotState slotState = sidedHandler.getSlotState(i);
-                NBTTagCompound slotStateTag = new NBTTagCompound();
-                slotStateTag.setString("slotType", slotState.getSlotType().name());
-                slotStateTag.setString("ingredientType", slotState.getIngredientType().name());
-                slotStateTag.setString("slotMode", slotState.getSlotMode().name());
-                slotStateTag.setString("slotAutoMode", slotState.getSlotAutoMode().name());
-                slotStateTag.setString("slotOutputMode", slotState.getSlotOutputMode().name());
-                slotStates.appendTag(slotStateTag);
-            }
-            statesTag.setTag(facing.getName() + "SlotStates", slotStates);
+            sidedHandler.writeToNBT(statesTag);
         }
 
         return statesTag;
@@ -447,21 +434,11 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
             for (EnumFacing facing : EnumFacing.values())
             {
-                String facingName = facing.getName();
-                if (statesTag.hasKey(facingName + "SlotStates"))
+                if (statesTag.hasKey(facing.toString() + "SlotStates"))
                 {
-                    NBTTagList slotStates = statesTag.getTagList(facingName + "SlotStates", Constants.NBT.TAG_COMPOUND);
                     SidedItemStackHandler sidedHandler = this.sidedItemStackHandlers[facing.ordinal()];
 
-                    for (int i = 0; i < slotStates.tagCount(); i++)
-                    {
-                        NBTTagCompound slotStateTag = slotStates.getCompoundTagAt(i);
-                        sidedHandler.setSlotType(i, SidedItemStackHandler.SlotState.SlotType.valueOf(slotStateTag.getString("slotType")));
-                        sidedHandler.setIngredientType(i, SidedItemStackHandler.SlotState.IngredientType.valueOf(slotStateTag.getString("ingredientType")));
-                        sidedHandler.setSlotMode(i, SidedItemStackHandler.SlotState.SlotMode.valueOf(slotStateTag.getString("slotMode")));
-                        sidedHandler.setSlotAutoMode(i, SidedItemStackHandler.SlotState.SlotAutoMode.valueOf(slotStateTag.getString("slotAutoMode")));
-                        sidedHandler.setSlotOutputMode(i, SidedItemStackHandler.SlotState.SlotOutputMode.valueOf(slotStateTag.getString("slotOutputMode")));
-                    }
+                    sidedHandler.readFromNBT(statesTag);
                 }
             }
         }

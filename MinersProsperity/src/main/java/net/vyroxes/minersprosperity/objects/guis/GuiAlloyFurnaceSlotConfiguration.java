@@ -62,9 +62,17 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 			int textureX = switch (slotState)
 			{
-				case DISABLED -> 184;
+				case DISABLED, AUTO_OUTPUT -> 184;
 				case INPUT -> 200;
+				case AUTO_INPUT -> 168;
 				case OUTPUT -> 216;
+            };
+
+			int textureY = switch (slotState)
+			{
+				case DISABLED, INPUT, OUTPUT -> 0;
+                case AUTO_INPUT -> 30;
+                case AUTO_OUTPUT -> 32;
 			};
 
 			int xOffset = switch (face)
@@ -83,7 +91,9 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 			String disabled = I18n.format("gui.slot_disabled.name");
 			String input = I18n.format("gui.slot_input.name");
+			String auto_input = I18n.format("gui.slot_auto_input.name");
 			String output = I18n.format("gui.slot_output.name");
+			String auto_output = I18n.format("gui.slot_auto_output.name");
 			String tooltip;
 
 			if (slotState.ordinal() == 0)
@@ -94,9 +104,17 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			{
 				tooltip = faceNames.get(face.ordinal()) + ": " + input;
 			}
-			else
+			else if (slotState.ordinal() == 2)
+			{
+				tooltip = faceNames.get(face.ordinal()) + ": " + auto_input;
+			}
+			else if (slotState.ordinal() == 3)
 			{
 				tooltip = faceNames.get(face.ordinal()) + ": " + output;
+			}
+			else
+			{
+				tooltip = faceNames.get(face.ordinal()) + ": " + auto_output;
 			}
 
 			this.addButton(new GuiDefaultButton(
@@ -107,7 +125,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 					16,
 					new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()),
 					textureX,
-					0,
+					textureY,
 					16,
 					tooltip
 			));
@@ -118,16 +136,19 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 		if (tileEntity.isSlotOutput(tileEntity.getSlotId()))
 		{
-			this.addButton(new GuiDefaultButton(9, guiLeft + 7, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 138, 0, 16, I18n.format("gui.set_output.name")));
+			this.addButton(new GuiDefaultButton(10, guiLeft + 7, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 138, 0, 16, I18n.format("gui.set_output.name")));
+			this.addButton(new GuiDefaultButton(11, guiLeft + 7, guiTop + 54, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 216, 32, 16, I18n.format("gui.set_auto_output.name")));
 		}
 		else
 		{
 			this.addButton(new GuiDefaultButton(8, guiLeft + 7, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 122, 0, 16, I18n.format("gui.set_input.name")));
-			this.addButton(new GuiDefaultButton(9, guiLeft + 7, guiTop + 54, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 138, 0, 16, I18n.format("gui.set_output.name")));
+			this.addButton(new GuiDefaultButton(9, guiLeft + 7, guiTop + 54, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 200, 32, 16, I18n.format("gui.set_auto_input.name")));
+			this.addButton(new GuiDefaultButton(10, guiLeft + 153, guiTop + 18, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 138, 0, 16, I18n.format("gui.set_output.name")));
+			this.addButton(new GuiDefaultButton(11, guiLeft + 153, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 216, 32, 16, I18n.format("gui.set_auto_output.name")));
 		}
 
 		String description = TextFormatting.AQUA + "Shift + left click" + TextFormatting.GRAY + " on the machine disables input and output for all slots on every side\n" + TextFormatting.AQUA + "Shift + right click" + TextFormatting.GRAY + " on the machine from a specific side disables input and output for all slots on that specific side.";
-		GuiButton descButton = new GuiDefaultButton(10, guiLeft + 163, guiTop + 6, 6, 8, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 41, 8, description);
+		GuiButton descButton = new GuiDefaultButton(12, guiLeft + 163, guiTop + 6, 6, 8, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 41, 8, description);
 		descButton.enabled = false;
 		this.addButton(descButton);
 	}
@@ -149,8 +170,9 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 				SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
 				{
 					case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
-                    case INPUT -> null;
-                    case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
+                    case INPUT, AUTO_INPUT -> null;
+                    case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.AUTO_OUTPUT;
+					case AUTO_OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
 				};
 
 				sidedItemStackHandler.setSlotMode(slot, nextState);
@@ -160,8 +182,10 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 				SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
 				{
 					case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.INPUT;
-					case INPUT -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
-					case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
+					case INPUT -> SidedItemStackHandler.SlotState.SlotMode.AUTO_INPUT;
+					case AUTO_INPUT -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
+					case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.AUTO_OUTPUT;
+					case AUTO_OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
 				};
 
 				sidedItemStackHandler.setSlotMode(slot, nextState);
@@ -196,7 +220,25 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			for (EnumFacing face : EnumFacing.values())
 			{
 				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+				sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.AUTO_INPUT);
+			}
+		}
+
+		if (guiButton.id == 10)
+		{
+			for (EnumFacing face : EnumFacing.values())
+			{
+				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
 				sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.OUTPUT);
+			}
+		}
+
+		if (guiButton.id == 11)
+		{
+			for (EnumFacing face : EnumFacing.values())
+			{
+				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+				sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.AUTO_OUTPUT);
 			}
 		}
 
@@ -225,9 +267,10 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 						{
 							SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
 							{
-								case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
-								case INPUT -> null;
+								case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.AUTO_OUTPUT;
+								case INPUT, AUTO_INPUT -> null;
 								case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
+								case AUTO_OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
 							};
 
 							sidedItemStackHandler.setSlotMode(slot, nextState);
@@ -236,9 +279,11 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 						{
 							SidedItemStackHandler.SlotState.SlotMode nextState = switch (currentState)
 							{
-								case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
+								case DISABLED -> SidedItemStackHandler.SlotState.SlotMode.AUTO_OUTPUT;
 								case INPUT -> SidedItemStackHandler.SlotState.SlotMode.DISABLED;
-								case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.INPUT;
+								case AUTO_INPUT -> SidedItemStackHandler.SlotState.SlotMode.INPUT;
+								case OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.AUTO_INPUT;
+								case AUTO_OUTPUT -> SidedItemStackHandler.SlotState.SlotMode.OUTPUT;
 							};
 
 							sidedItemStackHandler.setSlotMode(slot, nextState);

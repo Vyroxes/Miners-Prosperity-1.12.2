@@ -107,13 +107,17 @@ gui.set_all_disabled.name=Set All Sides in All Slots to Disabled
 gui.set_all_default.name=Set All Sides in All Slots to Default
 gui.set_disabled.name=Set All Sides to Disabled
 gui.set_input.name=Set All Sides to Input
+gui.set_auto_input.name=Set All Sides to Auto-Input
 gui.set_output.name=Set All Sides to Output
+gui.set_auto_output.name=Set All Sides to Auto-Output
 gui.energy_stored=Energy Stored
 gui.energy_usage=Energy Usage
 gui.max_energy_input=Max Energy Input
 gui.slot_disabled.name=Disabled
 gui.slot_input.name=Input
+gui.slot_auto_input.name=Auto-Input
 gui.slot_output.name=Output
+gui.slot_auto_output.name=Auto-Output
 
 #BLOCKS
 #MACHINES

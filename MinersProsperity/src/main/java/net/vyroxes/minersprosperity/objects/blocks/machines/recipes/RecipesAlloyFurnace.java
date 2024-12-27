@@ -2,7 +2,6 @@ package net.vyroxes.minersprosperity.objects.blocks.machines.recipes;
 
 import com.github.bsideup.jabel.Desugar;
 import it.unimi.dsi.fastutil.Hash;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.init.ItemInit;
@@ -64,59 +63,84 @@ public class RecipesAlloyFurnace
 
 	public static class LookupTable
 	{
-		private final Map<RecipeKey, Recipe> recipeMap;
+		private final Map<ItemStack, Set<Integer>> itemStackToRecipeIndices;
+		private final List<Recipe> recipes;
 
 		public LookupTable()
 		{
-			this.recipeMap = new Object2ObjectOpenCustomHashMap<>(new RecipeKeyHashStrategy());
+			this.itemStackToRecipeIndices = new HashMap<>();
+			this.recipes = new ArrayList<>();
 		}
 
 		public void addRow(Recipe recipe)
 		{
-			RecipeKey key = new RecipeKey(recipe.input1, recipe.input2);
-			recipeMap.put(key, recipe);
+			int index = recipes.size();
+			recipes.add(recipe);
+
+			addItemToMap(recipe.input1, index);
+			addItemToMap(recipe.input2, index);
+		}
+
+		private void addItemToMap(ItemStack stack, int index)
+		{
+			itemStackToRecipeIndices.computeIfAbsent(stack, k -> new HashSet<>()).add(index);
 		}
 
 		public List<Recipe> getRecipes()
 		{
-			return new ArrayList<>(recipeMap.values());
+			return new ArrayList<>(recipes);
 		}
 
 		public List<Recipe> findRecipes(ItemStack... inputs)
 		{
-			if (inputs.length != 2)
+			if (inputs.length == 0)
 			{
-				throw new IllegalArgumentException("Exactly two inputs are required.");
+				return Collections.emptyList();
 			}
 
-			RecipeKey key = new RecipeKey(inputs[0], inputs[1]);
-			Recipe recipe = recipeMap.get(key);
+			Set<Integer> validIndices = new HashSet<>(itemStackToRecipeIndices.getOrDefault(inputs[0], Collections.emptySet()));
 
-			return recipe != null ? Collections.singletonList(recipe) : Collections.emptyList();
+			for (int i = 1; i < inputs.length; i++)
+			{
+				if (inputs[i] == null || inputs[i].isEmpty())
+				{
+					continue;
+				}
+
+				validIndices.retainAll(itemStackToRecipeIndices.getOrDefault(inputs[i], Collections.emptySet()));
+			}
+
+			List<Recipe> matchingRecipes = new ArrayList<>();
+			for (int index : validIndices)
+			{
+				matchingRecipes.add(recipes.get(index));
+			}
+
+			return matchingRecipes;
 		}
 	}
 
 	@Desugar
 	private record RecipeKey(ItemStack ingredient1, ItemStack ingredient2)
 	{
-			private RecipeKey(ItemStack ingredient1, ItemStack ingredient2)
+		private RecipeKey(ItemStack ingredient1, ItemStack ingredient2)
+		{
+			if (compareStacks(ingredient1, ingredient2) <= 0)
 			{
-				if (compareStacks(ingredient1, ingredient2) <= 0)
-				{
-					this.ingredient1 = ingredient1;
-					this.ingredient2 = ingredient2;
-				}
-				else
-				{
-					this.ingredient1 = ingredient2;
-					this.ingredient2 = ingredient1;
-				}
+				this.ingredient1 = ingredient1;
+				this.ingredient2 = ingredient2;
 			}
+			else
+			{
+				this.ingredient1 = ingredient2;
+				this.ingredient2 = ingredient1;
+			}
+		}
 
-			private static int compareStacks(ItemStack a, ItemStack b)
-			{
-				return Objects.requireNonNull(a.getItem().getRegistryName()).compareTo(Objects.requireNonNull(b.getItem().getRegistryName()));
-			}
+		private static int compareStacks(ItemStack a, ItemStack b)
+		{
+			return Objects.requireNonNull(a.getItem().getRegistryName()).compareTo(Objects.requireNonNull(b.getItem().getRegistryName()));
+		}
 	}
 
 	private static class RecipeKeyHashStrategy implements Hash.Strategy<RecipeKey>
@@ -138,14 +162,7 @@ public class RecipesAlloyFurnace
 
 	public boolean isIngredientInAnyRecipe(ItemStack itemStack)
 	{
-		for (RecipeKey key : lookupTable.recipeMap.keySet())
-		{
-			if (ItemStack.areItemsEqual(key.ingredient1(), itemStack) || ItemStack.areItemsEqual(key.ingredient2(), itemStack))
-			{
-				return true;
-			}
-		}
-		return false;
+		return !this.lookupTable.itemStackToRecipeIndices.getOrDefault(itemStack, Collections.emptySet()).isEmpty();
 	}
 
 	public ItemStack getResult(ItemStack input1, ItemStack input2)
@@ -190,9 +207,8 @@ public class RecipesAlloyFurnace
 
 	public float getExperience(ItemStack result)
 	{
-		for (RecipeKey key : lookupTable.recipeMap.keySet())
+		for (Recipe recipe : this.lookupTable.recipes)
 		{
-			Recipe recipe = lookupTable.recipeMap.get(key);
 			if (ItemStack.areItemsEqual(recipe.result, result))
 			{
 				return recipe.experience;

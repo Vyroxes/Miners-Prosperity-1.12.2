@@ -22,7 +22,7 @@ public class AlloyFurnaceRecipeCategory extends AbstractAlloyFurnaceRecipeCatego
     public AlloyFurnaceRecipeCategory(IGuiHelper helper)
     {
         super(helper);
-        background = helper.createDrawable(TEXTURES, 33, 21, 110, 54);
+        background = helper.createDrawable(ALLOY_FURNACE, 33, 21, 110, 54);
         name = I18n.format("tile.alloy_furnace.name");
         icon = helper.createDrawableIngredient(new ItemStack(BlockInit.ALLOY_FURNACE));
     }
@@ -42,7 +42,7 @@ public class AlloyFurnaceRecipeCategory extends AbstractAlloyFurnaceRecipeCatego
     @Override
     public void drawExtras(@NotNull Minecraft minecraft)
     {
-        animatedArrow.draw(minecraft, 48, 15);
+        animatedArrow.draw(minecraft, 49, 15);
     }
 
     @Override
@@ -67,9 +67,9 @@ public class AlloyFurnaceRecipeCategory extends AbstractAlloyFurnaceRecipeCatego
     public void setRecipe(IRecipeLayout recipeLayout, @NotNull AlloyFurnaceRecipe recipeWrapper, @NotNull IIngredients ingredients)
     {
         IGuiItemStackGroup stacks = recipeLayout.getItemStacks();
-        stacks.init(input1, true, 4, 13);
-        stacks.init(input2, true, 22, 13);
-        stacks.init(output, false, 84, 13);
+        stacks.init(input1, true, 3, 13);
+        stacks.init(input2, true, 23, 13);
+        stacks.init(output, false, 85, 13);
         stacks.set(ingredients);
     }
 }

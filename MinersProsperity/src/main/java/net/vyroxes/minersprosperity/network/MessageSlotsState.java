@@ -29,27 +29,25 @@ public class MessageSlotsState implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        this.side = EnumFacing.values()[buf.readInt()];
+        this.side = EnumFacing.values()[buf.readByte()];
         this.id = buf.readInt();
-        SidedItemStackHandler.SlotState.SlotType slotType = SidedItemStackHandler.SlotState.SlotType.values()[buf.readInt()];
-        SidedItemStackHandler.SlotState.IngredientType ingredientType = SidedItemStackHandler.SlotState.IngredientType.values()[buf.readInt()];
-        SidedItemStackHandler.SlotState.SlotMode slotMode = SidedItemStackHandler.SlotState.SlotMode.values()[buf.readInt()];
-        SidedItemStackHandler.SlotState.SlotAutoMode slotAutoMode = SidedItemStackHandler.SlotState.SlotAutoMode.values()[buf.readInt()];
-        SidedItemStackHandler.SlotState.SlotOutputMode slotOutputMode = SidedItemStackHandler.SlotState.SlotOutputMode.values()[buf.readInt()];
-        this.slotsState = new SidedItemStackHandler.SlotState(slotType, ingredientType, slotMode, slotAutoMode, slotOutputMode);
+        SidedItemStackHandler.SlotState.SlotType slotType = SidedItemStackHandler.SlotState.SlotType.values()[buf.readByte()];
+        SidedItemStackHandler.SlotState.IngredientType ingredientType = SidedItemStackHandler.SlotState.IngredientType.values()[buf.readByte()];
+        SidedItemStackHandler.SlotState.SlotMode slotMode = SidedItemStackHandler.SlotState.SlotMode.values()[buf.readByte()];
+        SidedItemStackHandler.SlotState.SlotOutputMode slotOutputMode = SidedItemStackHandler.SlotState.SlotOutputMode.values()[buf.readByte()];
+        this.slotsState = new SidedItemStackHandler.SlotState(slotType, ingredientType, slotMode, slotOutputMode);
         this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(this.side.ordinal());
+        buf.writeByte(this.side.ordinal());
         buf.writeInt(this.id);
-        buf.writeInt(this.slotsState.getSlotType().ordinal());
-        buf.writeInt(this.slotsState.getIngredientType().ordinal());
-        buf.writeInt(this.slotsState.getSlotMode().ordinal());
-        buf.writeInt(this.slotsState.getSlotAutoMode().ordinal());
-        buf.writeInt(this.slotsState.getSlotOutputMode().ordinal());
+        buf.writeByte(this.slotsState.getSlotType().ordinal());
+        buf.writeByte(this.slotsState.getIngredientType().ordinal());
+        buf.writeByte(this.slotsState.getSlotMode().ordinal());
+        buf.writeByte(this.slotsState.getSlotOutputMode().ordinal());
         buf.writeInt(this.pos.getX());
         buf.writeInt(this.pos.getY());
         buf.writeInt(this.pos.getZ());

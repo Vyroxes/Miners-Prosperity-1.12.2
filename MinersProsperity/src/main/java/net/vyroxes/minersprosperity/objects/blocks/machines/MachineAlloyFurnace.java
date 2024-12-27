@@ -134,24 +134,11 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 
 				for (EnumFacing facing : EnumFacing.values())
 				{
-					String facingName = facing.getName();
-					if (statesTag.hasKey(facingName + "SlotStates"))
+					if (statesTag.hasKey(facing.toString() + "SlotStates"))
 					{
-						NBTTagList slotStates = statesTag.getTagList(facingName + "SlotStates", Constants.NBT.TAG_COMPOUND);
-						SidedItemStackHandler sidedHandler = (SidedItemStackHandler) alloyFurnace.getSidedItemHandler(facing);
+						SidedItemStackHandler sidedHandler = (SidedItemStackHandler) ((TileEntityAlloyFurnace) tileEntity).getSidedItemHandler(facing);
 
-						for (int i = 0; i < slotStates.tagCount(); i++)
-						{
-							NBTTagCompound slotStateTag = slotStates.getCompoundTagAt(i);
-							SidedItemStackHandler.SlotState.SlotType slotType = SidedItemStackHandler.SlotState.SlotType.valueOf(slotStateTag.getString("slotType"));
-							SidedItemStackHandler.SlotState.IngredientType ingredientType = SidedItemStackHandler.SlotState.IngredientType.valueOf(slotStateTag.getString("ingredientType"));
-							SidedItemStackHandler.SlotState.SlotMode slotMode = SidedItemStackHandler.SlotState.SlotMode.valueOf(slotStateTag.getString("slotMode"));
-							SidedItemStackHandler.SlotState.SlotAutoMode slotAutoMode = SidedItemStackHandler.SlotState.SlotAutoMode.valueOf(slotStateTag.getString("slotAutoMode"));
-							SidedItemStackHandler.SlotState.SlotOutputMode slotOutputMode = SidedItemStackHandler.SlotState.SlotOutputMode.valueOf(slotStateTag.getString("slotOutputMode"));
-
-							SidedItemStackHandler.SlotState slotState = new SidedItemStackHandler.SlotState(slotType, ingredientType, slotMode, slotAutoMode, slotOutputMode);
-							sidedHandler.setSlotState(i, slotState);
-						}
+						sidedHandler.readFromNBT(statesTag);
 					}
 				}
 			}
