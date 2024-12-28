@@ -1,118 +1,139 @@
 package net.vyroxes.minersprosperity.objects.blocks.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
-public class CustomEnergyStorage extends EnergyStorage
+public class CustomEnergyStorage implements IEnergyStorage
 {
-    private int energyUsage;
+    protected long energyStored;
+    protected long maxEnergyStored;
+    protected long maxReceive;
+    protected long maxExtract;
 
-    public CustomEnergyStorage(int capacity)
+    public CustomEnergyStorage(long maxEnergyStored, long maxReceive, long maxExtract, long energyStored)
     {
-        super(capacity, capacity, capacity, 0);
-    }
-
-    public CustomEnergyStorage(int capacity, int maxTransfer)
-    {
-        super(capacity, maxTransfer, maxTransfer, 0);
-    }
-
-    public CustomEnergyStorage(int capacity, int maxReceive, int maxExtract)
-    {
-        super(capacity, maxReceive, maxExtract, 0);
-    }
-
-    public CustomEnergyStorage(int capacity, int maxReceive, int maxExtract, int storedEnergy)
-    {
-        super(capacity, maxReceive, maxExtract, storedEnergy);
+        this.maxEnergyStored = maxEnergyStored;
+        this.maxReceive = maxReceive;
+        this.maxExtract = maxExtract;
+        this.energyStored = Math.max(0 , Math.min(maxEnergyStored, energyStored));
     }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate)
     {
-        return super.receiveEnergy(maxReceive, simulate);
+        if (!canReceive())
+            return 0;
+
+        long energyReceived = Math.min(maxEnergyStored - energyStored, Math.min(this.maxReceive, maxReceive));
+        if (!simulate)
+            energyStored += energyReceived;
+        return (int) energyReceived;
+    }
+
+    public long receiveEnergy(long maxReceive, boolean simulate)
+    {
+        if (!canReceive())
+            return 0;
+
+        long energyReceived = Math.min(maxEnergyStored - energyStored, Math.min(this.maxReceive, maxReceive));
+        if (!simulate)
+            energyStored += energyReceived;
+        return energyReceived;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate)
     {
-        return super.extractEnergy(maxExtract, simulate);
+        if (!canExtract())
+            return 0;
+
+        long energyExtracted = Math.min(energyStored, Math.min(this.maxExtract, maxExtract));
+        if (!simulate)
+            energyStored -= energyExtracted;
+        return (int) energyExtracted;
     }
 
-    @Override
-    public int getEnergyStored()
+    public long extractEnergy(long maxExtract, boolean simulate)
     {
-        return super.getEnergyStored();
+        if (!canExtract())
+            return 0;
+
+        long energyExtracted = Math.min(energyStored, Math.min(this.maxExtract, maxExtract));
+        if (!simulate)
+            energyStored -= energyExtracted;
+        return energyExtracted;
     }
 
-    public void setEnergyStored(int energyStored)
+    public long useEnergy(long energyUsage, boolean simulate)
     {
-        this.energy = energyStored;
-    }
-
-    @Override
-    public int getMaxEnergyStored()
-    {
-        return super.getMaxEnergyStored();
-    }
-
-    public int getMaxReceive()
-    {
-        return this.maxReceive;
-    }
-
-    public void setMaxReceive(int maxReceive)
-    {
-        this.maxReceive = maxReceive;
-    }
-
-    public int getMaxExtract()
-    {
-        return this.maxExtract;
-    }
-
-    public void setMaxExtract(int maxExtract)
-    {
-        this.maxExtract = maxExtract;
-    }
-
-    public int getEnergyUsage()
-    {
-        return this.energyUsage;
-    }
-
-    public void setEnergyUsage(int energyUsage)
-    {
-        this.energyUsage = energyUsage;
+        long energyMissing = 0;
+        if (this.energyStored < energyUsage) energyMissing = energyUsage - this.energyStored;
+        if (!simulate && energyUsage != 0 && energyMissing == 0)
+            this.energyStored -= energyUsage;
+        return energyMissing;
     }
 
     @Override
     public boolean canExtract()
     {
-        return super.canExtract();
+        return this.maxExtract > 0;
     }
 
     @Override
     public boolean canReceive()
     {
-        return super.canReceive();
+        return this.maxReceive > 0;
+    }
+
+    public void setEnergyStored(long energyStored)
+    {
+        this.energyStored = energyStored;
+    }
+
+    @Override
+    public int getEnergyStored()
+    {
+        return (int) this.energyStored;
+    }
+
+    @Override
+    public int getMaxEnergyStored()
+    {
+        return (int) this.maxEnergyStored;
+    }
+
+    public void setMaxEnergyStored(long maxEnergyStored)
+    {
+        this.maxEnergyStored = maxEnergyStored;
+    }
+
+    public long getMaxReceive()
+    {
+        return this.maxReceive;
+    }
+
+    public void setMaxReceive(long maxReceive)
+    {
+        this.maxReceive = maxReceive;
+    }
+
+    public long getMaxExtract()
+    {
+        return this.maxExtract;
+    }
+
+    public void setMaxExtract(long maxExtract)
+    {
+        this.maxExtract = maxExtract;
     }
 
     public void readFromNBT(NBTTagCompound compound)
     {
-        this.energy = compound.getInteger("Energy");
-        this.capacity = compound.getInteger("Capacity");
-        this.maxReceive = compound.getInteger("MaxReceive");
-        this.maxExtract = compound.getInteger("MaxExtract");
-        this.energyUsage = compound.getInteger("EnergyUsage");
+        this.energyStored = compound.getLong("Energy");
     }
 
     public void writeToNBT(NBTTagCompound compound)
     {
-        compound.setInteger("Energy", this.energy);
-        compound.setInteger("Capacity", this.capacity);
-        compound.setInteger("MaxReceive", this.maxReceive);
-        compound.setInteger("MaxExtract", this.maxExtract);
-        compound.setInteger("EnergyUsage", this.energyUsage);
+        compound.setLong("Energy", this.energyStored);
     }
 }

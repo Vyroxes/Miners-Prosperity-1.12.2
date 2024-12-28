@@ -19,13 +19,13 @@ public class ContainerAlloyFurnace extends Container
     private final TileEntityAlloyFurnace tileEntity;
     private int cookTime;
     private int totalCookTime;
-    private int energyStored;
-    private int energyUsage;
+    private long energyStored;
+    private long energyUsage;
 
     public ContainerAlloyFurnace(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntity)
     {
         this.tileEntity = tileEntity;
-        IItemHandler handler = this.tileEntity.getItemStackHandler();
+        IItemHandler handler = this.tileEntity.getCustomItemStackHandler();
 
         this.addSlotToContainer(new SlotItemHandler(handler, 0, 37, 35)); // Slot wejściowy lewy (1)
         this.addSlotToContainer(new SlotItemHandler(handler, 1, 57, 35)); // Slot wejściowy prawy (2)
@@ -108,19 +108,19 @@ public class ContainerAlloyFurnace extends Container
 
             if (this.energyStored != this.tileEntity.getEnergyStored())
             {
-                icontainerlistener.sendWindowProperty(this, 2, this.tileEntity.getEnergyStored());
+                icontainerlistener.sendWindowProperty(this, 2, (int) this.tileEntity.getEnergyStored());
             }
 
-            if (this.energyUsage != this.tileEntity.getEnergyUsage())
-            {
-                icontainerlistener.sendWindowProperty(this, 3, this.tileEntity.getEnergyUsage());
-            }
+//            if (this.energyUsage != this.tileEntity.getEnergyUsage())
+//            {
+//                icontainerlistener.sendWindowProperty(this, 3, this.tileEntity.getEnergyUsage());
+//            }
         }
         
         this.cookTime = this.tileEntity.getCookTime();
         this.totalCookTime = this.tileEntity.getTotalCookTime();
         this.energyStored = this.tileEntity.getEnergyStored();
-        this.energyUsage = this.tileEntity.getEnergyUsage();
+        //this.energyUsage = this.tileEntity.getEnergyUsage();
     }
     
     @Override
@@ -240,7 +240,7 @@ public class ContainerAlloyFurnace extends Container
                         }
                     }
                 }
-                else if (this.tileEntity.isItemEnergy(itemstack1))
+                else if (this.tileEntity.getCustomItemStackHandler().isValidEnergy(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 2, 3, false))
                     {

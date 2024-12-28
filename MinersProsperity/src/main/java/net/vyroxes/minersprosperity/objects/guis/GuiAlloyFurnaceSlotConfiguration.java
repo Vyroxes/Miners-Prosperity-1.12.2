@@ -17,7 +17,7 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
-import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
 import net.vyroxes.minersprosperity.util.handlers.SlotState;
 import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
         for (EnumFacing face : EnumFacing.values())
 		{
-			SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
+			SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
 			Map<Integer, String> faceNames = new HashMap<>();
 			faceNames.put(0, I18n.format("gui.side_bottom.name"));
 			faceNames.put(1, I18n.format("gui.side_top.name"));
@@ -59,7 +59,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 			int slot = tileEntity.getSlotEditedId();
 
-			SlotState.SlotMode slotState = sidedItemStackHandler.getSlotMode(slot);
+			SlotState.SlotMode slotState = sidedIngredientHandler.getSlotMode(slot);
 
 			int textureX = switch (slotState)
 			{
@@ -135,7 +135,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		this.addButton(new GuiDefaultButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 36, 9, I18n.format("gui.back.name")));
 		this.addButton(new GuiDefaultButton(7, guiLeft + 7, guiTop + 18, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 106, 0, 16, I18n.format("gui.set_disabled.name")));
 
-		if (tileEntity.isSlotOutput(tileEntity.getSlotEditedId()))
+		if (this.tileEntity.isSlotOutput(this.tileEntity.getSlotEditedId()))
 		{
 			this.addButton(new GuiDefaultButton(10, guiLeft + 7, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 138, 0, 16, I18n.format("gui.set_output.name")));
 			this.addButton(new GuiDefaultButton(11, guiLeft + 7, guiTop + 54, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 216, 32, 16, I18n.format("gui.set_auto_output.name")));
@@ -163,10 +163,10 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		{
 			int face = guiButton.id;
 
-			SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
-			SlotState.SlotMode currentState = sidedItemStackHandler.getSlotMode(slot);
+			SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.byIndex(face));
+			SlotState.SlotMode currentState = sidedIngredientHandler.getSlotMode(slot);
 
-			if (sidedItemStackHandler.isSlotOutput(slot))
+			if (sidedIngredientHandler.isSlotOutput(slot))
 			{
 				SlotState.SlotMode nextState = switch (currentState)
 				{
@@ -176,7 +176,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 					case AUTO_OUTPUT -> SlotState.SlotMode.DISABLED;
 				};
 
-				sidedItemStackHandler.setSlotMode(slot, nextState);
+				sidedIngredientHandler.setSlotMode(slot, nextState);
 			}
 			else
 			{
@@ -189,7 +189,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 					case AUTO_OUTPUT -> SlotState.SlotMode.DISABLED;
 				};
 
-				sidedItemStackHandler.setSlotMode(slot, nextState);
+				sidedIngredientHandler.setSlotMode(slot, nextState);
 			}
 		}
 
@@ -202,8 +202,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-				sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 			}
 		}
 
@@ -211,8 +211,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-				sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.INPUT);
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.INPUT);
 			}
 		}
 
@@ -220,8 +220,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-				sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.AUTO_INPUT);
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.AUTO_INPUT);
 			}
 		}
 
@@ -229,8 +229,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-				sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.OUTPUT);
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.OUTPUT);
 			}
 		}
 
@@ -238,8 +238,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-				sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.AUTO_OUTPUT);
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.AUTO_OUTPUT);
 			}
 		}
 
@@ -261,10 +261,10 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 						int slot = tileEntity.getSlotEditedId();
 						int face = guiButton.id;
 
-						SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(EnumFacing.byIndex(face));
-						SlotState.SlotMode currentState = sidedItemStackHandler.getSlotMode(slot);
+						SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.byIndex(face));
+						SlotState.SlotMode currentState = sidedIngredientHandler.getSlotMode(slot);
 
-						if (sidedItemStackHandler.isSlotOutput(slot))
+						if (sidedIngredientHandler.isSlotOutput(slot))
 						{
 							SlotState.SlotMode nextState = switch (currentState)
 							{
@@ -274,7 +274,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 								case AUTO_OUTPUT -> SlotState.SlotMode.OUTPUT;
 							};
 
-							sidedItemStackHandler.setSlotMode(slot, nextState);
+							sidedIngredientHandler.setSlotMode(slot, nextState);
 						}
 						else
 						{
@@ -287,7 +287,7 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 								case AUTO_OUTPUT -> SlotState.SlotMode.OUTPUT;
 							};
 
-							sidedItemStackHandler.setSlotMode(slot, nextState);
+							sidedIngredientHandler.setSlotMode(slot, nextState);
 						}
 
 						Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
@@ -309,8 +309,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 						int slot = tileEntity.getSlotEditedId();
 						int face = guiButton.id;
 
-						SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(EnumFacing.values()[face]);
-						sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+						SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.values()[face]);
+						sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 						Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
 						this.initGui();
 						return;

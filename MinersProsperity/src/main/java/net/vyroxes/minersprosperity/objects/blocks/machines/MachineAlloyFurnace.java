@@ -39,7 +39,7 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.annotations.NonnullByDefault;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
-import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
 import net.vyroxes.minersprosperity.util.handlers.SlotState;
 import org.jetbrains.annotations.NotNull;
 
@@ -117,7 +117,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 		{
 			if (tag.hasKey("Energy"))
 			{
-				alloyFurnace.setEnergyStored(tag.getInteger("Energy"));
+				alloyFurnace.setEnergyStored(tag.getLong("Energy"));
 			}
 
 			if (tag.hasKey("States"))
@@ -133,7 +133,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 				{
 					if (statesTag.hasKey(facing.toString() + "SlotStates"))
 					{
-						SidedItemStackHandler sidedHandler = (SidedItemStackHandler) ((TileEntityAlloyFurnace) tileEntity).getSidedItemHandler(facing);
+						SidedIngredientHandler sidedHandler = (SidedIngredientHandler) ((TileEntityAlloyFurnace) tileEntity).getSidedIngredientHandler(facing);
 
 						sidedHandler.readFromNBT(statesTag);
 					}
@@ -264,10 +264,10 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 				{
 					for (EnumFacing face : EnumFacing.values())
 					{
-						SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-						for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+						SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+						for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++)
 						{
-							sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+							sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 						}
 					}
 				}
@@ -289,10 +289,10 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 				if (tileEntity != null)
 				{
 					EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
-					SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(side);
-					for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+					SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(side);
+					for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++)
 					{
-						sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+						sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 					}
 				}
 			}

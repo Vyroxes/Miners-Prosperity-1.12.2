@@ -8,7 +8,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import org.jetbrains.annotations.NotNull;
 
-public class SidedItemStackHandler implements IItemHandler
+public class SidedIngredientHandler implements IItemHandler
 {
     private final TileEntityMachine tileEntity;
     private final CustomItemStackHandler customItemStackHandler;
@@ -16,7 +16,7 @@ public class SidedItemStackHandler implements IItemHandler
 
     private final SlotState[] slotStates;
 
-    public SidedItemStackHandler(TileEntityMachine tileEntity, CustomItemStackHandler customItemStackHandler, int inputs, int energy, int outputs, EnumFacing facing)
+    public SidedIngredientHandler(TileEntityMachine tileEntity, CustomItemStackHandler customItemStackHandler, int inputs, int energy, int outputs, EnumFacing facing)
     {
         this.tileEntity = tileEntity;
         this.customItemStackHandler = customItemStackHandler;
@@ -34,6 +34,46 @@ public class SidedItemStackHandler implements IItemHandler
         for (int i = inputs + energy; i < inputs + energy + outputs; i++)
         {
             this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.OUTPUT, SlotState.SlotOutputMode.DEFAULT);
+        }
+    }
+
+    public static class Builder
+    {
+        private int inputs = 0;
+        private int energySlots = 0;
+        private int outputs = 0;
+
+        public Builder setInputs(int inputs)
+        {
+            this.inputs = inputs;
+            return this;
+        }
+
+        public Builder setEnergySlots(int energySlots)
+        {
+            this.energySlots = energySlots;
+            return this;
+        }
+
+        public Builder setOutputs(int outputs)
+        {
+            this.outputs = outputs;
+            return this;
+        }
+
+        public SidedIngredientHandler[] build(TileEntityMachine machine)
+        {
+            if (inputs + energySlots + outputs <= 0)
+            {
+                return null; // No handlers needed
+            }
+
+            SidedIngredientHandler[] handlers = new SidedIngredientHandler[EnumFacing.values().length];
+            for (EnumFacing facing : EnumFacing.values())
+            {
+                handlers[facing.ordinal()] = new SidedIngredientHandler(machine, machine.getCustomItemStackHandler(), inputs, energySlots, outputs, facing);
+            }
+            return handlers;
         }
     }
 

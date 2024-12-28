@@ -16,7 +16,7 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
-import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
 import net.vyroxes.minersprosperity.util.handlers.SlotState;
 
 import java.io.IOException;
@@ -91,10 +91,10 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-				for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++)
 				{
-					sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+					sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 				}
 			}
 		}
@@ -102,16 +102,16 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
-				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
-				for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++)
 				{
-					if (sidedItemStackHandler.isSlotOutput(slot))
+					if (sidedIngredientHandler.isSlotOutput(slot))
 					{
-						sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.OUTPUT);
+						sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.OUTPUT);
 					}
 					else
 					{
-						sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.INPUT);
+						sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.INPUT);
 					}
 				}
 			}

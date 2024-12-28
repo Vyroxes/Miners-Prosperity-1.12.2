@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
-import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
+import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
 import net.vyroxes.minersprosperity.util.handlers.SlotState;
 
 public class MessageSlotsState implements IMessage
@@ -77,10 +77,10 @@ public class MessageSlotsState implements IMessage
             TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.pos);
             if (tileEntity instanceof TileEntityAlloyFurnace tileEntityAlloyFurnace)
             {
-                SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntityAlloyFurnace.getSidedItemHandler(message.side);
-                if (sidedItemStackHandler != null)
+                SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntityAlloyFurnace.getSidedIngredientHandler(message.side);
+                if (sidedIngredientHandler != null)
                 {
-                    sidedItemStackHandler.setSlotState(message.id, message.slotsState);
+                    sidedIngredientHandler.setSlotState(message.id, message.slotsState);
                 }
             }
         }
