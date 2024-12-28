@@ -52,7 +52,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
     public MachineAlloyFurnace(String name)
     {
         super(name, Material.IRON, MapColor.STONE);
-        setSoundType(SoundType.STONE);
+		setSoundType(SoundType.STONE);
 		setCreativeTab(MinersProsperity.blocks_tab);
 		setHarvestLevel("pickaxe", 0);
 		setHardness(5.0F);
