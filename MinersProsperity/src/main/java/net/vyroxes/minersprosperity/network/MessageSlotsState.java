@@ -1,8 +1,12 @@
 package net.vyroxes.minersprosperity.network;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -58,16 +62,26 @@ public class MessageSlotsState implements IMessage
         @Override
         public IMessage onMessage(MessageSlotsState message, MessageContext ctx)
         {
-            TileEntityAlloyFurnace tileEntity = (TileEntityAlloyFurnace) ctx.getServerHandler().player.world.getTileEntity(message.pos);
-            if (tileEntity != null)
+            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
+            return null;
+        }
+
+        private static void handle(MessageSlotsState message, MessageContext ctx)
+        {
+            EntityPlayerMP playerEntity = ctx.getServerHandler().player;
+            World world = playerEntity.getEntityWorld();
+
+            if (!world.isBlockLoaded(message.pos)) return;
+
+            TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.pos);
+            if (tileEntity instanceof TileEntityAlloyFurnace tileEntityAlloyFurnace)
             {
-                SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(message.side);
+                SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntityAlloyFurnace.getSidedItemHandler(message.side);
                 if (sidedItemStackHandler != null)
                 {
                     sidedItemStackHandler.setSlotState(message.id, message.slotsState);
                 }
             }
-            return null;
         }
     }
 }

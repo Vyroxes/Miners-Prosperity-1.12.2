@@ -23,7 +23,7 @@ public class NetworkHandler
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.SERVER);
     }
 
-    public static void sendButtonStateUpdate(int redstoneControlButtonState, BlockPos pos)
+    public static void sendRedstoneControlButtonStateUpdate(int redstoneControlButtonState, BlockPos pos)
     {
         NETWORK.sendToServer(new MessageRedstoneControlButtonState(redstoneControlButtonState, pos));
     }

@@ -57,26 +57,6 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
     private final ItemStackHandler itemStackHandler = new ItemStackHandler(4)
     {
         @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
-        {
-            if (slot >= 0 && slot <= 2)
-            {
-                if (isItemValid(slot, stack))
-                {
-                    return super.insertItem(slot, stack, simulate);
-                }
-            }
-
-            return stack;
-        }
-
-        @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
-        {
-            return super.extractItem(slot, amount, simulate);
-        }
-
-        @Override
         public int getSlotLimit(int slot)
         {
             if (slot == 2)
@@ -90,10 +70,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack)
         {
-            if (ItemStack.areItemsEqual(stack, this.getStackInSlot(slot)) && ItemStack.areItemStackTagsEqual(stack, this.getStackInSlot(slot)))
-            {
-                return true;
-            }
+            if (!getStackInSlot(slot).isEmpty()) return ItemStack.areItemsEqual(stack, this.getStackInSlot(slot)) && ItemStack.areItemStackTagsEqual(stack, this.getStackInSlot(slot));
 
             if (slot == 0)
             {
@@ -298,7 +275,7 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
 
         if (this.world.isRemote)
         {
-            NetworkHandler.sendButtonStateUpdate(this.redstoneControlButtonState, this.pos);
+            NetworkHandler.sendRedstoneControlButtonStateUpdate(this.redstoneControlButtonState, this.pos);
         }
 
 		this.markDirty();
