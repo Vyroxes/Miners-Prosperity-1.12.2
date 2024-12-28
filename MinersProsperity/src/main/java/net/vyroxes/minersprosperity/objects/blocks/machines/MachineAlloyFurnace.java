@@ -17,7 +17,6 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -29,7 +28,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -41,10 +39,9 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.annotations.NonnullByDefault;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
-import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
+import net.vyroxes.minersprosperity.util.handlers.SlotState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvider
 {	
@@ -270,7 +267,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 						SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
 						for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
 						{
-							sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+							sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 						}
 					}
 				}
@@ -295,7 +292,7 @@ public class MachineAlloyFurnace extends BlockBase implements ITileEntityProvide
 					SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(side);
 					for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
 					{
-						sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+						sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 					}
 				}
 			}

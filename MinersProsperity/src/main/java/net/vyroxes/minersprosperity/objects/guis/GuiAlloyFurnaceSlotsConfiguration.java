@@ -17,6 +17,7 @@ import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
+import net.vyroxes.minersprosperity.util.handlers.SlotState;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,22 +65,22 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 	{
 		if (guiButton.id == 0)
 		{
-			this.tileEntity.setSlotId(0);
+			this.tileEntity.setSlotEditedId(0);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 1)
 		{
-			this.tileEntity.setSlotId(1);
+			this.tileEntity.setSlotEditedId(1);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 2)
 		{
-			this.tileEntity.setSlotId(2);
+			this.tileEntity.setSlotEditedId(2);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 3)
 		{
-			this.tileEntity.setSlotId(3);
+			this.tileEntity.setSlotEditedId(3);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 4)
@@ -93,7 +94,7 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 				SidedItemStackHandler sidedItemStackHandler = (SidedItemStackHandler) tileEntity.getSidedItemHandler(face);
 				for (int slot = 0; slot < sidedItemStackHandler.getSlots(); slot++)
 				{
-					sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.DISABLED);
+					sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 				}
 			}
 		}
@@ -106,11 +107,11 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 				{
 					if (sidedItemStackHandler.isSlotOutput(slot))
 					{
-						sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.OUTPUT);
+						sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.OUTPUT);
 					}
 					else
 					{
-						sidedItemStackHandler.setSlotMode(slot, SidedItemStackHandler.SlotState.SlotMode.INPUT);
+						sidedItemStackHandler.setSlotMode(slot, SlotState.SlotMode.INPUT);
 					}
 				}
 			}

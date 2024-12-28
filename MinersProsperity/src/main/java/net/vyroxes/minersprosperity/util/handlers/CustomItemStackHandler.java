@@ -1,60 +1,64 @@
 package net.vyroxes.minersprosperity.util.handlers;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import java.util.Objects;
+import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
-public class CustomItemStackHandler
+public class CustomItemStackHandler extends ItemStackHandler
 {
-    private final ItemStack stack;
-    private Item item;
-    private int meta;
-    private NBTTagCompound nbt;
+    private final int inputSlots;
+    private final int energySlots;
+    private final int outputSlots;
 
-    public CustomItemStackHandler(ItemStack stack)
+    public CustomItemStackHandler(int inputSlots, int energySlots, int outputSlots)
     {
-        this.stack = stack;
-        if (!stack.isEmpty())
-        {
-            this.item = stack.getItem();
-            this.meta = stack.getMetadata();
-            this.nbt = stack.getTagCompound();
-        }
+        super(inputSlots + energySlots + outputSlots);
+        this.inputSlots = inputSlots;
+        this.energySlots = energySlots;
+        this.outputSlots = outputSlots;
     }
 
-    public ItemStack getItemStack()
+    public int getInputSlots()
     {
-        return stack;
+        return this.inputSlots;
+    }
+
+    public int getEnergySlots()
+    {
+        return this.energySlots;
+    }
+
+    public int getOutputSlots()
+    {
+        return this.outputSlots;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean isItemValid(int slot, @NotNull ItemStack stack)
     {
-        if (this == obj)
+        if (slot < inputSlots)
         {
-            return true;
+            return isValidInput(stack);
         }
-
-        if (!(obj instanceof CustomItemStackHandler other))
+        else if (slot < inputSlots + energySlots)
+        {
+            return isItemEnergy(stack);
+        }
+        else
         {
             return false;
         }
-
-        return Objects.equals(this.item, other.item) && this.meta == other.meta && Objects.equals(this.nbt, other.nbt);
     }
 
-    @Override
-    public int hashCode()
+    private boolean isValidInput(ItemStack stack)
     {
-        int result = Objects.hash(this.item, this.meta);
-        result = 31 * result + (this.nbt != null ? this.nbt.toString().hashCode() : 0);
-        return result;
+        // Logic
+        return true;
     }
 
-    @Override
-    public String toString()
+    private boolean isItemEnergy(ItemStack stack)
     {
-        return "CustomItemStack{" + "item=" + this.item + ", meta=" + this.meta + ", nbt=" + this.nbt + ", hash=" + this.hashCode() + '}';
+        // Logic
+        return true;
     }
 }

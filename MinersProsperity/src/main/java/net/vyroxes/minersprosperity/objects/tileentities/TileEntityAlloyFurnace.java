@@ -6,9 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -19,75 +17,27 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.vyroxes.minersprosperity.objects.blocks.energy.CustomEnergyStorage;
 import net.vyroxes.minersprosperity.objects.blocks.machines.MachineAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-public class TileEntityAlloyFurnace extends TileEntity implements ITickable
+public class TileEntityAlloyFurnace extends TileEntityMachine
 {
-    public final CustomEnergyStorage storage = new CustomEnergyStorage(20000, 200, 0, 0);
     private int cookTime;
     private int totalCookTime;
     private String customName;
     private int redstoneControlButtonState;
-    private int slotId;
+    private int slotEditedId;
     private int speedMultiplier;
     private int energyMultiplier;
-    private final SidedItemStackHandler[] sidedItemStackHandlers = new SidedItemStackHandler[EnumFacing.values().length];
+
     public TileEntityAlloyFurnace()
     {
-        for (EnumFacing facing : EnumFacing.values())
-        {
-            int inputs = 3;
-            int outputs = 1;
-            this.sidedItemStackHandlers[facing.ordinal()] = new SidedItemStackHandler(this, this.itemStackHandler, inputs, outputs, facing);
-        }
+        super(20000, 200, 2, 1, 2);
     }
-
-    public IItemHandler getSidedItemHandler(EnumFacing side)
-    {
-        return this.sidedItemStackHandlers[side.ordinal()];
-    }
-
-    private final ItemStackHandler itemStackHandler = new ItemStackHandler(4)
-    {
-        @Override
-        public int getSlotLimit(int slot)
-        {
-            if (slot == 2)
-            {
-                return 1;
-            }
-
-            return super.getSlotLimit(slot);
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack)
-        {
-            if (!getStackInSlot(slot).isEmpty()) return ItemStack.areItemsEqual(stack, this.getStackInSlot(slot)) && ItemStack.areItemStackTagsEqual(stack, this.getStackInSlot(slot));
-
-            if (slot == 0)
-            {
-                return isValidInputForSlot(stack, getStackInSlot(0), getStackInSlot(1), true);
-            }
-            else if (slot == 1)
-            {
-                return isValidInputForSlot(stack, getStackInSlot(0), getStackInSlot(1), false);
-            }
-            else if (slot == 2)
-            {
-                return isItemEnergy(stack);
-            }
-
-            return false;
-        }
-    };
 
     public ItemStack getItemStackInSlot(int slot)
     {
@@ -216,14 +166,19 @@ public class TileEntityAlloyFurnace extends TileEntity implements ITickable
         return this.storage.getEnergyUsage();
     }
 
-    public int getSlotId()
+    public int getSlotEditedId()
     {
-        return this.slotId;
+        return this.slotEditedId;
     }
 
-    public void setSlotId(int slotId)
+    public void setSlotEditedId(int slotEditedId)
     {
-        this.slotId = slotId;
+        this.slotEditedId = slotEditedId;
+    }
+
+    public boolean isSlotEnergy(int id)
+    {
+        return sidedItemStackHandlers[0].isSlotEnergy(id);
     }
 
     public boolean isSlotOutput(int id)

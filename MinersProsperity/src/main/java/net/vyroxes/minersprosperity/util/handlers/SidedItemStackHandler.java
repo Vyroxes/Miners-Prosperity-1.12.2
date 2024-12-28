@@ -5,145 +5,46 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import org.jetbrains.annotations.NotNull;
 
 public class SidedItemStackHandler implements IItemHandler
 {
-    private final TileEntityAlloyFurnace tileEntity;
-    private final ItemStackHandler itemStackHandler;
+    private final TileEntityMachine tileEntity;
+    private final CustomItemStackHandler customItemStackHandler;
     private final EnumFacing facing;
-
-    public static class SlotState
-    {
-        public enum SlotType
-        {
-            INPUT,
-            OUTPUT
-        }
-
-        public enum IngredientType
-        {
-            ITEM,
-            FLUID
-        }
-
-        public enum SlotMode
-        {
-            DISABLED,
-            INPUT,
-            AUTO_INPUT,
-            OUTPUT,
-            AUTO_OUTPUT
-        }
-
-        public enum SlotOutputMode
-        {
-            DEFAULT,
-            VOID_EXCESS,
-            VOID_ALL
-        }
-
-        private SlotType slotType;
-        private IngredientType ingredientType;
-        private SlotMode slotMode;
-        private SlotOutputMode slotOutputMode;
-
-        public SlotState(SlotType slotType, IngredientType ingredientType, SlotMode slotMode, SlotOutputMode slotOutputMode)
-        {
-            this.slotType = slotType;
-            this.ingredientType = ingredientType;
-            this.slotMode = slotMode;
-            this.slotOutputMode = slotOutputMode;
-        }
-
-        public SlotType getSlotType()
-        {
-            return this.slotType;
-        }
-
-        public void setSlotType(SlotType slotType)
-        {
-            this.slotType = slotType;
-        }
-
-        public IngredientType getIngredientType()
-        {
-            return this.ingredientType;
-        }
-
-        public void setIngredientType(IngredientType ingredientType)
-        {
-            this.ingredientType = ingredientType;
-        }
-
-        public SlotMode getSlotMode()
-        {
-            return this.slotMode;
-        }
-
-        public void setSlotMode(SlotMode slotMode)
-        {
-            this.slotMode = slotMode;
-        }
-
-        public SlotOutputMode getSlotOutputMode()
-        {
-            return this.slotOutputMode;
-        }
-
-        public void setSlotOutputMode(SlotOutputMode slotOutputMode)
-        {
-            this.slotOutputMode = slotOutputMode;
-        }
-
-        public void writeToNBT(@NotNull NBTTagCompound tag)
-        {
-            tag.setString("SlotType", getSlotType().name());
-            tag.setString("IngredientType", getIngredientType().name());
-            tag.setString("SlotMode", getSlotMode().name());
-            tag.setString("SlotOutputMode", getSlotOutputMode().name());
-        }
-
-        public void readFromNBT(@NotNull NBTTagCompound tag)
-        {
-            if (tag.hasKey("SlotType"))
-            {
-                this.slotType = SlotType.valueOf(tag.getString("SlotType"));
-            }
-            if (tag.hasKey("IngredientType"))
-            {
-                this.ingredientType = IngredientType.valueOf(tag.getString("IngredientType"));
-            }
-            if (tag.hasKey("SlotMode"))
-            {
-                this.slotMode = SlotMode.valueOf(tag.getString("SlotMode"));
-            }
-            if (tag.hasKey("SlotOutputMode"))
-            {
-                this.slotOutputMode = SlotOutputMode.valueOf(tag.getString("SlotOutputMode"));
-            }
-        }
-    }
 
     private final SlotState[] slotStates;
 
-    public SidedItemStackHandler(TileEntityAlloyFurnace tileEntity, ItemStackHandler itemStackHandler, int inputs, int outputs, EnumFacing facing)
+    public SidedItemStackHandler(TileEntityMachine tileEntity, CustomItemStackHandler customItemStackHandler, int inputs, int energy, int outputs, EnumFacing facing)
     {
         this.tileEntity = tileEntity;
-        this.itemStackHandler = itemStackHandler;
+        this.customItemStackHandler = customItemStackHandler;
         this.facing = facing;
-        this.slotStates = new SlotState[inputs + outputs];
+        this.slotStates = new SlotState[inputs + energy + outputs];
 
         for (int i = 0; i < inputs; i++)
         {
             this.slotStates[i] = new SlotState(SlotState.SlotType.INPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.INPUT, SlotState.SlotOutputMode.DEFAULT);
         }
-        for (int i = inputs; i < inputs + outputs; i++)
+        for (int i = inputs; i < inputs + energy; i++)
+        {
+            this.slotStates[i] = new SlotState(SlotState.SlotType.ENERGY, SlotState.IngredientType.ITEM, SlotState.SlotMode.INPUT, SlotState.SlotOutputMode.DEFAULT);
+        }
+        for (int i = inputs + energy; i < inputs + energy + outputs; i++)
         {
             this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.OUTPUT, SlotState.SlotOutputMode.DEFAULT);
         }
+    }
+
+    public boolean isSlotEnergy(int id)
+    {
+        if (id >= 0 && id < this.slotStates.length)
+        {
+            return this.slotStates[id].getSlotType().equals(SlotState.SlotType.ENERGY);
+        }
+
+        return false;
     }
 
     public boolean isSlotOutput(int id)
@@ -284,25 +185,25 @@ public class SidedItemStackHandler implements IItemHandler
     @Override
     public int getSlots()
     {
-        return this.itemStackHandler.getSlots();
+        return this.customItemStackHandler.getSlots();
     }
 
     @Override
     public @NotNull ItemStack getStackInSlot(int slot)
     {
-        return this.itemStackHandler.getStackInSlot(slot);
+        return this.customItemStackHandler.getStackInSlot(slot);
     }
 
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
     {
-        if (getSlotState(slot).slotMode != SlotState.SlotMode.INPUT && getSlotState(slot).slotMode != SlotState.SlotMode.AUTO_INPUT)
+        if (getSlotState(slot).getSlotMode() != SlotState.SlotMode.INPUT && getSlotState(slot).getSlotMode() != SlotState.SlotMode.AUTO_INPUT)
         {
             return stack;
         }
         else if (isItemValid(slot, stack))
         {
-            return itemStackHandler.insertItem(slot, stack, simulate);
+            return customItemStackHandler.insertItem(slot, stack, simulate);
         }
 
         return stack;
@@ -311,18 +212,18 @@ public class SidedItemStackHandler implements IItemHandler
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
     {
-        if (getSlotState(slot).slotMode != SlotState.SlotMode.OUTPUT && getSlotState(slot).slotMode != SlotState.SlotMode.AUTO_OUTPUT)
+        if (getSlotState(slot).getSlotMode() != SlotState.SlotMode.OUTPUT && getSlotState(slot).getSlotMode() != SlotState.SlotMode.AUTO_OUTPUT)
         {
             return ItemStack.EMPTY;
         }
 
-        return itemStackHandler.extractItem(slot, amount, simulate);
+        return customItemStackHandler.extractItem(slot, amount, simulate);
     }
 
     @Override
     public int getSlotLimit(int slot)
     {
-        return this.itemStackHandler.getSlotLimit(slot);
+        return this.customItemStackHandler.getSlotLimit(slot);
     }
 
     public void writeToNBT(@NotNull NBTTagCompound tag)
