@@ -46,90 +46,79 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
-        for (EnumFacing face : EnumFacing.values())
+		if (this.tileEntity.getSidedIngredientHandlers() != null)
 		{
-			SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
-			Map<Integer, String> faceNames = new HashMap<>();
-			faceNames.put(0, I18n.format("gui.side_bottom.name"));
-			faceNames.put(1, I18n.format("gui.side_top.name"));
-			faceNames.put(2, I18n.format("gui.side_front.name"));
-			faceNames.put(3, I18n.format("gui.side_back.name"));
-			faceNames.put(4, I18n.format("gui.side_left.name"));
-			faceNames.put(5, I18n.format("gui.side_right.name"));
+			for (EnumFacing face : EnumFacing.values()) {
+				SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+				Map<Integer, String> faceNames = new HashMap<>();
+				faceNames.put(0, I18n.format("gui.side_bottom.name"));
+				faceNames.put(1, I18n.format("gui.side_top.name"));
+				faceNames.put(2, I18n.format("gui.side_front.name"));
+				faceNames.put(3, I18n.format("gui.side_back.name"));
+				faceNames.put(4, I18n.format("gui.side_left.name"));
+				faceNames.put(5, I18n.format("gui.side_right.name"));
 
-			int slot = tileEntity.getSlotEditedId();
+				int slot = tileEntity.getSlotEditedId();
 
-			SlotState.SlotMode slotState = sidedIngredientHandler.getSlotMode(slot);
+				SlotState.SlotMode slotState = sidedIngredientHandler.getSlotMode(slot);
 
-			int textureX = switch (slotState)
-			{
-				case DISABLED, AUTO_OUTPUT -> 184;
-				case INPUT -> 200;
-				case AUTO_INPUT -> 168;
-				case OUTPUT -> 216;
-            };
+				int textureX = switch (slotState) {
+					case DISABLED, AUTO_OUTPUT -> 184;
+					case INPUT -> 200;
+					case AUTO_INPUT -> 168;
+					case OUTPUT -> 216;
+				};
 
-			int textureY = switch (slotState)
-			{
-				case DISABLED, INPUT, OUTPUT -> 0;
-                case AUTO_INPUT -> 30;
-                case AUTO_OUTPUT -> 32;
-			};
+				int textureY = switch (slotState) {
+					case DISABLED, INPUT, OUTPUT -> 0;
+					case AUTO_INPUT -> 30;
+					case AUTO_OUTPUT -> 32;
+				};
 
-			int xOffset = switch (face)
-			{
-				case UP, NORTH, DOWN -> 80;
-				case WEST -> 62;
-				case SOUTH, EAST -> 98;
-			};
+				int xOffset = switch (face) {
+					case UP, NORTH, DOWN -> 80;
+					case WEST -> 62;
+					case SOUTH, EAST -> 98;
+				};
 
-			int yOffset = switch (face)
-			{
-				case UP -> 17;
-				case WEST, NORTH, EAST -> 35;
-				case DOWN, SOUTH -> 53;
-			};
+				int yOffset = switch (face) {
+					case UP -> 17;
+					case WEST, NORTH, EAST -> 35;
+					case DOWN, SOUTH -> 53;
+				};
 
-			String disabled = I18n.format("gui.slot_disabled.name");
-			String input = I18n.format("gui.slot_input.name");
-			String auto_input = I18n.format("gui.slot_auto_input.name");
-			String output = I18n.format("gui.slot_output.name");
-			String auto_output = I18n.format("gui.slot_auto_output.name");
-			String tooltip;
+				String disabled = I18n.format("gui.slot_disabled.name");
+				String input = I18n.format("gui.slot_input.name");
+				String auto_input = I18n.format("gui.slot_auto_input.name");
+				String output = I18n.format("gui.slot_output.name");
+				String auto_output = I18n.format("gui.slot_auto_output.name");
+				String tooltip;
 
-			if (slotState.ordinal() == 0)
-			{
-				tooltip = faceNames.get(face.ordinal()) + ": " + disabled;
+				if (slotState.ordinal() == 0) {
+					tooltip = faceNames.get(face.ordinal()) + ": " + disabled;
+				} else if (slotState.ordinal() == 1) {
+					tooltip = faceNames.get(face.ordinal()) + ": " + input;
+				} else if (slotState.ordinal() == 2) {
+					tooltip = faceNames.get(face.ordinal()) + ": " + auto_input;
+				} else if (slotState.ordinal() == 3) {
+					tooltip = faceNames.get(face.ordinal()) + ": " + output;
+				} else {
+					tooltip = faceNames.get(face.ordinal()) + ": " + auto_output;
+				}
+
+				this.addButton(new GuiDefaultButton(
+						face.ordinal(),
+						guiLeft + xOffset,
+						guiTop + yOffset,
+						16,
+						16,
+						new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()),
+						textureX,
+						textureY,
+						16,
+						tooltip
+				));
 			}
-			else if (slotState.ordinal() == 1)
-			{
-				tooltip = faceNames.get(face.ordinal()) + ": " + input;
-			}
-			else if (slotState.ordinal() == 2)
-			{
-				tooltip = faceNames.get(face.ordinal()) + ": " + auto_input;
-			}
-			else if (slotState.ordinal() == 3)
-			{
-				tooltip = faceNames.get(face.ordinal()) + ": " + output;
-			}
-			else
-			{
-				tooltip = faceNames.get(face.ordinal()) + ": " + auto_output;
-			}
-
-			this.addButton(new GuiDefaultButton(
-					face.ordinal(),
-					guiLeft + xOffset,
-					guiTop + yOffset,
-					16,
-					16,
-					new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()),
-					textureX,
-					textureY,
-					16,
-					tooltip
-			));
 		}
 
 		this.addButton(new GuiDefaultButton(6, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 36, 9, I18n.format("gui.back.name")));

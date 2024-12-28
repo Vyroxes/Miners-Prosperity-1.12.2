@@ -59,7 +59,6 @@ public class CustomItemStackHandler extends ItemStackHandler
         }
     }
 
-
     public boolean isValidInput(ItemStack stack, ItemStack[] inputSlotStacks)
     {
         RecipesAlloyFurnace recipes = RecipesAlloyFurnace.getInstance();

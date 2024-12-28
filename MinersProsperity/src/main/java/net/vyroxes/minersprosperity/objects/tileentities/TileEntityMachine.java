@@ -113,7 +113,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         return this.customItemStackHandler;
     }
 
-    public SidedIngredientHandler[] getSidedIngredientHandlers()
+    public IItemHandler[] getSidedIngredientHandlers()
     {
         return this.sidedIngredientHandlers;
     }
@@ -125,12 +125,22 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
     public boolean isSlotEnergy(int slot)
     {
-        return this.sidedIngredientHandlers[0].isSlotEnergy(slot);
+        if (this.sidedIngredientHandlers != null)
+        {
+            return this.sidedIngredientHandlers[0].isSlotEnergy(slot);
+        }
+
+        return false;
     }
 
     public boolean isSlotOutput(int slot)
     {
-        return this.sidedIngredientHandlers[0].isSlotOutput(slot);
+        if (this.sidedIngredientHandlers != null)
+        {
+            return this.sidedIngredientHandlers[0].isSlotOutput(slot);
+        }
+
+        return false;
     }
 
     public int getSlotEditedId()
@@ -148,7 +158,15 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
     {
         if (customItemStackHandler != null)
         {
-            if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY)
+            if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            {
+                return true;
+            }
+        }
+
+        if (this.storage != null)
+        {
+            if (capability == CapabilityEnergy.ENERGY)
             {
                 return true;
             }
@@ -315,11 +333,14 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         NBTTagCompound statesTag = new NBTTagCompound();
         statesTag.setInteger("RedstoneControlButtonState", this.redstoneControlButtonState);
 
-        for (EnumFacing facing : EnumFacing.values())
+        if (this.sidedIngredientHandlers != null)
         {
-            SidedIngredientHandler sidedHandler = this.sidedIngredientHandlers[facing.ordinal()];
+            for (EnumFacing facing : EnumFacing.values())
+            {
+                SidedIngredientHandler sidedHandler = this.sidedIngredientHandlers[facing.ordinal()];
 
-            sidedHandler.writeToNBT(statesTag);
+                sidedHandler.writeToNBT(statesTag);
+            }
         }
 
         return statesTag;
@@ -443,14 +464,12 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
             if (this.cookTime > 0 && this.canSmelt() && canOperate)
             {
-                //this.storage.setEnergyUsage(RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2));
-                //this.storage.setEnergy(this.storage.getEnergy() - this.storage.getEnergyUsage());
+                this.storage.useEnergy(RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2), false);
                 stateChanged = true;
             }
             else if (this.cookTime > 0 && !this.canSmelt() || this.cookTime > 0 && !canOperate)
             {
                 this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
-                //this.storage.setEnergyUsage(0);
                 stateChanged = true;
             }
 
@@ -509,11 +528,6 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             else
             {
                 ItemStack result = RecipesAlloyFurnace.getInstance().getResult(input1, input2);
-
-//                if (result.isEmpty())
-//                {
-//                    result = RecipesAlloyFurnace.getInstance().getResult(input2, input1);
-//                }
 
                 if (result.isEmpty())
                 {

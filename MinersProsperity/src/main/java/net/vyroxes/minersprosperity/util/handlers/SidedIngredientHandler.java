@@ -65,7 +65,7 @@ public class SidedIngredientHandler implements IItemHandler
         {
             if (inputs + energySlots + outputs <= 0)
             {
-                return null; // No handlers needed
+                return null;
             }
 
             SidedIngredientHandler[] handlers = new SidedIngredientHandler[EnumFacing.values().length];
