@@ -33,6 +33,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
     protected String customName;
     protected int redstoneControlButtonState;
     protected int slotEditedId;
+    protected long energyUsage;
     protected int speedMultiplier;
     protected int energyMultiplier;
 
@@ -253,6 +254,11 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         return this.storage.getMaxReceive();
     }
 
+    public long getEnergyUsage()
+    {
+        return this.energyUsage;
+    }
+
     public int getRedstoneControlButtonState()
     {
         return this.redstoneControlButtonState;
@@ -465,11 +471,13 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             if (this.cookTime > 0 && this.canSmelt() && canOperate)
             {
                 this.storage.useEnergy(RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2), false);
+                this.energyUsage = RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2);
                 stateChanged = true;
             }
             else if (this.cookTime > 0 && !this.canSmelt() || this.cookTime > 0 && !canOperate)
             {
                 this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
+                this.energyUsage = 0;
                 stateChanged = true;
             }
 
@@ -517,7 +525,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         ItemStack input1 = customItemStackHandler.getStackInSlot(0);
         ItemStack input2 = customItemStackHandler.getStackInSlot(1);
         //int energy = RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2) * RecipesAlloyFurnace.getInstance().getCookTime(input1, input2);
-        int energy = RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2);
+        long energy = RecipesAlloyFurnace.getInstance().getEnergyUsage(input1, input2);
 
         if (this.storage.getEnergyStored() > energy)
         {
@@ -621,7 +629,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
                 this.storage.setEnergyStored(value);
                 break;
             case 3:
-                //this.storage.setEnergyUsage(value);
+                this.energyUsage = value;
         }
 
         this.markDirty();

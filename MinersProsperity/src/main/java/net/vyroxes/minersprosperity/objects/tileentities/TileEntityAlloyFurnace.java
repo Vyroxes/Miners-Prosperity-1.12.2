@@ -3,8 +3,6 @@ package net.vyroxes.minersprosperity.objects.tileentities;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
 
 public class TileEntityAlloyFurnace extends TileEntityMachine

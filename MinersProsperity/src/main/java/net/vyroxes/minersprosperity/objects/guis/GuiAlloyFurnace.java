@@ -163,13 +163,13 @@ public class GuiAlloyFurnace extends GuiContainer
 		{
 			float energyStored = (float) this.tileEntity.getEnergyStored() / 1000;
 			String formattedEnergyStored = String.format("%.1f", energyStored);
-			//int energyUsage = this.tileEntity.getEnergyUsage();
+			int energyUsage = (int) this.tileEntity.getEnergyUsage();
 			float maxEnergyStored = (float) this.tileEntity.getMaxEnergyStored() / 1000;
 			String formattedMaxEnergyStored = String.format("%.1f", maxEnergyStored);
 			int maxReceive = (int) this.tileEntity.getMaxReceive();
 			List<String> currentTooltip = new ArrayList<>();
 			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
-			//currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_usage") + TextFormatting.GRAY + ": " + energyUsage + " FE/t");
+			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_usage") + TextFormatting.GRAY + ": " + energyUsage + " FE/t");
 			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_input") + TextFormatting.GRAY + ": " + maxReceive + " FE/t");
 			GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 		}
@@ -209,7 +209,6 @@ public class GuiAlloyFurnace extends GuiContainer
 
 	private int getEnergyStoredScaled()
 	{
-		//int i = this.tileEntity.getEnergyStored();
 		int i = (int) Math.round(this.tileEntity.getEnergyStored() / 100.0) * 100;
 		int j = (int) this.tileEntity.getMaxEnergyStored();
 		return i != 0 && j != 0 ? i * 41 / j : 0;

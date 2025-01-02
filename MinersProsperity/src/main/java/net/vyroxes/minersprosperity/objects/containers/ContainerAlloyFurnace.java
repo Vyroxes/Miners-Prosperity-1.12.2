@@ -111,16 +111,16 @@ public class ContainerAlloyFurnace extends Container
                 icontainerlistener.sendWindowProperty(this, 2, (int) this.tileEntity.getEnergyStored());
             }
 
-//            if (this.energyUsage != this.tileEntity.getEnergyUsage())
-//            {
-//                icontainerlistener.sendWindowProperty(this, 3, this.tileEntity.getEnergyUsage());
-//            }
+            if (this.energyUsage != this.tileEntity.getEnergyUsage())
+            {
+                icontainerlistener.sendWindowProperty(this, 3, (int) this.tileEntity.getEnergyUsage());
+            }
         }
         
         this.cookTime = this.tileEntity.getCookTime();
         this.totalCookTime = this.tileEntity.getTotalCookTime();
         this.energyStored = this.tileEntity.getEnergyStored();
-        //this.energyUsage = this.tileEntity.getEnergyUsage();
+        this.energyUsage = this.tileEntity.getEnergyUsage();
     }
     
     @Override
@@ -240,7 +240,7 @@ public class ContainerAlloyFurnace extends Container
                         }
                     }
                 }
-                else if (this.tileEntity.getCustomItemStackHandler().isValidEnergy(itemstack1))
+                else if (this.tileEntity.getCustomItemStackHandler().isEnergyItemValid(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 2, 3, false))
                     {

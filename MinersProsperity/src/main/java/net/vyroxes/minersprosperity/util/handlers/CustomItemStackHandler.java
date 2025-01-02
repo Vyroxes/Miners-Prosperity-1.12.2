@@ -4,8 +4,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomItemStackHandler extends ItemStackHandler
 {
@@ -41,17 +45,11 @@ public class CustomItemStackHandler extends ItemStackHandler
     {
         if (slot < inputSlots)
         {
-            ItemStack[] inputSlotStacks = new ItemStack[inputSlots];
-            for (int i = 0; i < inputSlots; i++)
-            {
-                inputSlotStacks[i] = getStackInSlot(i);
-            }
-
-            return isValidInput(stack, inputSlotStacks);
+            return RecipesAlloyFurnace.getInstance().getLookupTable().isItemValid(this, 0, inputSlots, slot, stack);
         }
         else if (slot < inputSlots + energySlots)
         {
-            return isValidEnergy(stack);
+            return isEnergyItemValid(stack);
         }
         else
         {
@@ -59,50 +57,7 @@ public class CustomItemStackHandler extends ItemStackHandler
         }
     }
 
-    public boolean isValidInput(ItemStack stack, ItemStack[] inputSlotStacks)
-    {
-        RecipesAlloyFurnace recipes = RecipesAlloyFurnace.getInstance();
-
-        if (stack.isEmpty())
-        {
-            return false;
-        }
-
-        boolean allSlotsEmpty = true;
-        for (ItemStack slot : inputSlotStacks)
-        {
-            if (!slot.isEmpty())
-            {
-                allSlotsEmpty = false;
-                break;
-            }
-        }
-
-        if (allSlotsEmpty && !recipes.findRecipes(stack).isEmpty())
-        {
-            return true;
-        }
-
-        for (ItemStack slot : inputSlotStacks)
-        {
-            if (!slot.isEmpty() && !recipes.findRecipes(stack, slot).isEmpty())
-            {
-                return true;
-            }
-        }
-
-        for (ItemStack slot : inputSlotStacks)
-        {
-            if (!slot.isEmpty() && slot.getItem().equals(stack.getItem()))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isValidEnergy(ItemStack stack)
+    public boolean isEnergyItemValid(ItemStack stack)
     {
         if (!stack.isEmpty() && stack.hasCapability(CapabilityEnergy.ENERGY, null))
         {

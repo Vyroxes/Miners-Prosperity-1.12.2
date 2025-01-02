@@ -5,14 +5,15 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.init.ItemInit;
 import java.util.*;
 
 public class RecipesAlloyFurnace
 {
 	private static final RecipesAlloyFurnace INSTANCE = new RecipesAlloyFurnace();
-
 	private final LookupTable lookupTable;
+	private long energyUsage;
 
 	public RecipesAlloyFurnace()
 	{
@@ -94,6 +95,46 @@ public class RecipesAlloyFurnace
 			return unmodifiableRecipes;
 		}
 
+		public boolean isItemValid(IItemHandler itemHandler, int start, int len, int slot, ItemStack slotStack)
+		{
+			if (itemHandler == null || slotStack == null || slotStack.isEmpty())
+			{
+				return false;
+			}
+
+			IntOpenHashSet matchingIndices = null;
+
+			for (int i = start; i < start + len; i++)
+			{
+				final ItemStack input = i == slot ? slotStack : itemHandler.getStackInSlot(i);
+
+				if (input.isEmpty()) continue;
+
+				IntOpenHashSet indices = recipeKeyToIndices.get(input);
+
+				if (indices == null)
+				{
+					return false;
+				}
+
+				if (matchingIndices == null)
+				{
+					matchingIndices = new IntOpenHashSet(indices);
+				}
+				else
+				{
+					matchingIndices.retainAll(indices);
+				}
+
+				if (matchingIndices.isEmpty())
+				{
+					return false;
+				}
+			}
+
+			return matchingIndices != null && !matchingIndices.isEmpty();
+		}
+
 		public List<Recipe> findRecipes(ItemStack... inputs)
 		{
 			if (inputs == null || inputs.length == 0)
@@ -101,23 +142,35 @@ public class RecipesAlloyFurnace
 				return Collections.emptyList();
 			}
 
-			IntOpenHashSet matchingIndices = new IntOpenHashSet();
+			IntOpenHashSet matchingIndices = null;
+
 			for (ItemStack input : inputs)
 			{
 				if (input == null || input.isEmpty()) continue;
 
-				IntOpenHashSet indices = recipeKeyToIndices.getOrDefault(input, new IntOpenHashSet());
-				if (matchingIndices.isEmpty())
+				IntOpenHashSet indices = recipeKeyToIndices.get(input);
+
+				if (indices == null)
 				{
-					matchingIndices.addAll(indices);
+					return Collections.emptyList();
+				}
+
+				if (matchingIndices == null)
+				{
+					matchingIndices = new IntOpenHashSet(indices);
 				}
 				else
 				{
 					matchingIndices.retainAll(indices);
 				}
+
+				if (matchingIndices.isEmpty())
+				{
+					return Collections.emptyList();
+				}
 			}
 
-			if (matchingIndices.isEmpty())
+			if (matchingIndices == null || matchingIndices.isEmpty())
 			{
 				return Collections.emptyList();
 			}
