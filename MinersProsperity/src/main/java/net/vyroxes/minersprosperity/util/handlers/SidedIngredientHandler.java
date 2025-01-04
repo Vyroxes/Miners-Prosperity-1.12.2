@@ -4,24 +4,33 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
+import net.vyroxes.minersprosperity.objects.fluids.CustomFluidTank;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class SidedIngredientHandler implements IItemHandler
+public class SidedIngredientHandler implements IItemHandler, IFluidHandler
 {
     private final TileEntityMachine tileEntity;
     private final CustomItemStackHandler customItemStackHandler;
+    private final CustomFluidTank tank;
     private final EnumFacing facing;
 
     private final SlotState[] slotStates;
 
-    public SidedIngredientHandler(TileEntityMachine tileEntity, CustomItemStackHandler customItemStackHandler, int inputs, int energy, int outputs, EnumFacing facing)
+    public SidedIngredientHandler(TileEntityMachine tileEntity, CustomItemStackHandler customItemStackHandler, CustomFluidTank tank, int inputs, int energy, int outputs, EnumFacing facing)
     {
         this.tileEntity = tileEntity;
         this.customItemStackHandler = customItemStackHandler;
+        this.tank = tank;
         this.facing = facing;
-        this.slotStates = new SlotState[inputs + energy + outputs];
+        if (this.tank != null) this.slotStates = new SlotState[inputs + energy + outputs + 1];
+        else this.slotStates = new SlotState[inputs + energy + outputs];
 
         for (int i = 0; i < inputs; i++)
         {
@@ -35,6 +44,42 @@ public class SidedIngredientHandler implements IItemHandler
         {
             this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.OUTPUT, SlotState.SlotOutputMode.DEFAULT);
         }
+
+        if (this.tank != null)
+        {
+            for (int i = inputs + energy + outputs; i < inputs + energy + outputs + 1; i++)
+            {
+                this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.FLUID, SlotState.SlotMode.OUTPUT, SlotState.SlotOutputMode.DEFAULT);
+            }
+        }
+    }
+
+    @Override
+    public IFluidTankProperties[] getTankProperties() {
+        return this.tank.getTankProperties();
+    }
+
+    @Override
+    public int fill(FluidStack resource, boolean doFill) {
+        return this.tank.fill(resource, doFill);
+    }
+
+    @Override
+    public @Nullable FluidStack drain(FluidStack resource, boolean doDrain) {
+        if (getIngredientType(this.getSlots()-1) == SlotState.IngredientType.FLUID)
+        {
+            this.tank.setCanDrain(this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.OUTPUT || this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.AUTO_OUTPUT);
+        }
+        return this.tank.drain(resource, doDrain);
+    }
+
+    @Override
+    public @Nullable FluidStack drain(int maxDrain, boolean doDrain) {
+        if (getIngredientType(this.getSlots()-1) == SlotState.IngredientType.FLUID)
+        {
+            this.tank.setCanDrain(this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.OUTPUT || this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.AUTO_OUTPUT);
+        }
+        return this.tank.drain(maxDrain, doDrain);
     }
 
     public static class Builder
@@ -71,7 +116,7 @@ public class SidedIngredientHandler implements IItemHandler
             SidedIngredientHandler[] handlers = new SidedIngredientHandler[EnumFacing.values().length];
             for (EnumFacing facing : EnumFacing.values())
             {
-                handlers[facing.ordinal()] = new SidedIngredientHandler(machine, machine.getCustomItemStackHandler(), inputs, energySlots, outputs, facing);
+                handlers[facing.ordinal()] = new SidedIngredientHandler(machine, machine.getCustomItemStackHandler(), machine.getFluidTank(), inputs, energySlots, outputs, facing);
             }
             return handlers;
         }
@@ -225,7 +270,8 @@ public class SidedIngredientHandler implements IItemHandler
     @Override
     public int getSlots()
     {
-        return this.customItemStackHandler.getSlots();
+        if (this.tank != null) return this.customItemStackHandler.getSlots() + 1;
+        else return this.customItemStackHandler.getSlots();
     }
 
     @Override
@@ -241,7 +287,7 @@ public class SidedIngredientHandler implements IItemHandler
         {
             return stack;
         }
-        else if (isItemValid(slot, stack))
+        else if (customItemStackHandler.isItemValid(slot, stack))
         {
             return customItemStackHandler.insertItem(slot, stack, simulate);
         }

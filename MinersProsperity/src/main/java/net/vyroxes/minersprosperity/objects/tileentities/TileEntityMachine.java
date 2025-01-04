@@ -13,11 +13,17 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.vyroxes.minersprosperity.objects.blocks.energy.CustomEnergyStorage;
-import net.vyroxes.minersprosperity.objects.blocks.machines.MachineAlloyFurnace;
+import net.vyroxes.minersprosperity.init.FluidInit;
+import net.vyroxes.minersprosperity.objects.energy.CustomEnergyStorage;
+import net.vyroxes.minersprosperity.objects.blocks.machines.Machine;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.fluids.CustomFluidTank;
 import net.vyroxes.minersprosperity.util.handlers.CustomItemStackHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
@@ -26,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class TileEntityMachine extends TileEntity implements ITickable
 {
     protected final CustomEnergyStorage storage;
+    protected final CustomFluidTank tank;
     protected final SidedIngredientHandler[] sidedIngredientHandlers;
     protected final CustomItemStackHandler customItemStackHandler;
     protected int cookTime;
@@ -41,6 +48,10 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
     {
         this.storage = builder.energyCapacity > 0
                 ? new CustomEnergyStorage(builder.energyCapacity, builder.maxReceive, builder.maxExtract, builder.storedEnergy)
+                : null;
+
+        this.tank = builder.tankCapacity > 0
+                ? new CustomFluidTank(builder.fluid, builder.storedFluid, builder.tankCapacity, builder.canDrain, builder.canFill)
                 : null;
 
         this.customItemStackHandler = builder.inputs + builder.energySlots + builder.outputs > 0
@@ -59,6 +70,12 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         private int maxExtract = 0;
         private int storedEnergy = 0;
 
+        private Fluid fluid = null;
+        private int tankCapacity = 0;
+        private int storedFluid = 0;
+        private boolean canDrain = false;
+        private boolean canFill = false;
+
         private int inputs = 0;
         private int energySlots = 0;
         private int outputs = 0;
@@ -71,6 +88,16 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             this.maxReceive = maxReceive;
             this.maxExtract = maxExtract;
             this.storedEnergy = stored;
+            return this;
+        }
+
+        public Builder setFluid(Fluid fluid, int capacity, int stored, boolean canDrain, boolean canFill)
+        {
+            this.fluid = fluid;
+            this.tankCapacity = capacity;
+            this.storedFluid = stored;
+            this.canDrain = canDrain;
+            this.canFill = canFill;
             return this;
         }
 
@@ -109,14 +136,29 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         return this.storage;
     }
 
+    public CustomFluidTank getFluidTank()
+    {
+        return this.tank;
+    }
+
     public CustomItemStackHandler getCustomItemStackHandler()
     {
         return this.customItemStackHandler;
     }
 
+    public IFluidHandler[] getSidedIngredientHandlersFluid()
+    {
+        return this.sidedIngredientHandlers;
+    }
+
     public IItemHandler[] getSidedIngredientHandlers()
     {
         return this.sidedIngredientHandlers;
+    }
+
+    public IFluidHandler getSidedIngredientHandlerFluid(EnumFacing side)
+    {
+        return this.sidedIngredientHandlers[side.ordinal()];
     }
 
     public IItemHandler getSidedIngredientHandler(EnumFacing side)
@@ -173,13 +215,21 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             }
         }
 
+        if (this.tank != null)
+        {
+            if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            {
+                return true;
+            }
+        }
+
         return super.hasCapability(capability, facing);
     }
 
     @Override
     public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing)
     {
-        if (customItemStackHandler != null)
+        if (this.customItemStackHandler != null)
         {
             if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             {
@@ -192,9 +242,25 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             }
         }
 
-        if (capability == CapabilityEnergy.ENERGY)
+        if (this.storage != null)
         {
-            return CapabilityEnergy.ENERGY.cast(this.storage);
+            if (capability == CapabilityEnergy.ENERGY)
+            {
+                return CapabilityEnergy.ENERGY.cast(this.storage);
+            }
+        }
+
+        if (this.tank != null)
+        {
+            if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            {
+                if (facing == null)
+                {
+                    return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.tank);
+                }
+
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(getSidedIngredientHandlerFluid(getRelativeSide(getMachineFacing(), facing)));
+            }
         }
 
         return super.getCapability(capability, facing);
@@ -205,9 +271,9 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         if (world != null)
         {
             IBlockState state = world.getBlockState(pos);
-            if (state.getBlock() instanceof MachineAlloyFurnace)
+            if (state.getBlock() instanceof Machine)
             {
-                return state.getValue(MachineAlloyFurnace.FACING);
+                return state.getValue(Machine.FACING);
             }
         }
         return EnumFacing.NORTH;
@@ -232,6 +298,16 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             case WEST -> rotationMap[3];
             default -> pipeDirection;
         };
+    }
+
+    public int getFluidStored()
+    {
+        return this.tank.getFluidAmount();
+    }
+
+    public void setFluidStored(Fluid fluid, int fluidStored)
+    {
+        this.tank.setFluidStored(fluid, fluidStored);
     }
 
     public long getEnergyStored()
@@ -323,6 +399,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         tag.setInteger("TotalCookTime", this.totalCookTime);
 
         this.storage.writeToNBT(tag);
+        this.tank.writeToNBT(tag);
 
         if (this.hasCustomName())
         {
@@ -373,6 +450,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         }
 
         this.storage.readFromNBT(tag);
+        this.tank.readFromNBT(tag);
 
         if (tag.hasKey("CustomName", 8))
         {
@@ -441,8 +519,10 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
     @Override
     public void update()
     {
-        boolean wasPowered = MachineAlloyFurnace.getStatePowered(this.world, this.pos);
+        boolean wasPowered = Machine.getStatePowered(this.world, this.pos);
         boolean stateChanged = false;
+
+        System.out.println(this.getFluidStored());
 
         if (!this.world.isRemote)
         {
@@ -490,7 +570,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
             if (wasPowered != this.isPowered())
             {
-                MachineAlloyFurnace.setStatePowered(this.isPowered(), world, pos);
+                Machine.setStatePowered(this.isPowered(), world, pos);
                 stateChanged = true;
             }
         }
@@ -569,6 +649,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
         if (this.canSmelt())
         {
+            int experience = (int) (RecipesAlloyFurnace.getInstance().getExperience(input1, input2) * 10);
             ItemStack result = RecipesAlloyFurnace.getInstance().getResult(input1, input2);
             ItemStack output = customItemStackHandler.getStackInSlot(3);
 
@@ -588,6 +669,8 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
             if (input1.isEmpty()) customItemStackHandler.setStackInSlot(0, ItemStack.EMPTY);
             if (input2.isEmpty()) customItemStackHandler.setStackInSlot(1, ItemStack.EMPTY);
+
+            this.tank.fillInternal(new FluidStack(FluidInit.LIQUID_EXPERIENCE, experience), true);
 
             this.markDirty();
         }
@@ -630,6 +713,9 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
                 break;
             case 3:
                 this.energyUsage = value;
+                break;
+            case 4:
+                this.tank.setFluidStored(FluidInit.LIQUID_EXPERIENCE, value);
         }
 
         this.markDirty();

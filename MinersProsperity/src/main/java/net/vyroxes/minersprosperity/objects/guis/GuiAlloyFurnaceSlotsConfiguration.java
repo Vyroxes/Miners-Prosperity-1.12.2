@@ -14,6 +14,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
@@ -28,9 +29,9 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 {
 	private static final ResourceLocation GUI_ELEMENTS = new ResourceLocation(Tags.MODID, "textures/gui/gui_elements.png");
 	private static final ResourceLocation ALLOY_FURNACE_SLOTS_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/alloy_furnace_slots_configuration.png");
-	private final TileEntityAlloyFurnace tileEntity;
+	private final TileEntityMachine tileEntity;
 
-	public GuiAlloyFurnaceSlotsConfiguration(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
+	public GuiAlloyFurnaceSlotsConfiguration(InventoryPlayer player, TileEntityMachine tileEntity)
 	{
 		super(new ContainerInventory(player, tileEntity));
 		this.tileEntity = tileEntity;
@@ -46,13 +47,14 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
-		this.addButton(new GuiDefaultButton(0, guiLeft + 36, guiTop + 34, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 106, 32, 18, I18n.format("gui.input1.name")));
-		this.addButton(new GuiDefaultButton(1, guiLeft + 56, guiTop + 34, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 106, 32, 18, I18n.format("gui.input2.name")));
+		this.addButton(new GuiDefaultButton(0, guiLeft + 32, guiTop + 34, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 106, 32, 18, I18n.format("gui.input1.name")));
+		this.addButton(new GuiDefaultButton(1, guiLeft + 52, guiTop + 34, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 106, 32, 18, I18n.format("gui.input2.name")));
 		this.addButton(new GuiDefaultButton(2, guiLeft + 7, guiTop + 52, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 124, 32, 18, I18n.format("gui.energy.name")));
-		this.addButton(new GuiDefaultButton(3, guiLeft + 114, guiTop + 30, 26, 26, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 142, 32, 26, I18n.format("gui.output.name")));
-		this.addButton(new GuiDefaultButton(4, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 36, 9, I18n.format("gui.back.name")));
-		this.addButton(new GuiDefaultButton(5, guiLeft + 7, guiTop + 18, 15, 15, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 154, 0, 15, I18n.format("gui.set_all_disabled.name")));
-		this.addButton(new GuiDefaultButton(6, guiLeft + 7, guiTop + 34, 15, 15, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 169, 0, 15, I18n.format("gui.set_all_default.name")));
+		this.addButton(new GuiDefaultButton(3, guiLeft + 110, guiTop + 30, 26, 26, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 142, 32, 26, I18n.format("gui.output.name")));
+		this.addButton(new GuiDefaultButton(4, guiLeft + 138, guiTop + 30, 6, 26, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 232, 17, 26, I18n.format("gui.experience.name")));
+		this.addButton(new GuiDefaultButton(5, guiLeft + 7, guiTop + 6, 18, 9, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 36, 9, I18n.format("gui.back.name")));
+		this.addButton(new GuiDefaultButton(6, guiLeft + 7, guiTop + 18, 15, 15, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 154, 0, 15, I18n.format("gui.set_all_disabled.name")));
+		this.addButton(new GuiDefaultButton(7, guiLeft + 7, guiTop + 34, 15, 15, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 169, 0, 15, I18n.format("gui.set_all_default.name")));
 
 		String description = TextFormatting.AQUA + "Shift + left click" + TextFormatting.GRAY + " on the machine disables input and output for all slots on every side\n" + TextFormatting.AQUA + "Shift + right click" + TextFormatting.GRAY + " on the machine from a specific side disables input and output for all slots on that specific side.";
 		GuiButton descButton = new GuiDefaultButton(7, guiLeft + 163, guiTop + 6, 6, 8, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 41, 8, description);
@@ -85,9 +87,14 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 		}
 		else if (guiButton.id == 4)
 		{
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
+			this.tileEntity.setSlotEditedId(4);
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 5)
+		{
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
+		}
+		else if (guiButton.id == 6)
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
@@ -98,7 +105,7 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 				}
 			}
 		}
-		else if (guiButton.id == 6)
+		else if (guiButton.id == 7)
 		{
 			for (EnumFacing face : EnumFacing.values())
 			{
@@ -167,7 +174,7 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 
 		this.mc.getTextureManager().bindTexture(GUI_ELEMENTS);
 		int l = this.getCookProgressScaled();
-		this.drawTexturedModalRect(this.guiLeft + 82, this.guiTop + 35, 232, 0, l + 1, 16);
+		this.drawTexturedModalRect(this.guiLeft + 78, this.guiTop + 35, 232, 0, l + 1, 16);
 	}
 
 	private int getCookProgressScaled()

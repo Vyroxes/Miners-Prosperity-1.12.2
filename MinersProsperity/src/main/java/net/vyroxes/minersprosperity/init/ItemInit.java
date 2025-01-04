@@ -23,7 +23,7 @@ import net.vyroxes.minersprosperity.objects.tools.SwordEmerald;
 
 public class ItemInit
 {
-	public static final List<Item> ITEMS = new ArrayList<Item>();
+	public static final List<Item> ITEMS = new ArrayList<>();
 	
 	//TOOL MATERIALS
 	public static final ToolMaterial EMERALD_TOOL = EnumHelper.addToolMaterial("emerald tool", 4, 1892, 10.0F, 4.0F, 8);
@@ -56,6 +56,10 @@ public class ItemInit
 
 	//ITEMS
 	public static final Item CHAIN = new ItemBase("chain");
+
+	//UPGRADES
+	public static final Item SPEED_UPGRADE = new ItemBase("speed_upgrade");
+	public static final Item ENERGY_UPGRADE = new ItemBase("energy_upgrade");
 
 	//BACKPACKS
 	public static final Item BACKPACK = new Backpack("backpack");

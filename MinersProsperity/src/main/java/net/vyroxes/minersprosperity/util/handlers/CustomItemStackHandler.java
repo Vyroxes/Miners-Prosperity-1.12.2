@@ -4,12 +4,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CustomItemStackHandler extends ItemStackHandler
 {

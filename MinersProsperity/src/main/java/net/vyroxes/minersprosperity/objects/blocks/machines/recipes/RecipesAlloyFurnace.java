@@ -18,7 +18,7 @@ public class RecipesAlloyFurnace
 	public RecipesAlloyFurnace()
 	{
 		this.lookupTable = new LookupTable();
-		addRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 100, 20, 0.7f);
+		addRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), new ItemStack(Items.DIAMOND), 100, 20, 10.0f);
 		addRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), new ItemStack(Items.REDSTONE), 100, 20, 0.1F);
 	}
 
@@ -102,6 +102,17 @@ public class RecipesAlloyFurnace
 				return false;
 			}
 
+			for (int i = start; i < start + len; i++)
+			{
+				if (i == slot) continue;
+
+				ItemStack stackInSlot = itemHandler.getStackInSlot(i);
+				if (!stackInSlot.isEmpty() && ItemStack.areItemsEqual(stackInSlot, slotStack))
+				{
+					return false;
+				}
+			}
+
 			IntOpenHashSet matchingIndices = null;
 
 			for (int i = start; i < start + len; i++)
@@ -140,6 +151,21 @@ public class RecipesAlloyFurnace
 			if (inputs == null || inputs.length == 0)
 			{
 				return Collections.emptyList();
+			}
+
+			for (int i = 0; i < inputs.length; i++)
+			{
+				if (inputs[i] == null || inputs[i].isEmpty()) continue;
+
+				for (int j = i + 1; j < inputs.length; j++)
+				{
+					if (inputs[j] == null || inputs[j].isEmpty()) continue;
+
+					if (ItemStack.areItemsEqual(inputs[i], inputs[j]))
+					{
+						return Collections.emptyList();
+					}
+				}
 			}
 
 			IntOpenHashSet matchingIndices = null;

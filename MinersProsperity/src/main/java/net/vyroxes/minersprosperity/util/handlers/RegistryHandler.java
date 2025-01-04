@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.init.BlockInit;
+import net.vyroxes.minersprosperity.init.FluidInit;
 import net.vyroxes.minersprosperity.init.ItemInit;
 import net.vyroxes.minersprosperity.util.compat.OreDictionaryCompat;
 import net.vyroxes.minersprosperity.util.interfaces.IHasModel;
@@ -35,9 +37,10 @@ public class RegistryHandler
 	public static void onBlockRegister(RegistryEvent.Register<Block> event)
 	{
 		event.getRegistry().registerAll(BlockInit.BLOCKS.toArray(new Block[0]));
+		event.getRegistry().register(BlockInit.LIQUID_EXPERIENCE_BLOCK);
 		TileEntityHandler.registerTileEntities();
 	}
-	
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public static void onModelRegister(ModelRegistryEvent event)
@@ -71,7 +74,10 @@ public class RegistryHandler
 	public static void preInitRegistries(FMLPreInitializationEvent event)
 	{
 		MinecraftForge.EVENT_BUS.register(MinersProsperity.INSTANCE);
-		
+
+		FluidRegistry.registerFluid(FluidInit.LIQUID_EXPERIENCE);
+		FluidRegistry.addBucketForFluid(FluidInit.LIQUID_EXPERIENCE);
+
 	    MinecraftForge.EVENT_BUS.register(new CraftingHandler());
 		
 		ConfigHandler.registerConfig(event);

@@ -4,6 +4,9 @@ itemGroup.armour_tab=Miner's Prosperity Armor
 itemGroup.items_tab=Miner's Prosperity Items
 itemGroup.blocks_tab=Miner's Prosperity Blocks
 
+#FLUIDS
+fluid.liquid_experience=Liquid Experience
+
 #TOOLS
 item.emerald_sword.name=Emerald Sword
 item.emerald_pickaxe.name=Emerald Pickaxe
@@ -27,6 +30,10 @@ item.emerald_boots.name=Emerald Boots
 
 #ITEMS
 item.chain.name=Chain
+
+#UPGRADES
+item.speed_upgrade=Speed Upgrade
+item.energy_upgrade=Energy Upgrade
 
 #BACKPACKS
 item.backpack.name=Backpack
@@ -91,6 +98,7 @@ gui.input1.name=Input 1 Slot
 gui.input2.name=Input 2 Slot
 gui.energy.name=Energy Slot
 gui.output.name=Output Slot
+gui.experience.name=Liquid Experience Tank
 gui.back.name=Back
 gui.side_front.name=Front
 gui.side_back.name=Back
@@ -112,6 +120,9 @@ gui.set_output.name=Set All Sides to Output
 gui.set_auto_output.name=Set All Sides to Auto-Output
 gui.energy_stored=Energy Stored
 gui.energy_usage=Energy Usage
+gui.fluid=Fluid
+gui.fluid_stored=Fluid Stored
+gui.xp_levels=XP Levels
 gui.max_energy_input=Max Energy Input
 gui.slot_disabled.name=Disabled
 gui.slot_input.name=Input

@@ -1,6 +1,5 @@
 package net.vyroxes.minersprosperity.objects.blocks.machines;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -23,6 +22,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -40,22 +41,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public abstract class Machine extends BlockBase implements ITileEntityProvider {
-    private static final PropertyDirection FACING = BlockHorizontal.FACING;
-    private static final PropertyBool POWERED = PropertyBool.create("powered");
-    private static Block block;
-    private static GuiHandler.GuiTypes guiTypes;
+    public static final PropertyDirection FACING = BlockHorizontal.FACING;
+    public static final PropertyBool POWERED = PropertyBool.create("powered");
+    private final GuiHandler.GuiTypes guiTypes;
     private static boolean keepInventory;
 
 
-    public Machine(String name, Material material, MapColor mapColor, SoundType soundType, CreativeTabs creativeTabs, String harvestTool, int harvestLevel, float hardness, float resistance, Block block, GuiHandler.GuiTypes guiTypes) {
+    public Machine(String name, Material material, MapColor mapColor, SoundType soundType, CreativeTabs creativeTabs, String harvestTool, int harvestLevel, float hardness, float resistance, GuiHandler.GuiTypes guiTypes) {
         super(name, material, mapColor);
         setSoundType(soundType);
         setCreativeTab(creativeTabs);
         setHarvestLevel(harvestTool, harvestLevel);
         setHardness(hardness);
         setResistance(resistance);
-        Machine.block = block;
-        Machine.guiTypes = guiTypes;
+        this.guiTypes = guiTypes;
 
         setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POWERED, false));
     }
@@ -70,7 +69,7 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         keepInventory = true;
 
-        worldIn.setBlockState(pos, block.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)).withProperty(POWERED, powered), 3);
+        worldIn.setBlockState(pos, iblockstate.withProperty(POWERED, powered), 3);
 
         keepInventory = false;
 
@@ -78,12 +77,6 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
             tileentity.validate();
             worldIn.setTileEntity(pos, tileentity);
         }
-    }
-
-    @Override
-    @NonnullByDefault
-    public @NotNull Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Item.getItemFromBlock(block);
     }
 
     @Override
@@ -135,7 +128,7 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
                 return false;
             }
 
-            playerIn.openGui(MinersProsperity.INSTANCE, guiTypes.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.openGui(MinersProsperity.INSTANCE, this.guiTypes.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
 
         return true;
@@ -157,7 +150,7 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
             }
 
             for (String key : tileEntityData.getKeySet()) {
-                if (key.equals("Energy") || key.equals("States")) {
+                if (key.equals("Energy") || key.equals("FluidName") || key.equals("Amount") || key.equals("States")) {
                     tag.setTag(key, tileEntityData.getTag(key));
                 }
             }
@@ -177,6 +170,10 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
 
             if (tag.hasKey("Energy")) {
                 tileEntityMachine.setEnergyStored(tag.getLong("Energy"));
+            }
+
+            if (tag.hasKey("FluidName") && tag.hasKey("Amount")) {
+                tileEntityMachine.setFluidStored(FluidRegistry.getFluid(tag.getString("FluidName")), tag.getInteger("Amount"));
             }
 
             if (tag.hasKey("States")) {

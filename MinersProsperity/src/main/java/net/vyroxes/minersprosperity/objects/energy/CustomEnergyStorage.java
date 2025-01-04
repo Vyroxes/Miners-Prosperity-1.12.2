@@ -1,7 +1,8 @@
-package net.vyroxes.minersprosperity.objects.blocks.energy;
+package net.vyroxes.minersprosperity.objects.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.IFluidTank;
 
 public class CustomEnergyStorage implements IEnergyStorage
 {

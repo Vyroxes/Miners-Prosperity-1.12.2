@@ -1,7 +1,7 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-			"model": "minersprosperity:copper_block"
+		"model": "minersprosperity:copper_block"
 	},
 	"variants": {
 		"inventory": [{}],

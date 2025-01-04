@@ -14,40 +14,81 @@ import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloy
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import org.jetbrains.annotations.NotNull;
 
-public class ContainerAlloyFurnace extends Container
+public abstract class ContainerMachine extends Container
 {
     private final TileEntityMachine tileEntity;
     private int cookTime;
     private int totalCookTime;
     private long energyStored;
     private long energyUsage;
-    private int fluidStored;
 
-    public ContainerAlloyFurnace(InventoryPlayer playerInventory, TileEntityMachine tileEntity)
+    public ContainerMachine(InventoryPlayer playerInventory, TileEntityMachine tileEntity, int[] inputs, int[] energy, int[] outputs)
     {
         this.tileEntity = tileEntity;
         IItemHandler handler = this.tileEntity.getCustomItemStackHandler();
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 0, 33, 35)); // Slot wejściowy lewy (1)
-        this.addSlotToContainer(new SlotItemHandler(handler, 1, 53, 35)); // Slot wejściowy prawy (2)
+        if (inputs != null)
+        {
+            for (int i = 0; i < inputs.length; i += 2)
+            {
+                this.addSlotToContainer(new SlotItemHandler(handler, 0, inputs[i], inputs[i+1]));
+            }
+        }
+
+        if (energy != null)
+        {
+            for (int i = 0; i < energy.length; i += 2)
+            {
+                this.addSlotToContainer(new SlotItemHandler(handler, 0, energy[i], energy[i+1]));
+            }
+        }
+
         this.addSlotToContainer(new SlotItemHandler(handler, 2, 8, 53)); // Slot energii
-        this.addSlotToContainer(new SlotItemHandler(handler, 3, 115, 35) // Slot wyjściowy
+        this.addSlotToContainer(new SlotItemHandler(handler, 3, 119, 35) // Slot wyjściowy
         {
             @Override
             public @NotNull ItemStack onTake(@NotNull EntityPlayer entityPlayer, @NotNull ItemStack itemStack)
             {
+                float experiencePerItem = RecipesAlloyFurnace.getInstance().getExperience(itemStack, ItemStack.EMPTY);
+                int totalItemCount = itemStack.getCount();
+
                 if (!entityPlayer.world.isRemote)
                 {
-                    if(tileEntity.getFluidStored() > 10)
+                    int totalExperience;
+
+                    if (experiencePerItem == 0.0F)
                     {
-                        giveExperienceToPlayer(entityPlayer);
+                        totalExperience = 0;
+                    }
+                    else if (experiencePerItem < 1.0F)
+                    {
+                        int flooredExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+
+                        if (flooredExperience < MathHelper.ceil((float) totalItemCount * experiencePerItem) &&
+                                Math.random() < (float) totalItemCount * experiencePerItem - (float) flooredExperience)
+                        {
+                            ++flooredExperience;
+                        }
+
+                        totalExperience = flooredExperience;
+                    }
+                    else
+                    {
+                        totalExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+                    }
+
+                    while (totalExperience > 0)
+                    {
+                        int xpSplit = EntityXPOrb.getXPSplit(totalExperience);
+                        totalExperience -= xpSplit;
+                        entityPlayer.world.spawnEntity(new EntityXPOrb(entityPlayer.world, entityPlayer.posX, entityPlayer.posY + 0.5D, entityPlayer.posZ + 0.5D, xpSplit));
                     }
                 }
 
                 return super.onTake(entityPlayer, itemStack);
             }
         });
-
+        
         for (int i = 0; i < 3; ++i)
         {
             for(int j = 0; j < 9; ++j)
@@ -55,28 +96,11 @@ public class ContainerAlloyFurnace extends Container
                 this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
-
+        
         for (int k = 0; k < 9; ++k)
         {
             this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
-    }
-
-    public void giveExperienceToPlayer(EntityPlayer entityPlayer)
-    {
-        int totalExperience = tileEntity.getFluidStored() / 10;
-        int drainedExperience = 0;
-
-        while (totalExperience > 0)
-        {
-            int xpSplit = EntityXPOrb.getXPSplit(totalExperience);
-            totalExperience -= xpSplit;
-            drainedExperience += xpSplit;
-            entityPlayer.world.spawnEntity(new EntityXPOrb(entityPlayer.world, entityPlayer.posX, entityPlayer.posY + 0.5D, entityPlayer.posZ + 0.5D, xpSplit));
-        }
-
-        System.out.println(drainedExperience * 10);
-        tileEntity.getFluidTank().drainInternal(drainedExperience * 10, true);
     }
 
     @Override
@@ -105,18 +129,12 @@ public class ContainerAlloyFurnace extends Container
             {
                 icontainerlistener.sendWindowProperty(this, 3, (int) this.tileEntity.getEnergyUsage());
             }
-
-            if (this.fluidStored != this.tileEntity.getFluidStored() || this.tileEntity.getFluidStored() == 0)
-            {
-                icontainerlistener.sendWindowProperty(this, 4, this.tileEntity.getFluidStored());
-            }
         }
         
         this.cookTime = this.tileEntity.getCookTime();
         this.totalCookTime = this.tileEntity.getTotalCookTime();
         this.energyStored = this.tileEntity.getEnergyStored();
         this.energyUsage = this.tileEntity.getEnergyUsage();
-        this.fluidStored = this.tileEntity.getFluidStored();
     }
     
     @Override
@@ -126,13 +144,13 @@ public class ContainerAlloyFurnace extends Container
     }
     
     @Override
-    public boolean canInteractWith(@NotNull EntityPlayer entityPlayer)
+    public boolean canInteractWith(@NotNull EntityPlayer playerIn)
     {
-        return this.tileEntity.isUsableByPlayer(entityPlayer);
+        return this.tileEntity.isUsableByPlayer(playerIn);
     }
 
     @Override
-    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer entityPlayer, int index)
+    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -151,11 +169,39 @@ public class ContainerAlloyFurnace extends Container
 
                 slot.onSlotChange(itemstack1, itemstack);
 
-                if (!entityPlayer.world.isRemote)
+                float experiencePerItem = RecipesAlloyFurnace.getInstance().getExperience(itemstack);
+                int totalItemCount = itemstack.getCount();
+
+                if (!playerIn.world.isRemote)
                 {
-                    if(tileEntity.getFluidStored() > 10)
+                    int totalExperience;
+
+                    if (experiencePerItem == 0.0F)
                     {
-                        giveExperienceToPlayer(entityPlayer);
+                        totalExperience = 0;
+                    }
+                    else if (experiencePerItem < 1.0F)
+                    {
+                        int flooredExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+
+                        if (flooredExperience < MathHelper.ceil((float) totalItemCount * experiencePerItem) &&
+                                Math.random() < (float) totalItemCount * experiencePerItem - (float) flooredExperience)
+                        {
+                            ++flooredExperience;
+                        }
+
+                        totalExperience = flooredExperience;
+                    }
+                    else
+                    {
+                        totalExperience = MathHelper.floor((float) totalItemCount * experiencePerItem);
+                    }
+
+                    while (totalExperience > 0)
+                    {
+                        int xpSplit = EntityXPOrb.getXPSplit(totalExperience);
+                        totalExperience -= xpSplit;
+                        playerIn.world.spawnEntity(new EntityXPOrb(playerIn.world, playerIn.posX, playerIn.posY + 0.5D, playerIn.posZ + 0.5D, xpSplit));
                     }
                 }
             }
@@ -249,7 +295,7 @@ public class ContainerAlloyFurnace extends Container
             	return ItemStack.EMPTY;
             }
             
-            slot.onTake(entityPlayer, itemstack1);
+            slot.onTake(playerIn, itemstack1);
         }
         
         return itemstack;

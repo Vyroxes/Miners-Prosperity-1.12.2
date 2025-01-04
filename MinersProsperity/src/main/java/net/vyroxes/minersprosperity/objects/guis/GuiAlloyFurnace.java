@@ -13,10 +13,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.vyroxes.minersprosperity.Tags;
+import net.vyroxes.minersprosperity.init.FluidInit;
 import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
@@ -24,16 +26,16 @@ public class GuiAlloyFurnace extends GuiContainer
 {
 	private static final ResourceLocation GUI_ELEMENTS = new ResourceLocation(Tags.MODID, "textures/gui/gui_elements.png");
 	private static final ResourceLocation ALLOY_FURNACE = new ResourceLocation(Tags.MODID, "textures/gui/alloy_furnace.png");
-	private final TileEntityAlloyFurnace tileEntity;
+	private final TileEntityMachine tileEntity;
 	private int redstoneControlButtonState;
 	
-	public GuiAlloyFurnace(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
+	public GuiAlloyFurnace(InventoryPlayer player, TileEntityMachine tileEntity)
 	{
 		super(new ContainerAlloyFurnace(player, tileEntity));
 		this.tileEntity = tileEntity;
 	}
 
-	public TileEntityAlloyFurnace getTileEntity()
+	public TileEntityMachine getTileEntity()
 	{
 		return this.tileEntity;
 	}
@@ -154,29 +156,59 @@ public class GuiAlloyFurnace extends GuiContainer
 	        }
 	    }
 
-		int energyBarX = this.guiLeft + 8;
-		int energyBarY = this.guiTop + 7;
-		int energyBarWidth = 16;
-		int energyBarHeight = 41;
-
-		if (mouseX >= energyBarX && mouseX < energyBarX + energyBarWidth && mouseY >= energyBarY && mouseY < energyBarY + energyBarHeight)
+		if (this.tileEntity.getEnergyStorage() != null)
 		{
-			float energyStored = (float) this.tileEntity.getEnergyStored() / 1000;
-			String formattedEnergyStored = String.format("%.1f", energyStored);
-			int energyUsage = (int) this.tileEntity.getEnergyUsage();
-			float maxEnergyStored = (float) this.tileEntity.getMaxEnergyStored() / 1000;
-			String formattedMaxEnergyStored = String.format("%.1f", maxEnergyStored);
-			int maxReceive = (int) this.tileEntity.getMaxReceive();
-			List<String> currentTooltip = new ArrayList<>();
-			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
-			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_usage") + TextFormatting.GRAY + ": " + energyUsage + " FE/t");
-			currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_input") + TextFormatting.GRAY + ": " + maxReceive + " FE/t");
-			GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+			int energyBarX = this.guiLeft + 8;
+			int energyBarY = this.guiTop + 7;
+			int energyBarWidth = 16;
+			int energyBarHeight = 41;
+
+			if (mouseX >= energyBarX && mouseX < energyBarX + energyBarWidth && mouseY >= energyBarY && mouseY < energyBarY + energyBarHeight)
+			{
+				float energyStored = (float) this.tileEntity.getEnergyStored() / 1000;
+				String formattedEnergyStored = String.format("%.1f", energyStored);
+				int energyUsage = (int) this.tileEntity.getEnergyUsage();
+				float maxEnergyStored = (float) this.tileEntity.getMaxEnergyStored() / 1000;
+				String formattedMaxEnergyStored = String.format("%.1f", maxEnergyStored);
+				int maxReceive = (int) this.tileEntity.getMaxReceive();
+				List<String> currentTooltip = new ArrayList<>();
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_usage") + TextFormatting.GRAY + ": " + energyUsage + " FE/t");
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_input") + TextFormatting.GRAY + ": " + maxReceive + " FE/t");
+				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+			}
+		}
+
+		int tankBarX = this.guiLeft + 138;
+		int tankBarY = this.guiTop + 30;
+		int tankBarWidth = 6;
+		int tankBarHeight = 26;
+
+		if (mouseX >= tankBarX && mouseX < tankBarX + tankBarWidth && mouseY >= tankBarY && mouseY < tankBarY + tankBarHeight)
+		{
+			if (this.tileEntity.getFluidTank() != null && this.tileEntity.getFluidTank().getFluid() != null && this.tileEntity.getFluidStored() > 0)
+			{
+				int fluidStored = this.tileEntity.getFluidStored();
+				String calculatedLevels = String.format("%.1f", calculateLevelsFromXP(fluidStored / 10));
+				List<String> currentTooltip = new ArrayList<>();
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid") + TextFormatting.GRAY + ": " + this.tileEntity.getFluidTank().getFluid().getLocalizedName());
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid_stored") + TextFormatting.GRAY + ": " + fluidStored + " mB");
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.xp_levels") + TextFormatting.GRAY + ": " + calculatedLevels);
+				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+			}
+			else
+			{
+				List<String> currentTooltip = new ArrayList<>();
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid") + TextFormatting.GRAY + ": " + FluidInit.LIQUID_EXPERIENCE.getLocalizedName(new FluidStack(FluidInit.LIQUID_EXPERIENCE, 0)));
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid_stored") + TextFormatting.GRAY + ": 0 mB");
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.xp_levels") + TextFormatting.GRAY + ": 0.0");
+				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+			}
 		}
 
 	    this.renderHoveredToolTip(mouseX, mouseY);
 	}
-	
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
@@ -194,10 +226,50 @@ public class GuiAlloyFurnace extends GuiContainer
 
 		this.mc.getTextureManager().bindTexture(GUI_ELEMENTS);
 		int l = this.getCookProgressScaled();
-		this.drawTexturedModalRect(this.guiLeft + 82, this.guiTop + 35, 232, 0, l + 1, 16);
+		this.drawTexturedModalRect(this.guiLeft + 78, this.guiTop + 35, 232, 0, l + 1, 16);
 
 		int k = this.getEnergyStoredScaled();
 		this.drawTexturedModalRect(this.guiLeft + 8, this.guiTop + 7, 0, 0, 16, 41 - k);
+
+		if (this.tileEntity.getFluidStored() == 0 || this.tileEntity.getFluidTank() == null)
+		{
+			this.drawTexturedModalRect(this.guiLeft + 139, this.guiTop + 31, 0, 0, 4, 24);
+		}
+	}
+
+	public float calculateLevelsFromXP(int xp)
+	{
+		int level = 0;
+
+		while (xp > 0)
+		{
+			int xpToNextLevel;
+
+			if (level < 16)
+			{
+				xpToNextLevel = 2 * level + 7;
+			}
+			else if (level < 31)
+			{
+				xpToNextLevel = 5 * level - 38;
+			}
+			else
+			{
+				xpToNextLevel = 9 * level - 158;
+			}
+
+			if (xp >= xpToNextLevel)
+			{
+				xp -= xpToNextLevel;
+				level++;
+			}
+			else
+			{
+				return level + (float) xp / xpToNextLevel;
+			}
+		}
+
+		return level;
 	}
 
 	private int getCookProgressScaled()

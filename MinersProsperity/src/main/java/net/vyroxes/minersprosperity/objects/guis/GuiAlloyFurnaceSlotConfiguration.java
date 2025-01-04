@@ -15,6 +15,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.objects.containers.ContainerInventory;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
@@ -28,9 +29,9 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 {
 	private static final ResourceLocation GUI_ELEMENTS = new ResourceLocation(Tags.MODID, "textures/gui/gui_elements.png");
 	private static final ResourceLocation ALLOY_FURNACE_SLOT_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/alloy_furnace_slot_configuration.png");
-	private final TileEntityAlloyFurnace tileEntity;
+	private final TileEntityMachine tileEntity;
 
-	public GuiAlloyFurnaceSlotConfiguration(InventoryPlayer player, TileEntityAlloyFurnace tileEntity)
+	public GuiAlloyFurnaceSlotConfiguration(InventoryPlayer player, TileEntityMachine tileEntity)
 	{
 		super(new ContainerInventory(player, tileEntity));
 		this.tileEntity = tileEntity;

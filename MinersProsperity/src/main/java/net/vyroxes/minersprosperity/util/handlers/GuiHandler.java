@@ -12,6 +12,7 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerIronBackpack;
 import net.vyroxes.minersprosperity.objects.guis.*;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.minecraft.util.math.BlockPos;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 
 import java.util.Objects;
 
@@ -42,8 +43,8 @@ public class GuiHandler implements IGuiHandler
         BlockPos pos = new BlockPos(x, y, z);
         return switch (GuiTypes.fromId(id))
         {
-            case ALLOY_FURNACE -> new ContainerAlloyFurnace(player.inventory, (TileEntityAlloyFurnace) Objects.requireNonNull(world.getTileEntity(pos)));
-            case ALLOY_FURNACE_SLOTS_CONFIGURATION, ALLOY_FURNACE_SLOT_CONFIGURATION -> new ContainerInventory(player.inventory, (TileEntityAlloyFurnace) Objects.requireNonNull(world.getTileEntity(pos)));
+            case ALLOY_FURNACE -> new ContainerAlloyFurnace(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case ALLOY_FURNACE_SLOTS_CONFIGURATION, ALLOY_FURNACE_SLOT_CONFIGURATION -> new ContainerInventory(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case BACKPACK -> new ContainerBackpack(player.inventory, player.getHeldItemMainhand());
             case IRON_BACKPACK -> new ContainerIronBackpack(player.inventory, player.getHeldItemMainhand());
         };
@@ -56,9 +57,9 @@ public class GuiHandler implements IGuiHandler
         BlockPos pos = new BlockPos(x, y, z);
         return switch (GuiTypes.fromId(id))
         {
-            case ALLOY_FURNACE -> new GuiAlloyFurnace(player.inventory, (TileEntityAlloyFurnace) Objects.requireNonNull(world.getTileEntity(pos)));
-            case ALLOY_FURNACE_SLOTS_CONFIGURATION -> new GuiAlloyFurnaceSlotsConfiguration(player.inventory, (TileEntityAlloyFurnace) Objects.requireNonNull(world.getTileEntity(pos)));
-            case ALLOY_FURNACE_SLOT_CONFIGURATION -> new GuiAlloyFurnaceSlotConfiguration(player.inventory, (TileEntityAlloyFurnace) Objects.requireNonNull(world.getTileEntity(pos)));
+            case ALLOY_FURNACE -> new GuiAlloyFurnace(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case ALLOY_FURNACE_SLOTS_CONFIGURATION -> new GuiAlloyFurnaceSlotsConfiguration(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case ALLOY_FURNACE_SLOT_CONFIGURATION -> new GuiAlloyFurnaceSlotConfiguration(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case BACKPACK -> new GuiBackpack(new ContainerBackpack(player.inventory, player.getHeldItemMainhand()));
             case IRON_BACKPACK -> new GuiIronBackpack(new ContainerIronBackpack(player.inventory, player.getHeldItemMainhand()));
         };

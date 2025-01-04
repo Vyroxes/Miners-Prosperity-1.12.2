@@ -7,29 +7,30 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerInventory extends Container
 {
-    private final TileEntityAlloyFurnace tileEntity;
+    private final TileEntityMachine tileEntity;
     private int cookTime;
     private int totalCookTime;
 
-    public ContainerInventory(InventoryPlayer playerInventory, TileEntityAlloyFurnace tileEntity)
+    public ContainerInventory(InventoryPlayer playerInventory, TileEntityMachine tileEntity)
     {
         this.tileEntity = tileEntity;
-        
+
+        for (int k = 0; k < 9; ++k)
+        {
+            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
+        }
+
         for (int i = 0; i < 3; ++i)
         {
             for(int j = 0; j < 9; ++j)
             {
                 this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
-        }
-        
-        for (int k = 0; k < 9; ++k)
-        {
-            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
     }
 
