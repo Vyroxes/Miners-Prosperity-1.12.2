@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:duraluminum_block"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:duraluminum_block",
+      "textures": {
+        "all": "minersprosperity:blocks/duraluminum_block"
+      }
+    }
+  }
+}

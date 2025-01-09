@@ -1,15 +1,17 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "minersprosperity:copper_ore"
-	},
-	"variants": {
-		"inventory": [{}],
-		"normal": {
-			"model": "minersprosperity:copper_ore",
-			"textures": {
-				"all": "minersprosperity:blocks/copper_ore"
-			}
-		}
-	}
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:copper_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:copper_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/copper_ore"
+      }
+    }
+  }
 }

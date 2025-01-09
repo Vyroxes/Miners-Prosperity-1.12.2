@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:chromium_block"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:chromium_block",
+      "textures": {
+        "all": "minersprosperity:blocks/chromium_block"
+      }
+    }
+  }
+}

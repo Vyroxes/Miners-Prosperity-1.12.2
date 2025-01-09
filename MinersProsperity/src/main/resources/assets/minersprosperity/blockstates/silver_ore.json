@@ -1,15 +1,17 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"model": "minersprosperity:silver_ore"
-	},
-	"variants": {
-		"inventory": [{}],
-		"normal": {
-			"model": "minersprosperity:silver_ore",
-			"textures": {
-				"all": "minersprosperity:blocks/silver_ore"
-			}
-		}
-	}
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:silver_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:silver_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/silver_ore"
+      }
+    }
+  }
 }

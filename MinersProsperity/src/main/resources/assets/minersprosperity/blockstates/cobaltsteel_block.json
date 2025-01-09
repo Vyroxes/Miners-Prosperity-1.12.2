@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:cobaltsteel_block"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:cobaltsteel_block",
+      "textures": {
+        "all": "minersprosperity:blocks/cobaltsteel_block"
+      }
+    }
+  }
+}

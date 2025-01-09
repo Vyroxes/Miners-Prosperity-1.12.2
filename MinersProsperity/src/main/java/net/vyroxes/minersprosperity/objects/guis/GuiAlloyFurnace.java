@@ -65,6 +65,9 @@ public class GuiAlloyFurnace extends GuiContainer
 		}
 		this.addButton(new GuiDefaultButton(1, guiLeft + 151, guiTop + 27, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 70, 0, 18, I18n.format("gui.slots_configuration.name")));
 		this.addButton(new GuiDefaultButton(2, guiLeft + 151, guiTop + 48, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 0, 18, I18n.format("gui.upgrades.name")));
+		GuiButton tankButton = this.addButton(new GuiDefaultButton(3, guiLeft + 138, guiTop + 30, 6, 26, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 238, 17, 0, ""));
+        tankButton.enabled = this.tileEntity.getFluidStored() != 0 && this.tileEntity.getFluidTank() != null;
+		this.addButton(tankButton);
 	}
 
 	@Override
@@ -84,6 +87,17 @@ public class GuiAlloyFurnace extends GuiContainer
 		if (guiButton.id == 1)
 		{
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+		}
+		if (guiButton.id == 2)
+		{
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_UPGRADES.ordinal(), this.tileEntity.getPos());
+		}
+		if (guiButton.id == 3)
+		{
+			if (this.tileEntity.getWorld().isRemote)
+			{
+				NetworkHandler.sendVariableUpdate(1, 0, this.tileEntity.getPos());
+			}
 		}
 		this.initGui();
 	}
@@ -148,11 +162,14 @@ public class GuiAlloyFurnace extends GuiContainer
 	    {
 	        if (button instanceof GuiDefaultButton)
 	        {
-	            List<String> guiButtonTooltip = ((GuiDefaultButton) button).getCurrentTooltip();
-	            if (guiButtonTooltip != null)
-	            {
-	                GuiUtils.drawHoveringText(guiButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
-	            }
+				if (button.id != 3)
+				{
+					List<String> guiButtonTooltip = ((GuiDefaultButton) button).getCurrentTooltip();
+					if (guiButtonTooltip != null)
+					{
+						GuiUtils.drawHoveringText(guiButtonTooltip, mouseX, mouseY, this.width, this.height, this.width/2, this.fontRenderer);
+					}
+				}
 	        }
 	    }
 
@@ -188,20 +205,32 @@ public class GuiAlloyFurnace extends GuiContainer
 		{
 			if (this.tileEntity.getFluidTank() != null && this.tileEntity.getFluidTank().getFluid() != null && this.tileEntity.getFluidStored() > 0)
 			{
+				for (GuiButton guiButton : this.buttonList)
+				{
+                    guiButton.enabled = guiButton.id == 3 && this.tileEntity.getFluidStored() >= 10;
+				}
+
 				int fluidStored = this.tileEntity.getFluidStored();
 				String calculatedLevels = String.format("%.1f", calculateLevelsFromXP(fluidStored / 10));
 				List<String> currentTooltip = new ArrayList<>();
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid") + TextFormatting.GRAY + ": " + this.tileEntity.getFluidTank().getFluid().getLocalizedName());
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid_stored") + TextFormatting.GRAY + ": " + fluidStored + " mB");
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.xp_levels") + TextFormatting.GRAY + ": " + calculatedLevels);
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.left_click") + TextFormatting.GRAY + I18n.format("gui.left_click_desc"));
 				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 			}
 			else
 			{
+				for (GuiButton guiButton : this.buttonList)
+				{
+					if (guiButton.id == 3) guiButton.enabled = false;
+				}
+
 				List<String> currentTooltip = new ArrayList<>();
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid") + TextFormatting.GRAY + ": " + FluidInit.LIQUID_EXPERIENCE.getLocalizedName(new FluidStack(FluidInit.LIQUID_EXPERIENCE, 0)));
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid_stored") + TextFormatting.GRAY + ": 0 mB");
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.xp_levels") + TextFormatting.GRAY + ": 0.0");
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.left_click") + TextFormatting.GRAY + I18n.format("gui.left_click_desc"));
 				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 			}
 		}

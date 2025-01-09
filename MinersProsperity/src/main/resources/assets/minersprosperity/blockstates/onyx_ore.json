@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:onyx_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:onyx_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/onyx_ore"
+      }
+    }
+  }
+}

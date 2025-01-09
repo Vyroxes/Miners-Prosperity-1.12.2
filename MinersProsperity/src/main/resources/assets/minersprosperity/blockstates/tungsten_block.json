@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:tungsten_block"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:tungsten_block",
+      "textures": {
+        "all": "minersprosperity:blocks/tungsten_block"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:iridium_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:iridium_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/iridium_ore"
+      }
+    }
+  }
+}

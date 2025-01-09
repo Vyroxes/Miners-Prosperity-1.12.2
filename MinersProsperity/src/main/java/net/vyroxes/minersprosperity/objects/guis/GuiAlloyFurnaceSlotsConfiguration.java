@@ -56,7 +56,7 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 		this.addButton(new GuiDefaultButton(6, guiLeft + 7, guiTop + 18, 15, 15, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 154, 0, 15, I18n.format("gui.set_all_disabled.name")));
 		this.addButton(new GuiDefaultButton(7, guiLeft + 7, guiTop + 34, 15, 15, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 169, 0, 15, I18n.format("gui.set_all_default.name")));
 
-		String description = TextFormatting.AQUA + "Shift + left click" + TextFormatting.GRAY + " on the machine disables input and output for all slots on every side\n" + TextFormatting.AQUA + "Shift + right click" + TextFormatting.GRAY + " on the machine from a specific side disables input and output for all slots on that specific side.";
+		String description = TextFormatting.AQUA + I18n.format("gui.shift_left_click") + TextFormatting.GRAY + I18n.format("gui.shift_left_click_desc")  + "\n" + TextFormatting.AQUA + I18n.format("gui.shift_right_click") + TextFormatting.GRAY + I18n.format("gui.shift_right_click_desc");
 		GuiButton descButton = new GuiDefaultButton(7, guiLeft + 163, guiTop + 6, 6, 8, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 41, 8, description);
 		descButton.enabled = false;
 		this.addButton(descButton);
@@ -146,7 +146,7 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 				List<String> guiButtonTooltip = ((GuiDefaultButton) button).getCurrentTooltip();
 				if (guiButtonTooltip != null)
 				{
-					GuiUtils.drawHoveringText(guiButtonTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
+					GuiUtils.drawHoveringText(guiButtonTooltip, mouseX, mouseY, this.width, this.height, this.width/2, this.fontRenderer);
 				}
 			}
 		}

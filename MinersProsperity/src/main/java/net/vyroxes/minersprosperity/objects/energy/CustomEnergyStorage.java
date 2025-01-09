@@ -2,7 +2,6 @@ package net.vyroxes.minersprosperity.objects.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.IFluidTank;
 
 public class CustomEnergyStorage implements IEnergyStorage
 {
@@ -10,6 +9,13 @@ public class CustomEnergyStorage implements IEnergyStorage
     protected long maxEnergyStored;
     protected long maxReceive;
     protected long maxExtract;
+    protected long baseMaxEnergyStored;
+    protected long baseMaxReceive;
+    protected long baseMaxExtract;
+    protected long maxEnergyStoredModifier;
+    protected long maxReceiveModifier;
+    protected long maxExtractModifier;
+
 
     public CustomEnergyStorage(long maxEnergyStored, long maxReceive, long maxExtract, long energyStored)
     {
@@ -17,6 +23,11 @@ public class CustomEnergyStorage implements IEnergyStorage
         this.maxReceive = maxReceive;
         this.maxExtract = maxExtract;
         this.energyStored = Math.max(0 , Math.min(maxEnergyStored, energyStored));
+        this.baseMaxEnergyStored = maxEnergyStored;
+        this.baseMaxReceive = maxReceive;
+        this.maxEnergyStoredModifier = (maxEnergyStored * 10 - maxEnergyStored)/8;
+        this.maxReceiveModifier = (maxReceive * 10 - maxReceive)/8;
+        this.maxExtractModifier = (maxExtract * 10 - maxExtract)/8;
     }
 
     @Override
@@ -74,6 +85,19 @@ public class CustomEnergyStorage implements IEnergyStorage
         return energyMissing;
     }
 
+    public long setEnergyUpgraded(int count, boolean simulate)
+    {
+        if (!simulate)
+        {
+            this.maxEnergyStored = this.maxEnergyStoredModifier * count + this.baseMaxEnergyStored;
+            this.maxReceive = this.maxReceiveModifier * count + this.baseMaxReceive;
+            this.maxExtract = this.maxExtractModifier * count + this.baseMaxExtract;
+
+            if (this.energyStored > this.maxEnergyStored) this.energyStored = this.maxEnergyStored;
+        }
+        return this.maxEnergyStoredModifier * count + this.baseMaxEnergyStored;
+    }
+
     @Override
     public boolean canExtract()
     {
@@ -88,7 +112,7 @@ public class CustomEnergyStorage implements IEnergyStorage
 
     public void setEnergyStored(long energyStored)
     {
-        this.energyStored = energyStored;
+        this.energyStored = Math.min(energyStored, this.maxEnergyStored);
     }
 
     @Override
@@ -131,10 +155,16 @@ public class CustomEnergyStorage implements IEnergyStorage
     public void readFromNBT(NBTTagCompound compound)
     {
         this.energyStored = compound.getLong("Energy");
+        this.maxEnergyStored = compound.getLong("MaxEnergy");
+        this.maxReceive = compound.getLong("MaxReceive");
+        this.maxExtract = compound.getLong("MaxExtract");
     }
 
     public void writeToNBT(NBTTagCompound compound)
     {
         compound.setLong("Energy", this.energyStored);
+        compound.setLong("MaxEnergy", this.maxEnergyStored);
+        compound.setLong("MaxReceive", this.maxReceive);
+        compound.setLong("MaxExtract", this.maxExtract);
     }
 }

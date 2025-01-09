@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:amethyst_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:amethyst_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/amethyst_ore"
+      }
+    }
+  }
+}

@@ -7,6 +7,7 @@ public class SlotState {
     public enum SlotType {
         INPUT,
         ENERGY,
+        UPGRADE,
         OUTPUT
     }
 

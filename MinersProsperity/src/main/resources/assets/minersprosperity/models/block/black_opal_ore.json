@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "minersprosperity:blocks/black_opal_ore"
+  }
+}

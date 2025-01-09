@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:nickel_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:nickel_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/nickel_ore"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:aluminum_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:aluminum_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/aluminum_ore"
+      }
+    }
+  }
+}

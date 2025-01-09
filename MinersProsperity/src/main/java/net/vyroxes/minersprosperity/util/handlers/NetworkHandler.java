@@ -15,17 +15,17 @@ public class NetworkHandler
     public static void init(FMLInitializationEvent event)
     {
         int id = 0;
-    	NETWORK.registerMessage(MessageRedstoneControlButtonState.Handler.class, MessageRedstoneControlButtonState.class, id++, Side.CLIENT);
-    	NETWORK.registerMessage(MessageRedstoneControlButtonState.Handler.class, MessageRedstoneControlButtonState.class, id++, Side.SERVER);
+    	NETWORK.registerMessage(MessageVariable.Handler.class, MessageVariable.class, id++, Side.CLIENT);
+    	NETWORK.registerMessage(MessageVariable.Handler.class, MessageVariable.class, id++, Side.SERVER);
         NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.CLIENT);
         NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.SERVER);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.CLIENT);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.SERVER);
     }
 
-    public static void sendRedstoneControlButtonStateUpdate(int redstoneControlButtonState, BlockPos pos)
+    public static void sendVariableUpdate(int id, int variable, BlockPos pos)
     {
-        NETWORK.sendToServer(new MessageRedstoneControlButtonState(redstoneControlButtonState, pos));
+        NETWORK.sendToServer(new MessageVariable(id, variable, pos));
     }
 
     public static void sendSlotsStateUpdate(EnumFacing side, int id, SlotState slotsState, BlockPos pos)

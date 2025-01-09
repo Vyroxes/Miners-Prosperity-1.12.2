@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:peridot_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:peridot_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/peridot_ore"
+      }
+    }
+  }
+}

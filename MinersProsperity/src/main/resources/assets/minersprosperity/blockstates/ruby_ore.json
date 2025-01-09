@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:ruby_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:ruby_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/ruby_ore"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:white_gold_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:white_gold_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/white_gold_ore"
+      }
+    }
+  }
+}

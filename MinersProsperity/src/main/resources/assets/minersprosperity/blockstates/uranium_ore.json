@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:uranium_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:uranium_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/uranium_ore"
+      }
+    }
+  }
+}

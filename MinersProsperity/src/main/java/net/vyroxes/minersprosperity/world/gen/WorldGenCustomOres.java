@@ -24,8 +24,8 @@ public class WorldGenCustomOres implements IWorldGenerator
     {
         copper_ore = new WorldGenMinable(BlockInit.COPPER_ORE.getDefaultState(), ConfigHandler.clusterSizeCopperOre, BlockMatcher.forBlock(Blocks.STONE));
         tin_ore = new WorldGenMinable(BlockInit.TIN_ORE.getDefaultState(), ConfigHandler.clusterSizeTinOre, BlockMatcher.forBlock(Blocks.STONE));
-        lead_ore = new WorldGenMinable(BlockInit.LEAD_ORE.getDefaultState(), ConfigHandler.clusterSizeLeadOre, BlockMatcher.forBlock(Blocks.STONE));
         silver_ore = new WorldGenMinable(BlockInit.SILVER_ORE.getDefaultState(), ConfigHandler.clusterSizeSilverOre, BlockMatcher.forBlock(Blocks.STONE));
+        lead_ore = new WorldGenMinable(BlockInit.LEAD_ORE.getDefaultState(), ConfigHandler.clusterSizeLeadOre, BlockMatcher.forBlock(Blocks.STONE));
     }
 
     private void runGenerator(WorldGenerator gen, World world, Random rand, int chunkX, int chunkZ, int clusterCount, int minHeight, int maxHeight)
@@ -60,13 +60,13 @@ public class WorldGenCustomOres implements IWorldGenerator
                 {
                     runGenerator(tin_ore, world, random, chunkX, chunkZ, ConfigHandler.clusterCountTinOre, ConfigHandler.minHeightTinOre, ConfigHandler.maxHeightTinOre);
                 }
-                if (ConfigHandler.generateLeadOre)
-                {
-                    runGenerator(lead_ore, world, random, chunkX, chunkZ, ConfigHandler.clusterCountLeadOre, ConfigHandler.minHeightLeadOre, ConfigHandler.maxHeightLeadOre);
-                }
                 if (ConfigHandler.generateSilverOre)
                 {
                     runGenerator(silver_ore, world, random, chunkX, chunkZ, ConfigHandler.clusterCountSilverOre, ConfigHandler.minHeightSilverOre, ConfigHandler.maxHeightSilverOre);
+                }
+                if (ConfigHandler.generateLeadOre)
+                {
+                    runGenerator(lead_ore, world, random, chunkX, chunkZ, ConfigHandler.clusterCountLeadOre, ConfigHandler.minHeightLeadOre, ConfigHandler.maxHeightLeadOre);
                 }
                 break;
             case 1:

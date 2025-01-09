@@ -5,7 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
@@ -23,14 +22,14 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
 
     private final SlotState[] slotStates;
 
-    public SidedIngredientHandler(TileEntityMachine tileEntity, CustomItemStackHandler customItemStackHandler, CustomFluidTank tank, int inputs, int energy, int outputs, EnumFacing facing)
+    public SidedIngredientHandler(TileEntityMachine tileEntity, CustomItemStackHandler customItemStackHandler, CustomFluidTank tank, int inputs, int energy, int outputs, int upgrades, EnumFacing facing)
     {
         this.tileEntity = tileEntity;
         this.customItemStackHandler = customItemStackHandler;
         this.tank = tank;
         this.facing = facing;
-        if (this.tank != null) this.slotStates = new SlotState[inputs + energy + outputs + 1];
-        else this.slotStates = new SlotState[inputs + energy + outputs];
+        if (this.tank != null) this.slotStates = new SlotState[inputs + energy + outputs + upgrades + 1];
+        else this.slotStates = new SlotState[inputs + energy + outputs + upgrades];
 
         for (int i = 0; i < inputs; i++)
         {
@@ -44,10 +43,14 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
         {
             this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.ITEM, SlotState.SlotMode.OUTPUT, SlotState.SlotOutputMode.DEFAULT);
         }
+        for (int i = inputs + energy + outputs; i < inputs + energy + outputs + upgrades; i++)
+        {
+            this.slotStates[i] = new SlotState(SlotState.SlotType.UPGRADE, SlotState.IngredientType.ITEM, SlotState.SlotMode.DISABLED, SlotState.SlotOutputMode.DEFAULT);
+        }
 
         if (this.tank != null)
         {
-            for (int i = inputs + energy + outputs; i < inputs + energy + outputs + 1; i++)
+            for (int i = inputs + energy + outputs + upgrades; i < inputs + energy + outputs + upgrades + 1; i++)
             {
                 this.slotStates[i] = new SlotState(SlotState.SlotType.OUTPUT, SlotState.IngredientType.FLUID, SlotState.SlotMode.OUTPUT, SlotState.SlotOutputMode.DEFAULT);
             }
@@ -87,6 +90,7 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
         private int inputs = 0;
         private int energySlots = 0;
         private int outputs = 0;
+        private int upgradeSlots = 0;
 
         public Builder setInputs(int inputs)
         {
@@ -106,9 +110,15 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
             return this;
         }
 
+        public Builder setUpgradeSlots(int upgradeSlots)
+        {
+            this.upgradeSlots = upgradeSlots;
+            return this;
+        }
+
         public SidedIngredientHandler[] build(TileEntityMachine machine)
         {
-            if (inputs + energySlots + outputs <= 0)
+            if (inputs + energySlots + outputs + upgradeSlots <= 0)
             {
                 return null;
             }
@@ -116,7 +126,7 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
             SidedIngredientHandler[] handlers = new SidedIngredientHandler[EnumFacing.values().length];
             for (EnumFacing facing : EnumFacing.values())
             {
-                handlers[facing.ordinal()] = new SidedIngredientHandler(machine, machine.getCustomItemStackHandler(), machine.getFluidTank(), inputs, energySlots, outputs, facing);
+                handlers[facing.ordinal()] = new SidedIngredientHandler(machine, machine.getCustomItemStackHandler(), machine.getFluidTank(), inputs, energySlots, outputs, upgradeSlots, facing);
             }
             return handlers;
         }
@@ -127,6 +137,16 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
         if (id >= 0 && id < this.slotStates.length)
         {
             return this.slotStates[id].getSlotType().equals(SlotState.SlotType.ENERGY);
+        }
+
+        return false;
+    }
+
+    public boolean isSlotUpgrade(int id)
+    {
+        if (id >= 0 && id < this.slotStates.length)
+        {
+            return this.slotStates[id].getSlotType().equals(SlotState.SlotType.UPGRADE);
         }
 
         return false;

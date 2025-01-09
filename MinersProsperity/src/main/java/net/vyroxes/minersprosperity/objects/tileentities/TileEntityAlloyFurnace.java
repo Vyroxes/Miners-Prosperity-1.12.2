@@ -14,12 +14,14 @@ public class TileEntityAlloyFurnace extends TileEntityMachine
                 .setItemInput(2)
                 .setItemEnergy(1)
                 .setItemOutput(1)
+                .setItemUpgrade(4)
                 .setEnergy(20000, 200, 0, 0)
                 .setFluid(FluidInit.LIQUID_EXPERIENCE, Integer.MAX_VALUE, 0, true, false)
                 .setSidedIngredientHandler(new SidedIngredientHandler.Builder()
                         .setInputs(2)
                         .setEnergySlots(1)
-                        .setOutputs(1)));
+                        .setOutputs(1)
+                        .setUpgradeSlots(4)));
     }
 
     @Override

@@ -9,11 +9,12 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.objects.containers.ContainerBackpack;
 
 public class GuiBackpack extends GuiContainer
 {
-    private static final ResourceLocation BACKPACK_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/backpack.png");
+    private static final ResourceLocation BACKPACK_TEXTURE = new ResourceLocation(Tags.MODID, "textures/gui/backpack.png");
 
     public GuiBackpack(ContainerBackpack container)
     {

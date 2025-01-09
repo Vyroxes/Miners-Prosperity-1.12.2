@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:sapphire_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:sapphire_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/sapphire_ore"
+      }
+    }
+  }
+}

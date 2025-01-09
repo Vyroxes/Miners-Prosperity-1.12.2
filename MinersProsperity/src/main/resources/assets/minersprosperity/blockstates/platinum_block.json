@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:platinum_block"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:platinum_block",
+      "textures": {
+        "all": "minersprosperity:blocks/platinum_block"
+      }
+    }
+  }
+}

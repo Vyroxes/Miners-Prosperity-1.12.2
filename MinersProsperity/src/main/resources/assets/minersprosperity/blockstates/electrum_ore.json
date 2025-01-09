@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:electrum_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:electrum_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/electrum_ore"
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -12,6 +13,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
+import net.vyroxes.minersprosperity.util.annotations.NonnullByDefault;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerAlloyFurnace extends Container
@@ -20,6 +22,9 @@ public class ContainerAlloyFurnace extends Container
     private int cookTime;
     private int totalCookTime;
     private long energyStored;
+    private long maxEnergyStored;
+    private long maxReceive;
+    private long maxExtract;
     private long energyUsage;
     private int fluidStored;
 
@@ -28,17 +33,17 @@ public class ContainerAlloyFurnace extends Container
         this.tileEntity = tileEntity;
         IItemHandler handler = this.tileEntity.getCustomItemStackHandler();
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 0, 33, 35)); // Slot wejściowy lewy (1)
-        this.addSlotToContainer(new SlotItemHandler(handler, 1, 53, 35)); // Slot wejściowy prawy (2)
-        this.addSlotToContainer(new SlotItemHandler(handler, 2, 8, 53)); // Slot energii
-        this.addSlotToContainer(new SlotItemHandler(handler, 3, 115, 35) // Slot wyjściowy
+        this.addSlotToContainer(new SlotItemHandler(handler, 0, 33, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, 1, 53, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, 2, 8, 53));
+        this.addSlotToContainer(new SlotItemHandler(handler, 3, 115, 35)
         {
             @Override
             public @NotNull ItemStack onTake(@NotNull EntityPlayer entityPlayer, @NotNull ItemStack itemStack)
             {
                 if (!entityPlayer.world.isRemote)
                 {
-                    if(tileEntity.getFluidStored() > 10)
+                    if(tileEntity.getFluidStored() >= 10)
                     {
                         giveExperienceToPlayer(entityPlayer);
                     }
@@ -64,9 +69,11 @@ public class ContainerAlloyFurnace extends Container
 
     public void giveExperienceToPlayer(EntityPlayer entityPlayer)
     {
-        int totalExperience = tileEntity.getFluidStored() / 10;
+        int totalExperience = this.tileEntity.getFluidStored() / 10;
         int drainedExperience = 0;
 
+        System.out.println("Fluid: " + this.tileEntity.getFluidStored());
+        System.out.println("XP: " + totalExperience);
         while (totalExperience > 0)
         {
             int xpSplit = EntityXPOrb.getXPSplit(totalExperience);
@@ -75,8 +82,7 @@ public class ContainerAlloyFurnace extends Container
             entityPlayer.world.spawnEntity(new EntityXPOrb(entityPlayer.world, entityPlayer.posX, entityPlayer.posY + 0.5D, entityPlayer.posZ + 0.5D, xpSplit));
         }
 
-        System.out.println(drainedExperience * 10);
-        tileEntity.getFluidTank().drainInternal(drainedExperience * 10, true);
+        this.tileEntity.getFluidTank().drainInternal(drainedExperience * 10, true);
     }
 
     @Override
@@ -101,20 +107,38 @@ public class ContainerAlloyFurnace extends Container
                 icontainerlistener.sendWindowProperty(this, 2, (int) this.tileEntity.getEnergyStored());
             }
 
+            if (this.maxEnergyStored != this.tileEntity.getMaxEnergyStored())
+            {
+                icontainerlistener.sendWindowProperty(this, 3, (int) this.tileEntity.getMaxEnergyStored());
+            }
+
+            if (this.maxReceive != this.tileEntity.getMaxReceive())
+            {
+                icontainerlistener.sendWindowProperty(this, 4, (int) this.tileEntity.getMaxReceive());
+            }
+
+            if (this.maxExtract != this.tileEntity.getMaxExtract())
+            {
+                icontainerlistener.sendWindowProperty(this, 5, (int) this.tileEntity.getMaxExtract());
+            }
+
             if (this.energyUsage != this.tileEntity.getEnergyUsage())
             {
-                icontainerlistener.sendWindowProperty(this, 3, (int) this.tileEntity.getEnergyUsage());
+                icontainerlistener.sendWindowProperty(this, 6, (int) this.tileEntity.getEnergyUsage());
             }
 
             if (this.fluidStored != this.tileEntity.getFluidStored() || this.tileEntity.getFluidStored() == 0)
             {
-                icontainerlistener.sendWindowProperty(this, 4, this.tileEntity.getFluidStored());
+                icontainerlistener.sendWindowProperty(this, 7, this.tileEntity.getFluidStored());
             }
         }
         
         this.cookTime = this.tileEntity.getCookTime();
         this.totalCookTime = this.tileEntity.getTotalCookTime();
         this.energyStored = this.tileEntity.getEnergyStored();
+        this.maxEnergyStored = this.tileEntity.getMaxEnergyStored();
+        this.maxReceive = this.tileEntity.getMaxReceive();
+        this.maxExtract = this.tileEntity.getMaxExtract();
         this.energyUsage = this.tileEntity.getEnergyUsage();
         this.fluidStored = this.tileEntity.getFluidStored();
     }

@@ -3,6 +3,7 @@ package net.vyroxes.minersprosperity.objects.guis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
+import net.vyroxes.minersprosperity.util.annotations.NonnullByDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class GuiDefaultButton extends GuiButton
         return mouseX >= this.x && mouseX <= this.x + this.width && mouseY >= this.y && mouseY <= this.y + this.height;
     }
 
+    @NonnullByDefault
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
     {

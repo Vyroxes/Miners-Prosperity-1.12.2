@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:black_opal_block"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:black_opal_block",
+      "textures": {
+        "all": "minersprosperity:blocks/black_opal_block"
+      }
+    }
+  }
+}

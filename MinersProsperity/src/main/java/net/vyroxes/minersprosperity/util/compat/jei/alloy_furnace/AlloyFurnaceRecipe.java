@@ -5,6 +5,7 @@ import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import net.vyroxes.minersprosperity.util.compat.jei.JEICompat;
 import java.util.List;
@@ -13,12 +14,12 @@ import java.awt.*;
 
 public class AlloyFurnaceRecipe implements IRecipeWrapper
 {
-    private final List<ItemStack> inputs;
+    private final List<List<ItemStack>> inputs;
     private final ItemStack output;
     private final int cookTime;
     private final int energy;
 
-    public AlloyFurnaceRecipe(List<ItemStack> inputs, ItemStack output, int cookTime, int energy)
+    public AlloyFurnaceRecipe(List<List<ItemStack>> inputs, ItemStack output, int cookTime, int energy)
     {
         this.inputs = inputs;
         this.output = output;
@@ -29,7 +30,7 @@ public class AlloyFurnaceRecipe implements IRecipeWrapper
     @Override
     public void getIngredients(IIngredients ingredients)
     {
-        ingredients.setInputs(ItemStack.class, inputs);
+        ingredients.setInputLists(ItemStack.class, inputs);
         ingredients.setOutput(ItemStack.class, output);
     }
 

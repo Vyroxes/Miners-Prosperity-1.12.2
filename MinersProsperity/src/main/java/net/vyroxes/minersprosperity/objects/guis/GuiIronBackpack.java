@@ -9,11 +9,12 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.objects.containers.ContainerIronBackpack;
 
 public class GuiIronBackpack extends GuiContainer
 {
-    private static final ResourceLocation IRON_BACKPACK_TEXTURE = new ResourceLocation("minersprosperity", "textures/gui/iron_backpack.png");
+    private static final ResourceLocation IRON_BACKPACK_TEXTURE = new ResourceLocation(Tags.MODID, "textures/gui/iron_backpack.png");
 
     public GuiIronBackpack(ContainerIronBackpack container)
     {

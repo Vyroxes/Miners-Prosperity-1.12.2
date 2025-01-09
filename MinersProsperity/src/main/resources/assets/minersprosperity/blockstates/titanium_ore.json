@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:titanium_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:titanium_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/titanium_ore"
+      }
+    }
+  }
+}
