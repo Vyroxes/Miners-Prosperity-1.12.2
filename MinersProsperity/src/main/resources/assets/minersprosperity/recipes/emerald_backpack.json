@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotGold"
+		},
+		"B":
+		{
+			"item": "minersprosperity:diamond_backpack"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:emerald_backpack",
+		"count": 1
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "minersprosperity:supreme_solar_panel",
+		"textures": {
+			"up": "minersprosperity:blocks/supreme_solar_panel_top_off"
+		}
+	},
+	"variants": {
+		"inventory": {
+			"model": "minersprosperity:supreme_solar_panel",
+			"textures": {
+				"up": "minersprosperity:blocks/supreme_solar_panel_top_active"
+			}
+		},
+		"powered": {
+			"false": {},
+			"true": {
+				"textures": {
+					"up": "minersprosperity:blocks/supreme_solar_panel_top_active"
+				}
+			}
+		},
+		"facing": {
+			"north": {},
+			"east": {"y": 90},
+			"south": {"y": 180},
+			"west": {"y": 270}
+		}
+	}
+}

@@ -15,10 +15,12 @@ import net.vyroxes.minersprosperity.objects.containers.ContainerIronBackpack;
 public class GuiIronBackpack extends GuiContainer
 {
     private static final ResourceLocation IRON_BACKPACK_TEXTURE = new ResourceLocation(Tags.MODID, "textures/gui/iron_backpack.png");
+    private final int backpackRows;
 
     public GuiIronBackpack(ContainerIronBackpack container)
     {
         super(container);
+        this.backpackRows = container.getRows();
         this.xSize = 176;
         this.ySize = 221;
         
@@ -46,7 +48,8 @@ public class GuiIronBackpack extends GuiContainer
     {
         String title = this.mc.player.getHeldItemMainhand().getDisplayName();
         this.fontRenderer.drawString(title, 8, 5, 4210752);
-        this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 127, 4210752);
+        int inventoryLabelY = 19 + this.backpackRows * 18;
+        this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, inventoryLabelY, 4210752);
     }
 
     @Override

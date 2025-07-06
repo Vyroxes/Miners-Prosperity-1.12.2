@@ -22,8 +22,13 @@ public class GuiHandler implements IGuiHandler
         ALLOY_FURNACE_SLOTS_CONFIGURATION,
         ALLOY_FURNACE_SLOT_CONFIGURATION,
         ALLOY_FURNACE_UPGRADES,
+        SOLAR_PANEL,
         BACKPACK,
-        IRON_BACKPACK;
+        LEAD_BACKPACK,
+        IRON_BACKPACK,
+        GOLDEN_BACKPACK,
+        DIAMOND_BACKPACK,
+        EMERALD_BACKPACK;
 
         public static GuiTypes fromId(int id)
         {
@@ -44,8 +49,13 @@ public class GuiHandler implements IGuiHandler
             case ALLOY_FURNACE -> new ContainerAlloyFurnace(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case ALLOY_FURNACE_SLOTS_CONFIGURATION, ALLOY_FURNACE_SLOT_CONFIGURATION -> new ContainerInventory(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case ALLOY_FURNACE_UPGRADES -> new ContainerUpgrades(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
-            case BACKPACK -> new ContainerBackpack(player.inventory, player.getHeldItemMainhand());
+            case SOLAR_PANEL -> new ContainerSolarPanel(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case BACKPACK -> new ContainerBackpack(player.inventory, player.getHeldItemMainhand(), 1);
+            case LEAD_BACKPACK -> new ContainerLeadBackpack(player.inventory, player.getHeldItemMainhand());
             case IRON_BACKPACK -> new ContainerIronBackpack(player.inventory, player.getHeldItemMainhand());
+            case GOLDEN_BACKPACK -> new ContainerGoldenBackpack(player.inventory, player.getHeldItemMainhand());
+            case DIAMOND_BACKPACK -> new ContainerDiamondBackpack(player.inventory, player.getHeldItemMainhand());
+            case EMERALD_BACKPACK -> new ContainerEmeraldBackpack(player.inventory, player.getHeldItemMainhand());
         };
     }
 
@@ -60,8 +70,13 @@ public class GuiHandler implements IGuiHandler
             case ALLOY_FURNACE_SLOTS_CONFIGURATION -> new GuiAlloyFurnaceSlotsConfiguration(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case ALLOY_FURNACE_SLOT_CONFIGURATION -> new GuiAlloyFurnaceSlotConfiguration(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case ALLOY_FURNACE_UPGRADES -> new GuiAlloyFurnaceUpgrades(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
-            case BACKPACK -> new GuiBackpack(new ContainerBackpack(player.inventory, player.getHeldItemMainhand()));
+            case SOLAR_PANEL -> new GuiSolarPanel(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case BACKPACK -> new GuiBackpack(new ContainerBackpack(player.inventory, player.getHeldItemMainhand(), 1));
+            case LEAD_BACKPACK -> new GuiLeadBackpack(new ContainerLeadBackpack(player.inventory, player.getHeldItemMainhand()));
             case IRON_BACKPACK -> new GuiIronBackpack(new ContainerIronBackpack(player.inventory, player.getHeldItemMainhand()));
+            case GOLDEN_BACKPACK -> new GuiGoldenBackpack(new ContainerGoldenBackpack(player.inventory, player.getHeldItemMainhand()));
+            case DIAMOND_BACKPACK -> new GuiDiamondBackpack(new ContainerDiamondBackpack(player.inventory, player.getHeldItemMainhand()));
+            case EMERALD_BACKPACK -> new GuiEmeraldBackpack(new ContainerEmeraldBackpack(player.inventory, player.getHeldItemMainhand()));
         };
     }
 }

@@ -2,5 +2,13 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "minersprosperity:items/backpack"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minersprosperity:open_backpack": 1
+      },
+      "model": "minersprosperity:item/opened_backpack"
+    }
+  ]
 }

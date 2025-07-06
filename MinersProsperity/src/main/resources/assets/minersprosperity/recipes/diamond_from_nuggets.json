@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "nuggetDiamond"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:diamond",
+        "count": 1
+    }
+}

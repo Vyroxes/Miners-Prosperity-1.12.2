@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "blockIridium"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:iridium_ingot",
+        "count": 9
+    }
+}

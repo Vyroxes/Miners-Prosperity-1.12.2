@@ -10,37 +10,47 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.vyroxes.minersprosperity.objects.guis.GuiBackpack;
 import net.vyroxes.minersprosperity.objects.items.Backpack;
 import net.vyroxes.minersprosperity.objects.items.InventoryBackpack;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerBackpack extends Container
 {
-    private final InventoryBackpack backpackInventory;
-    private final ItemStack backpackItemStack;
+    protected final InventoryBackpack backpackInventory;
+    protected final ItemStack backpackItemStack;
+    protected final int backpackRows;
+    protected final int inventoryStartY;
+    protected final int hotbarStartY;
 
-    public ContainerBackpack(InventoryPlayer playerInventory, ItemStack backpackItemStack)
+    public ContainerBackpack(InventoryPlayer playerInventory, ItemStack backpackItemStack, int backpackRows)
     {
         this.backpackItemStack = backpackItemStack;
         this.backpackInventory = Backpack.getBackpackInventory(backpackItemStack);
+        this.backpackRows = backpackRows;
 
-        for (int row = 0; row < 3; row++)
+        int slotSize = 18;
+
+        for (int row = 0; row < backpackRows; row++)
         {
             for (int col = 0; col < 9; col++)
             {
-                this.addSlotToContainer(new SlotItemHandler(backpackInventory, col + row * 9, 8 + col * 18, 17 + row * 18));
+                this.addSlotToContainer(new SlotBackpack(backpackInventory, col + row * 9, 8 + col * slotSize, 17 + row * slotSize));
             }
         }
 
+        inventoryStartY = 26 + backpackRows * slotSize + 4;
+        hotbarStartY = inventoryStartY + 58;
+
         for (int row = 0; row < 3; row++)
         {
             for (int col = 0; col < 9; col++)
             {
-                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
+                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, 8 + col * slotSize, inventoryStartY + row * slotSize));
             }
         }
 
         for (int i = 0; i < 9; i++)
         {
             final int index = i;
-            this.addSlotToContainer(new Slot(playerInventory, i, 8 + i * 18, 142)
+            this.addSlotToContainer(new Slot(playerInventory, i, 8 + i * slotSize, hotbarStartY)
             {
                 @Override
                 public boolean canTakeStack(EntityPlayer playerIn)
@@ -49,41 +59,51 @@ public class ContainerBackpack extends Container
                     if (!stackInSlot.isEmpty() && stackInSlot.getItem() == backpackItemStack.getItem())
                     {
                         NBTTagCompound tag = stackInSlot.getTagCompound();
-                        NBTTagCompound guiNBT = backpackItemStack.getTagCompound();
-
-                        if (tag != null && guiNBT != null && tag.equals(guiNBT))
+                        if (tag != null && tag.hasKey("BackpackData"))
                         {
-                            return false;
+                            NBTTagCompound backpackData = tag.getCompoundTag("BackpackData");
+                            if (backpackData.getBoolean("IsOpen"))
+                            {
+                                return false;
+                            }
                         }
                     }
                     return true;
                 }
             });
         }
+    }
 
+    public int getRows()
+    {
+        return this.backpackRows;
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+    public @NotNull ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
+
+        int backpackSlotCount = backpackRows * 9;
+        int inventorySlotStart = backpackSlotCount;
+        int inventorySlotEnd = inventorySlotStart + 27 + 9;
 
         if (slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            
-            if (index < 27)
+
+            if (index < backpackSlotCount)
             {
-                if (!this.mergeItemStack(itemstack1, 27, 63, true))
+                if (!this.mergeItemStack(itemstack1, inventorySlotStart, inventorySlotEnd, true))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (index >= 27 && index < 63)
+            else if (index >= inventorySlotStart && index < inventorySlotEnd)
             {
-                if (!this.mergeItemStack(itemstack1, 0, 27, false))
+                if (!this.mergeItemStack(itemstack1, 0, backpackSlotCount, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -121,5 +141,15 @@ public class ContainerBackpack extends Container
         super.onContainerClosed(playerIn);
         Backpack.saveBackpackInventory(backpackItemStack, backpackInventory);
         GuiBackpack.playBackpackOpenSound();
+        ItemStack held = playerIn.getHeldItemMainhand();
+        if (!ItemStack.areItemsEqual(held, backpackItemStack))
+        {
+            held = playerIn.getHeldItemOffhand();
+        }
+
+        if (held.getItem() instanceof Backpack)
+        {
+            held.getOrCreateSubCompound("BackpackData").setBoolean("IsOpen", false);
+        }
     }
 }

@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "shardGlowstone"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:glowstone_nugget",
+        "count": 9
+    }
+}

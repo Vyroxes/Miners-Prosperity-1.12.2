@@ -47,6 +47,8 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 		this.buttonList.clear();
 
+		int slot = tileEntity.getSlotEditedId();
+
 		if (this.tileEntity.getSidedIngredientHandlers() != null)
 		{
 			for (EnumFacing face : EnumFacing.values()) {
@@ -58,8 +60,6 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 				faceNames.put(3, I18n.format("gui.side_back.name"));
 				faceNames.put(4, I18n.format("gui.side_left.name"));
 				faceNames.put(5, I18n.format("gui.side_right.name"));
-
-				int slot = tileEntity.getSlotEditedId();
 
 				SlotState.SlotMode slotState = sidedIngredientHandler.getSlotMode(slot);
 
@@ -138,8 +138,26 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			this.addButton(new GuiDefaultButton(11, guiLeft + 153, guiTop + 36, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 216, 32, 16, I18n.format("gui.set_auto_output.name")));
 		}
 
+		SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.UP);
+
+		if (this.tileEntity.isSlotOutput(slot))
+		{
+			if (sidedIngredientHandler.getSlotOutputMode(slot).equals(SlotState.SlotOutputMode.DEFAULT))
+			{
+				this.addButton(new GuiDefaultButton(12, guiLeft + 153, guiTop + 18, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 57, 16, I18n.format("gui.output_default.name")));
+			}
+			else if (sidedIngredientHandler.getSlotOutputMode(slot).equals(SlotState.SlotOutputMode.VOID_EXCESS))
+			{
+				this.addButton(new GuiDefaultButton(12, guiLeft + 153, guiTop + 18, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 16, 72, 16, I18n.format("gui.output_void_excess.name")));
+			}
+			else
+			{
+				this.addButton(new GuiDefaultButton(12, guiLeft + 153, guiTop + 18, 16, 16, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 32, 72, 16, I18n.format("gui.output_void_all.name")));
+			}
+		}
+
 		String description = TextFormatting.AQUA + I18n.format("gui.shift_left_click") + TextFormatting.GRAY + I18n.format("gui.shift_left_click_desc")  + "\n" + TextFormatting.AQUA + I18n.format("gui.shift_right_click") + TextFormatting.GRAY + I18n.format("gui.shift_right_click_desc");
-		GuiButton descButton = new GuiDefaultButton(12, guiLeft + 163, guiTop + 6, 6, 8, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 41, 8, description);
+		GuiButton descButton = new GuiDefaultButton(13, guiLeft + 163, guiTop + 6, 6, 8, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 0, 41, 8, description);
 		descButton.enabled = false;
 		this.addButton(descButton);
 	}
@@ -233,6 +251,21 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 			}
 		}
 
+		if (guiButton.id == 12)
+		{
+			SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.UP);
+			SlotState.SlotOutputMode currentState = sidedIngredientHandler.getSlotOutputMode(slot);
+
+			SlotState.SlotOutputMode nextState = switch (currentState)
+			{
+				case DEFAULT -> SlotState.SlotOutputMode.VOID_EXCESS;
+				case VOID_EXCESS -> SlotState.SlotOutputMode.VOID_ALL;
+				case VOID_ALL -> SlotState.SlotOutputMode.DEFAULT;
+			};
+
+			sidedIngredientHandler.setSlotOutputMode(slot, nextState);
+		}
+
 		this.initGui();
 	}
 
@@ -284,6 +317,26 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 						this.initGui();
 						return;
 					}
+					else if (guiButton.id == 12)
+					{
+						int slot = tileEntity.getSlotEditedId();
+
+						SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.UP);
+						SlotState.SlotOutputMode currentState = sidedIngredientHandler.getSlotOutputMode(slot);
+
+						SlotState.SlotOutputMode nextState = switch (currentState)
+						{
+							case DEFAULT -> SlotState.SlotOutputMode.VOID_ALL;
+							case VOID_EXCESS -> SlotState.SlotOutputMode.DEFAULT;
+							case VOID_ALL -> SlotState.SlotOutputMode.VOID_EXCESS;
+						};
+
+						sidedIngredientHandler.setSlotOutputMode(slot, nextState);
+
+						Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+						this.initGui();
+						return;
+					}
 				}
 			}
 		}
@@ -301,6 +354,18 @@ public class GuiAlloyFurnaceSlotConfiguration extends GuiContainer
 
 						SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.values()[face]);
 						sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+
+						Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
+						this.initGui();
+						return;
+					}
+					else if (guiButton.id == 12)
+					{
+						int slot = tileEntity.getSlotEditedId();
+
+						SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(EnumFacing.UP);
+						sidedIngredientHandler.setSlotOutputMode(slot, SlotState.SlotOutputMode.DEFAULT);
+
 						Minecraft.getMinecraft().player.playSound(SoundEvents.UI_BUTTON_CLICK, 0.25F, 1.0F);
 						this.initGui();
 						return;

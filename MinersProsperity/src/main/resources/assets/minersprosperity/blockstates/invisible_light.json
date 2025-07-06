@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "normal": [
+      {
+        "model": "minersprosperity:invisible_light"
+      }
+    ]
+  }
+}

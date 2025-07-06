@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "ingotTitanium"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:titanium_nugget",
+        "count": 9
+    }
+}

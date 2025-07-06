@@ -25,7 +25,9 @@ public class PickupHandler
 	        if (!itemStack.isEmpty() && itemStack.getItem() instanceof Backpack) 
 	        {
 	            NBTTagCompound compound = itemStack.getTagCompound();
-	            if (compound != null && compound.getBoolean("AutoCollect")) 
+                NBTTagCompound backpackData = compound.getCompoundTag("BackpackData");
+                boolean autoCollect = backpackData.getBoolean("AutoCollect");
+	            if (autoCollect)
 	            {
 	                EntityItem entityItem = event.getItem();
 	                ItemStack itemStackToPickup = entityItem.getItem();
@@ -46,14 +48,12 @@ public class PickupHandler
     {
         InventoryBackpack backpackInventory = Backpack.getBackpackInventory(backpack);
 
-        //for (int i = 0; i < backpackInventory.getSizeInventory(); i++) 
         for (int i = 0; i < backpackInventory.getSlots(); i++) 
         {
             ItemStack slotStack = backpackInventory.getStackInSlot(i);
 
             if (slotStack.isEmpty()) 
             {
-                //backpackInventory.setInventorySlotContents(i, itemStackToAdd.copy());
                 backpackInventory.setStackInSlot(i, itemStackToAdd.copy());
                 itemStackToAdd.setCount(0);
                 Backpack.saveBackpackInventory(backpack, backpackInventory);

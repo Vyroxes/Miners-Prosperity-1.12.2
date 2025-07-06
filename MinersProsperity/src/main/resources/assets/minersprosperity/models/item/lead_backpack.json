@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "minersprosperity:items/lead_backpack"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minersprosperity:open_lead_backpack": 1
+      },
+      "model": "minersprosperity:item/opened_lead_backpack"
+    }
+  ]
+}

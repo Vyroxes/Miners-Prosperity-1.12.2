@@ -21,6 +21,8 @@ public class NetworkHandler
         NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.SERVER);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.CLIENT);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.SERVER);
+        NETWORK.registerMessage(MessageAutoCollect.Handler.class, MessageAutoCollect.class, id++, Side.CLIENT);
+        NETWORK.registerMessage(MessageAutoCollect.Handler.class, MessageAutoCollect.class, id++, Side.SERVER);
     }
 
     public static void sendVariableUpdate(int id, int variable, BlockPos pos)
@@ -36,5 +38,10 @@ public class NetworkHandler
     public static void sendOpenGuiUpdate(int guiId, BlockPos pos)
     {
         NETWORK.sendToServer(new MessageOpenGui(guiId, pos));
+    }
+
+    public static void sendAutoCollectUpdate(boolean autoCollect)
+    {
+        NETWORK.sendToServer(new MessageAutoCollect(autoCollect));
     }
 }

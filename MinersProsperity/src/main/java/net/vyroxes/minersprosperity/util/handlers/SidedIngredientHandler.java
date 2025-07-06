@@ -3,10 +3,13 @@ package net.vyroxes.minersprosperity.util.handlers;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.objects.fluids.CustomFluidTank;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
@@ -69,18 +72,18 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
 
     @Override
     public @Nullable FluidStack drain(FluidStack resource, boolean doDrain) {
-        if (getIngredientType(this.getSlots()-1) == SlotState.IngredientType.FLUID)
+        if (getIngredientType(this.customItemStackHandler.getSlots()) == SlotState.IngredientType.FLUID)
         {
-            this.tank.setCanDrain(this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.OUTPUT || this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.AUTO_OUTPUT);
+            this.tank.setCanDrain(this.getSlotMode(this.customItemStackHandler.getSlots()) == SlotState.SlotMode.OUTPUT || this.getSlotMode(this.customItemStackHandler.getSlots()) == SlotState.SlotMode.AUTO_OUTPUT);
         }
         return this.tank.drain(resource, doDrain);
     }
 
     @Override
     public @Nullable FluidStack drain(int maxDrain, boolean doDrain) {
-        if (getIngredientType(this.getSlots()-1) == SlotState.IngredientType.FLUID)
+        if (getIngredientType(this.customItemStackHandler.getSlots()) == SlotState.IngredientType.FLUID)
         {
-            this.tank.setCanDrain(this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.OUTPUT || this.getSlotMode(this.getSlots() - 1) == SlotState.SlotMode.AUTO_OUTPUT);
+            this.tank.setCanDrain(this.getSlotMode(this.customItemStackHandler.getSlots()) == SlotState.SlotMode.OUTPUT || this.getSlotMode(this.customItemStackHandler.getSlots()) == SlotState.SlotMode.AUTO_OUTPUT);
         }
         return this.tank.drain(maxDrain, doDrain);
     }
@@ -142,21 +145,21 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
         return false;
     }
 
-    public boolean isSlotUpgrade(int id)
-    {
-        if (id >= 0 && id < this.slotStates.length)
-        {
-            return this.slotStates[id].getSlotType().equals(SlotState.SlotType.UPGRADE);
-        }
-
-        return false;
-    }
-
     public boolean isSlotOutput(int id)
     {
         if (id >= 0 && id < this.slotStates.length)
         {
             return this.slotStates[id].getSlotType().equals(SlotState.SlotType.OUTPUT);
+        }
+
+        return false;
+    }
+
+    public boolean isSlotUpgrade(int id)
+    {
+        if (id >= 0 && id < this.slotStates.length)
+        {
+            return this.slotStates[id].getSlotType().equals(SlotState.SlotType.UPGRADE);
         }
 
         return false;
@@ -290,8 +293,9 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
     @Override
     public int getSlots()
     {
-        if (this.tank != null) return this.customItemStackHandler.getSlots() + 1;
-        else return this.customItemStackHandler.getSlots();
+//        if (this.tank != null) return this.customItemStackHandler.getSlots() + 1;
+//        else return this.customItemStackHandler.getSlots();
+        return this.customItemStackHandler.getSlots();
     }
 
     @Override
@@ -303,6 +307,8 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
     @Override
     public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate)
     {
+        if (slot > this.customItemStackHandler.getSlots()) return stack;
+
         if (getSlotState(slot).getSlotMode() != SlotState.SlotMode.INPUT && getSlotState(slot).getSlotMode() != SlotState.SlotMode.AUTO_INPUT)
         {
             return stack;
@@ -318,12 +324,125 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
     @Override
     public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate)
     {
+        if (slot > this.customItemStackHandler.getSlots()) return ItemStack.EMPTY;
+
         if (getSlotState(slot).getSlotMode() != SlotState.SlotMode.OUTPUT && getSlotState(slot).getSlotMode() != SlotState.SlotMode.AUTO_OUTPUT)
         {
             return ItemStack.EMPTY;
         }
 
         return customItemStackHandler.extractItem(slot, amount, simulate);
+    }
+
+    public void autoInput()
+    {
+        if (this.facing == null || this.tileEntity == null)
+        {
+            return;
+        }
+
+        EnumFacing offsetFacing = this.tileEntity.getRelativeSide(this.tileEntity.getMachineFacing(), this.facing);
+        TileEntity neighborTile = this.tileEntity.getWorld().getTileEntity(this.tileEntity.getPos().offset(offsetFacing));
+
+        if (neighborTile != null && neighborTile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offsetFacing))
+        {
+            IItemHandler itemHandler = neighborTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offsetFacing);
+
+            if (itemHandler != null)
+            {
+                for (int i = 0; i < itemHandler.getSlots(); i++)
+                {
+                    ItemStack extracted = itemHandler.extractItem(i, Integer.MAX_VALUE, true);
+                    if (!extracted.isEmpty())
+                    {
+                        for (int j = 0; j < this.customItemStackHandler.getSlots() - this.customItemStackHandler.getOutputSlots() - this.customItemStackHandler.getUpgradeSlots(); j++)
+                        {
+                            if (getIngredientType(j).equals(SlotState.IngredientType.ITEM) && !getSlotType(j).equals(SlotState.SlotType.OUTPUT) && getSlotMode(j).equals(SlotState.SlotMode.AUTO_INPUT))
+                            {
+                                ItemStack remaining = this.insertItem(j, extracted, false);
+                                if (remaining.isEmpty())
+                                {
+                                    itemHandler.extractItem(i, extracted.getCount(), false);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void autoDrain()
+    {
+        if (this.facing == null || this.tileEntity == null)
+        {
+            return;
+        }
+
+        EnumFacing offsetFacing = this.tileEntity.getRelativeSide(this.tileEntity.getMachineFacing(), this.facing);
+        TileEntity neighborTile = this.tileEntity.getWorld().getTileEntity(this.tileEntity.getPos().offset(offsetFacing));
+
+        if (neighborTile != null && neighborTile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offsetFacing))
+        {
+            IFluidHandler fluidHandler = neighborTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, offsetFacing);
+
+            if (fluidHandler != null)
+            {
+                if (getIngredientType(this.getSlots()).equals(SlotState.IngredientType.FLUID) && getSlotMode(this.getSlots()).equals(SlotState.SlotMode.AUTO_OUTPUT))
+                {
+                    if (this.tank.getFluid() != null)
+                    {
+                        int fluidAmount = fluidHandler.fill(this.tank.getFluid(), false);
+
+                        if (fluidAmount > 0)
+                        {
+                            fluidHandler.fill(new FluidStack(this.tank.getFluid().getFluid(), fluidAmount), true);
+                            this.tank.drainInternal(fluidAmount, true);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void autoOutput()
+    {
+        if (this.facing == null || this.tileEntity == null)
+        {
+            return;
+        }
+
+        EnumFacing offsetFacing = this.tileEntity.getRelativeSide(this.tileEntity.getMachineFacing(), this.facing);
+        TileEntity neighborTile = this.tileEntity.getWorld().getTileEntity(this.tileEntity.getPos().offset(offsetFacing));
+
+        if (neighborTile != null && neighborTile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offsetFacing))
+        {
+            IItemHandler itemHandler = neighborTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, offsetFacing);
+
+            if (itemHandler != null)
+            {
+                for (int i = 0; i < this.customItemStackHandler.getSlots() - this.customItemStackHandler.getUpgradeSlots(); i++)
+                {
+                    if (getIngredientType(i).equals(SlotState.IngredientType.ITEM) && getSlotMode(i).equals(SlotState.SlotMode.AUTO_OUTPUT))
+                    {
+                        ItemStack stackToExtract = getStackInSlot(i);
+                        if (!stackToExtract.isEmpty())
+                        {
+                            for (int j = 0; j < itemHandler.getSlots(); j++)
+                            {
+                                ItemStack remaining = itemHandler.insertItem(j, stackToExtract, false);
+                                if (remaining.isEmpty())
+                                {
+                                    this.extractItem(i, stackToExtract.getCount(), false);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override

@@ -18,7 +18,7 @@ import net.vyroxes.minersprosperity.objects.tabs.TabTools;
 import net.vyroxes.minersprosperity.proxy.ServerProxy;
 import net.vyroxes.minersprosperity.util.handlers.RegistryHandler;
 
-@Mod(modid = Tags.MODID, name = Tags.MODNAME, version = Tags.VERSION, acceptedMinecraftVersions = "[1.12.2]")
+@Mod(modid = Tags.MODID, name = Tags.MODNAME, version = Tags.VERSION, acceptedMinecraftVersions = "[1.12.2]", guiFactory = "net.vyroxes.minersprosperity.util.handlers.ModConfigGuiFactory")
 public class MinersProsperity
 {	
 	public static File config;

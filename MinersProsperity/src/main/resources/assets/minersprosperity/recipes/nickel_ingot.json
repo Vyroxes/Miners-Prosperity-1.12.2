@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "blockNickel"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:nickel_ingot",
+        "count": 9
+    }
+}

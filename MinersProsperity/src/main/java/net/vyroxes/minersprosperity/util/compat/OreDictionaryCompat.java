@@ -1,7 +1,6 @@
 package net.vyroxes.minersprosperity.util.compat;
 
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.init.BlockInit;
@@ -20,6 +19,10 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("gemPeridot", ItemInit.PERIDOT);
         OreDictionary.registerOre("gemOnyx", ItemInit.ONYX);
         OreDictionary.registerOre("gemBlackOpal", ItemInit.BLACK_OPAL);
+
+        OreDictionary.registerOre("shardGlowstone", ItemInit.GLOWSTONE_SHARD);
+
+        OreDictionary.registerOre("clusterObsidian", ItemInit.OBSIDIAN_CLUSTER);
 
         OreDictionary.registerOre("ingotCopper", ItemInit.COPPER_INGOT);
         OreDictionary.registerOre("ingotTin", ItemInit.TIN_INGOT);
@@ -47,6 +50,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("ingotCobaltsteel", ItemInit.COBALTSTEEL_INGOT);
         OreDictionary.registerOre("ingotDarkSteel", ItemInit.DARK_STEEL_INGOT);
 
+        OreDictionary.registerOre("nuggetQuartz", ItemInit.QUARTZ_NUGGET);
         OreDictionary.registerOre("nuggetDiamond", ItemInit.DIAMOND_NUGGET);
         OreDictionary.registerOre("nuggetEmerald", ItemInit.EMERALD_NUGGET);
         OreDictionary.registerOre("nuggetCopper", ItemInit.COPPER_NUGGET);
@@ -62,6 +66,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("nuggetSteel", ItemInit.STEEL_NUGGET);
         OreDictionary.registerOre("nuggetNickel", ItemInit.NICKEL_NUGGET);
         OreDictionary.registerOre("nuggetChromium", ItemInit.CHROMIUM_NUGGET);
+        OreDictionary.registerOre("nuggetGlowstone", ItemInit.GLOWSTONE_NUGGET);
         OreDictionary.registerOre("nuggetInconel", ItemInit.INCONEL_NUGGET);
         OreDictionary.registerOre("nuggetUranium", ItemInit.URANIUM_NUGGET);
         OreDictionary.registerOre("nuggetTungsten", ItemInit.TUNGSTEN_NUGGET);
@@ -85,6 +90,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("dustCoal", ItemInit.COAL_DUST);
         OreDictionary.registerOre("dustCharcoal", ItemInit.CHARCOAL_DUST);
         OreDictionary.registerOre("dustIron", ItemInit.IRON_DUST);
+        OreDictionary.registerOre("dustQuartz", ItemInit.QUARTZ_DUST);
         OreDictionary.registerOre("dustGold", ItemInit.GOLD_DUST);
         OreDictionary.registerOre("dustDiamond", ItemInit.DIAMOND_DUST);
         OreDictionary.registerOre("dustEmerald", ItemInit.EMERALD_DUST);
@@ -124,11 +130,12 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("gearCoal", ItemInit.COAL_GEAR);
         OreDictionary.registerOre("gearCharcoal", ItemInit.CHARCOAL_GEAR);
         OreDictionary.registerOre("gearIron", ItemInit.IRON_GEAR);
+        OreDictionary.registerOre("gearQuartz", ItemInit.QUARTZ_GEAR);
         OreDictionary.registerOre("gearGold", ItemInit.GOLD_GEAR);
         OreDictionary.registerOre("gearDiamond", ItemInit.DIAMOND_GEAR);
         OreDictionary.registerOre("gearEmerald", ItemInit.EMERALD_GEAR);
         OreDictionary.registerOre("gearRedstone", ItemInit.REDSTONE_GEAR);
-        OreDictionary.registerOre("gearLapis", ItemInit.LAPIS_LAZULI_GEAR);
+        OreDictionary.registerOre("gearLapis", ItemInit.LAPIS_GEAR);
         OreDictionary.registerOre("gearCopper", ItemInit.COPPER_GEAR);
         OreDictionary.registerOre("gearTin", ItemInit.TIN_GEAR);
         OreDictionary.registerOre("gearBronze", ItemInit.BRONZE_GEAR);
@@ -165,11 +172,12 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("plateCoal", ItemInit.COAL_PLATE);
         OreDictionary.registerOre("plateCharcoal", ItemInit.CHARCOAL_PLATE);
         OreDictionary.registerOre("plateIron", ItemInit.IRON_PLATE);
+        OreDictionary.registerOre("plateQuartz", ItemInit.QUARTZ_PLATE);
         OreDictionary.registerOre("plateGold", ItemInit.GOLD_PLATE);
         OreDictionary.registerOre("plateDiamond", ItemInit.DIAMOND_PLATE);
         OreDictionary.registerOre("plateEmerald", ItemInit.EMERALD_PLATE);
         OreDictionary.registerOre("plateRedstone", ItemInit.REDSTONE_PLATE);
-        OreDictionary.registerOre("plateLapis", ItemInit.LAPIS_LAZULI_PLATE);
+        OreDictionary.registerOre("plateLapis", ItemInit.LAPIS_PLATE);
         OreDictionary.registerOre("plateCopper", ItemInit.COPPER_PLATE);
         OreDictionary.registerOre("plateTin", ItemInit.TIN_PLATE);
         OreDictionary.registerOre("plateBronze", ItemInit.BRONZE_PLATE);
@@ -225,6 +233,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("oreOnyx", BlockInit.ONYX_ORE);
         OreDictionary.registerOre("oreBlackOpal", BlockInit.BLACK_OPAL_ORE);
 
+        OreDictionary.registerOre("blockCharcoal", BlockInit.CHARCOAL_BLOCK);
         OreDictionary.registerOre("blockCopper", BlockInit.COPPER_BLOCK);
         OreDictionary.registerOre("blockTin", BlockInit.TIN_BLOCK);
         OreDictionary.registerOre("blockBronze", BlockInit.BRONZE_BLOCK);

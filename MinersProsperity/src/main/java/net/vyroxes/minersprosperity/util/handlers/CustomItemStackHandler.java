@@ -50,6 +50,12 @@ public class CustomItemStackHandler extends ItemStackHandler
     }
 
     @Override
+    public int getSlots()
+    {
+        return super.getSlots();
+    }
+
+    @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack)
     {
         if (slot < this.inputSlots)

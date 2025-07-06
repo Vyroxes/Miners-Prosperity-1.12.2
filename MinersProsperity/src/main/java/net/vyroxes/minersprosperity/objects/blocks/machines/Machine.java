@@ -22,7 +22,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -37,7 +36,6 @@ import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
 import net.vyroxes.minersprosperity.util.handlers.SlotState;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Random;
 
 public abstract class Machine extends BlockBase implements ITileEntityProvider {
@@ -92,10 +90,12 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
             if (playerIn.isSneaking()) {
                 TileEntityMachine tileEntity = getTileEntity(worldIn, pos);
                 if (tileEntity != null) {
-                    for (EnumFacing face : EnumFacing.values()) {
-                        SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
-                        for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++) {
-                            sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+                    if (tileEntity.getSidedIngredientHandlers() != null) {
+                        for (EnumFacing face : EnumFacing.values()) {
+                            SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
+                            for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++) {
+                                sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+                            }
                         }
                     }
                 }
@@ -112,18 +112,20 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
             if (playerIn.isSneaking()) {
                 TileEntityMachine tileEntity = getTileEntity(worldIn, pos);
                 if (tileEntity != null) {
-                    EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
-                    SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(side);
-                    for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++) {
-                        sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+                    if (tileEntity.getSidedIngredientHandlers() != null) {
+                        EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
+                        SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(side);
+                        for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++) {
+                            sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+                        }
                     }
                 }
             }
         }
 
-        if (!worldIn.isRemote)
+        if (!worldIn.isRemote && this.guiTypes != null)
         {
-            if (playerIn.openContainer instanceof ContainerAlloyFurnace)
+            if (playerIn.openContainer != playerIn.inventoryContainer)
             {
                 return false;
             }
@@ -169,11 +171,11 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
         if (tag != null && tileEntity instanceof TileEntityMachine tileEntityMachine) {
 
             if (tag.hasKey("Energy")) {
-                tileEntityMachine.setEnergyStored(tag.getLong("Energy"));
+                if (tileEntityMachine.getEnergyStorage() != null) tileEntityMachine.setEnergyStored(tag.getInteger("Energy"));
             }
 
             if (tag.hasKey("FluidName") && tag.hasKey("Amount")) {
-                tileEntityMachine.setFluidStored(FluidRegistry.getFluid(tag.getString("FluidName")), tag.getInteger("Amount"));
+                if (tileEntityMachine.getFluidTank() != null) tileEntityMachine.setFluidStored(FluidRegistry.getFluid(tag.getString("FluidName")), tag.getInteger("Amount"));
             }
 
             if (tag.hasKey("States")) {
@@ -183,11 +185,13 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
                     tileEntityMachine.setRedstoneControlButtonState(statesTag.getInteger("RedstoneControlButtonState"));
                 }
 
-                for (EnumFacing facing : EnumFacing.values()) {
-                    if (statesTag.hasKey(facing.toString() + "SlotStates")) {
-                        SidedIngredientHandler sidedHandler = (SidedIngredientHandler) ((TileEntityMachine) tileEntity).getSidedIngredientHandler(facing);
+                if (tileEntityMachine.getSidedIngredientHandlers() != null) {
+                    for (EnumFacing facing : EnumFacing.values()) {
+                        if (statesTag.hasKey(facing.toString() + "SlotStates")) {
+                            SidedIngredientHandler sidedHandler = (SidedIngredientHandler) ((TileEntityMachine) tileEntity).getSidedIngredientHandler(facing);
 
-                        sidedHandler.readFromNBT(statesTag);
+                            sidedHandler.readFromNBT(statesTag);
+                        }
                     }
                 }
             }

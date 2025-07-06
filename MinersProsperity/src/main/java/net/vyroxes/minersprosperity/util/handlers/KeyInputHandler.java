@@ -1,6 +1,7 @@
 package net.vyroxes.minersprosperity.util.handlers;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,35 +32,45 @@ public class KeyInputHandler
     @SubscribeEvent
     public void onKeyInput(net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent event)
     {
-        if (toggleAutoCollectKey.isPressed()) 
+        if (toggleAutoCollectKey.isPressed())
         {
             Minecraft client = Minecraft.getMinecraft();
-            if (client.player != null) 
+            if (client.player != null)
             {
                 ItemStack itemStack = client.player.getHeldItemMainhand();
 
-                if (!itemStack.isEmpty() && itemStack.getItem() instanceof Backpack) 
+                if (!itemStack.isEmpty() && itemStack.getItem() instanceof Backpack)
                 {
-                    boolean newState = toggleAutoCollect(itemStack);
-                    
-                    String statusMessage = TextFormatting.GRAY + "Auto-Collect: " + (newState ? TextFormatting.GREEN + "On" : TextFormatting.RED + "Off");
-                    client.player.sendMessage(new TextComponentString(statusMessage));
+                    toggleAutoCollect(itemStack);
                 }
             }
         }
     }
 
-    private static boolean toggleAutoCollect(ItemStack itemStack)
+    private static void toggleAutoCollect(ItemStack itemStack)
     {
         NBTTagCompound compound = itemStack.hasTagCompound() ? itemStack.getTagCompound() : new NBTTagCompound();
-        if (!compound.hasKey("AutoCollect"))
+        if (!compound.hasKey("BackpackData"))
         {
-            compound.setBoolean("AutoCollect", false);
+            NBTTagCompound backpackData = new NBTTagCompound();
+            backpackData.setBoolean("AutoCollect", false);
+            compound.setTag("BackpackData", backpackData);
         }
-        boolean autoCollect = compound.getBoolean("AutoCollect");
+        else
+        {
+            NBTTagCompound backpackData = compound.getCompoundTag("BackpackData");
+
+            if (!backpackData.hasKey("AutoCollect"))
+            {
+                backpackData.setBoolean("AutoCollect", false);
+            }
+
+            compound.setTag("BackpackData", backpackData);
+        }
+        NBTTagCompound backpackData = compound.getCompoundTag("BackpackData");
+        boolean autoCollect = backpackData.getBoolean("AutoCollect");
         boolean newState = !autoCollect;
-        compound.setBoolean("AutoCollect", newState);
-        itemStack.setTagCompound(compound);
-        return newState;
+        NetworkHandler.sendAutoCollectUpdate(newState);
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(TextFormatting.GRAY + I18n.format("tooltip.backpack.auto_collect") + " " + (newState ? TextFormatting.GREEN + I18n.format("tooltip.backpack.auto_collect.on") : TextFormatting.RED + I18n.format("tooltip.backpack.auto_collect.off"))));
     }
 }

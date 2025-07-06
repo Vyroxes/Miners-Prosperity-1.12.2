@@ -38,6 +38,8 @@ public class JEICompat implements IModPlugin
         registry.addRecipeClickArea(GuiAlloyFurnace.class, 82, 36, 22, 15, RecipeCategories.ALLOY_FURNACE);
         recipeTransfer.addRecipeTransferHandler(ContainerAlloyFurnace.class, RecipeCategories.ALLOY_FURNACE, 0, 2, 4, 36);
         registry.addRecipeCatalyst(new ItemStack(BlockInit.ALLOY_FURNACE), RecipeCategories.ALLOY_FURNACE);
+
+        registry.getJeiHelpers().getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(BlockInit.INVISIBLE_LIGHT));
     }
 
     @SuppressWarnings("deprecation")

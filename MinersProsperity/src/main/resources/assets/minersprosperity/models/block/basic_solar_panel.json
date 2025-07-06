@@ -1,0 +1,14 @@
+{
+    "parent": "block/cube",
+    "textures":
+    {
+        "particle": "#up",
+        "side": "minersprosperity:blocks/solar_panel_side",
+        "up": "minersprosperity:blocks/basic_solar_panel_top_off",
+        "down": "#side",
+        "north": "#side",
+        "east": "#side",
+        "south": "#side",
+        "west": "#side"
+    }
+}

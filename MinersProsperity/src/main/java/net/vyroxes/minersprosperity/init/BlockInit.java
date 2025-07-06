@@ -6,9 +6,10 @@ import net.minecraft.block.material.Material;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.objects.blocks.BlockCharcoal;
+import net.vyroxes.minersprosperity.objects.blocks.BlockInvisibleLight;
 import net.vyroxes.minersprosperity.objects.blocks.BlockOreBlocks;
 import net.vyroxes.minersprosperity.objects.blocks.BlockOres;
-import net.vyroxes.minersprosperity.objects.blocks.machines.MachineAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.blocks.machines.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,13 @@ public class BlockInit
 	//BLOCKS
 	//MACHINES
 	public static final Block ALLOY_FURNACE = new MachineAlloyFurnace("alloy_furnace");
+	public static final Block BASIC_SOLAR_PANEL = new MachineBasicSolarPanel("basic_solar_panel");
+	public static final Block IMPROVED_SOLAR_PANEL = new MachineImprovedSolarPanel("improved_solar_panel");
+	public static final Block ADVANCED_SOLAR_PANEL = new MachineAdvancedSolarPanel("advanced_solar_panel");
+	public static final Block ELITE_SOLAR_PANEL = new MachineEliteSolarPanel("elite_solar_panel");
+	public static final Block ULTIMATE_SOLAR_PANEL = new MachineUltimateSolarPanel("ultimate_solar_panel");
+	public static final Block SUPREME_SOLAR_PANEL = new MachineSupremeSolarPanel("supreme_solar_panel");
+	public static final Block CREATIVE_SOLAR_PANEL = new MachineCreativeSolarPanel("creative_solar_panel");
 
 	//ORES
 	public static final Block COPPER_ORE = new BlockOres("copper_ore", 1, 5.0F, 10.0F, null);
@@ -81,4 +89,7 @@ public class BlockInit
 
 	//FLUIDBLOCKS
 	public static final BlockFluidClassic LIQUID_EXPERIENCE_BLOCK = (BlockFluidClassic) new BlockFluidClassic(FluidInit.LIQUID_EXPERIENCE, Material.WATER).setRegistryName("liquid_experience").setCreativeTab(MinersProsperity.blocks_tab);
+
+	//OTHERBLOCKS
+	public static final Block INVISIBLE_LIGHT = new BlockInvisibleLight("invisible_light", Material.AIR, MapColor.AIR);
 }

@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "nuggetOnyx"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:onyx",
+        "count": 1
+    }
+}

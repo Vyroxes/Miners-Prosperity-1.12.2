@@ -21,11 +21,12 @@ public class ContainerAlloyFurnace extends Container
     private final TileEntityMachine tileEntity;
     private int cookTime;
     private int totalCookTime;
-    private long energyStored;
-    private long maxEnergyStored;
-    private long maxReceive;
-    private long maxExtract;
-    private long energyUsage;
+    private int energyStored;
+    private int maxEnergyStored;
+    private int maxReceive;
+    private int maxExtract;
+    private int energyUsage;
+    private int energyGeneration;
     private int fluidStored;
 
     public ContainerAlloyFurnace(InventoryPlayer playerInventory, TileEntityMachine tileEntity)
@@ -72,8 +73,6 @@ public class ContainerAlloyFurnace extends Container
         int totalExperience = this.tileEntity.getFluidStored() / 10;
         int drainedExperience = 0;
 
-        System.out.println("Fluid: " + this.tileEntity.getFluidStored());
-        System.out.println("XP: " + totalExperience);
         while (totalExperience > 0)
         {
             int xpSplit = EntityXPOrb.getXPSplit(totalExperience);
@@ -104,32 +103,37 @@ public class ContainerAlloyFurnace extends Container
 
             if (this.energyStored != this.tileEntity.getEnergyStored())
             {
-                icontainerlistener.sendWindowProperty(this, 2, (int) this.tileEntity.getEnergyStored());
+                icontainerlistener.sendWindowProperty(this, 2, this.tileEntity.getEnergyStored());
             }
 
             if (this.maxEnergyStored != this.tileEntity.getMaxEnergyStored())
             {
-                icontainerlistener.sendWindowProperty(this, 3, (int) this.tileEntity.getMaxEnergyStored());
+                icontainerlistener.sendWindowProperty(this, 3, this.tileEntity.getMaxEnergyStored());
             }
 
             if (this.maxReceive != this.tileEntity.getMaxReceive())
             {
-                icontainerlistener.sendWindowProperty(this, 4, (int) this.tileEntity.getMaxReceive());
+                icontainerlistener.sendWindowProperty(this, 4, this.tileEntity.getMaxReceive());
             }
 
             if (this.maxExtract != this.tileEntity.getMaxExtract())
             {
-                icontainerlistener.sendWindowProperty(this, 5, (int) this.tileEntity.getMaxExtract());
+                icontainerlistener.sendWindowProperty(this, 5, this.tileEntity.getMaxExtract());
             }
 
             if (this.energyUsage != this.tileEntity.getEnergyUsage())
             {
-                icontainerlistener.sendWindowProperty(this, 6, (int) this.tileEntity.getEnergyUsage());
+                icontainerlistener.sendWindowProperty(this, 6, this.tileEntity.getEnergyUsage());
+            }
+
+            if (this.energyGeneration != this.tileEntity.getEnergyGeneration())
+            {
+                icontainerlistener.sendWindowProperty(this, 7, this.tileEntity.getEnergyGeneration());
             }
 
             if (this.fluidStored != this.tileEntity.getFluidStored() || this.tileEntity.getFluidStored() == 0)
             {
-                icontainerlistener.sendWindowProperty(this, 7, this.tileEntity.getFluidStored());
+                icontainerlistener.sendWindowProperty(this, 8, this.tileEntity.getFluidStored());
             }
         }
         
@@ -140,6 +144,7 @@ public class ContainerAlloyFurnace extends Container
         this.maxReceive = this.tileEntity.getMaxReceive();
         this.maxExtract = this.tileEntity.getMaxExtract();
         this.energyUsage = this.tileEntity.getEnergyUsage();
+        this.energyGeneration = this.tileEntity.getEnergyGeneration();
         this.fluidStored = this.tileEntity.getFluidStored();
     }
     

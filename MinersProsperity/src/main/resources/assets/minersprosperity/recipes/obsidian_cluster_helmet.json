@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "A A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "clusterObsidian"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:obsidian_cluster_helmet",
+        "count": 1
+    }
+}

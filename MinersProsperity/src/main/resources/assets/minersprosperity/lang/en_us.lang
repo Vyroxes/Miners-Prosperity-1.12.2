@@ -8,13 +8,18 @@ itemGroup.blocks_tab=Miner's Prosperity Blocks
 fluid.liquid_experience=Liquid Experience
 
 #TOOLS
+item.obsidian_cluster_sword.name=Obsidian Cluster Sword
+item.obsidian_cluster_pickaxe.name=Obsidian Cluster Pickaxe
+item.obsidian_cluster_axe.name=Obsidian Cluster Axe
+item.obsidian_cluster_shovel.name=Obsidian Cluster Shovel
+item.obsidian_cluster_hoe.name=Obsidian Cluster Hoe
 item.emerald_sword.name=Emerald Sword
 item.emerald_pickaxe.name=Emerald Pickaxe
 item.emerald_axe.name=Emerald Axe
 item.emerald_shovel.name=Emerald Shovel
 item.emerald_hoe.name=Emerald Hoe
 
-#ARMOUR
+#ARMOR
 item.wood_helmet.name=Wood Helmet
 item.wood_chestplate.name=Wood Chestplate
 item.wood_leggings.name=Wood Leggings
@@ -23,6 +28,10 @@ item.stone_helmet.name=Stone Helmet
 item.stone_chestplate.name=Stone Chestplate
 item.stone_leggings.name=Stone Leggings
 item.stone_boots.name=Stone Boots
+item.obsidian_cluster_helmet.name=Obsidian Cluster Helmet
+item.obsidian_cluster_chestplate.name=Obsidian Cluster Chestplate
+item.obsidian_cluster_leggings.name=Obsidian Cluster Leggings
+item.obsidian_cluster_boots.name=Obsidian Cluster Boots
 item.emerald_helmet.name=Emerald Helmet
 item.emerald_chestplate.name=Emerald Chestplate
 item.emerald_leggings.name=Emerald Leggings
@@ -39,7 +48,11 @@ item.machine_upgrade.name=Machine Upgrade
 
 #BACKPACKS
 item.backpack.name=Backpack
+item.lead_backpack.name=Lead Backpack
 item.iron_backpack.name=Iron Backpack
+item.golden_backpack.name=Golden Backpack
+item.diamond_backpack.name=Diamond Backpack
+item.emerald_backpack.name=Emerald Backpack
 
 #GEMS
 item.ruby.name=Ruby
@@ -49,6 +62,12 @@ item.topaz.name=Topaz
 item.peridot.name=Peridot
 item.onyx.name=Onyx
 item.black_opal.name=Black Opal
+
+#SHARDS
+item.glowstone_shard.name=Glowstone Shard
+
+#CLUSTERS
+item.obsidian_cluster.name=Obsidian Cluster
 
 #INGOTS
 item.copper_ingot.name=Copper Ingot
@@ -78,6 +97,7 @@ item.cobaltsteel_ingot.name=Cobaltsteel Ingot
 item.dark_steel_ingot.name=Dark Steel Ingot
 
 #NUGGETS
+item.quartz_nugget.name=Nether Quartz Nugget
 item.diamond_nugget.name=Diamond Nugget
 item.emerald_nugget.name=Emerald Nugget
 item.copper_nugget.name=Copper Nugget
@@ -93,6 +113,7 @@ item.refined_iron_nugget.name=Refined Iron Nugget
 item.steel_nugget.name=Steel Nugget
 item.nickel_nugget.name=Nickel Nugget
 item.chromium_nugget.name=Chromium Nugget
+item.glowstone_nugget.name=Glowstone Nugget
 item.inconel_nugget.name=Inconel Nugget
 item.uranium_nugget.name=Uranium Nugget
 item.tungsten_nugget.name=Tungsten Nugget
@@ -117,6 +138,7 @@ item.black_opal_nugget.name=Black Opal Nugget
 item.coal_dust.name=Coal Dust
 item.charcoal_dust.name=Charcoal Dust
 item.iron_dust.name=Iron Dust
+item.quartz_dust.name=Nether Quartz Dust
 item.gold_dust.name=Gold Dust
 item.diamond_dust.name=Diamond Dust
 item.emerald_dust.name=Emerald Dust
@@ -153,15 +175,47 @@ item.onyx_dust.name=Onyx Dust
 item.dark_steel_dust.name=Dark Steel Dust
 item.black_opal_dust.name=Black Opal Dust
 
+#VEINS
+item.coal_vein.name=Coal Vein
+item.iron_vein.name=Iron Vein
+item.quartz_vein.name=Nether Quartz Vein
+item.lapis_vein.name=Lapis Lazuli Vein
+item.redstone_vein.name=Redstone Vein
+item.gold_vein.name=Gold Vein
+item.diamond_vein.name=Diamond Vein
+item.emerald_vein.name=Emerald Vein
+item.copper_vein.name=Copper Vein
+item.tin_vein.name=Tin Vein
+item.silver_vein.name=Silver Vein
+item.lead_vein.name=Lead Vein
+item.zinc_vein.name=Zinc Vein
+item.aluminum_vein.name=Aluminum Vein
+item.nickel_vein.name=Nickel Vein
+item.chromium_vein.name=Chromium Vein
+item.uranium_vein.name=Uranium Vein
+item.tungsten_vein.name=Tungsten Vein
+item.platinum_vein.name=Platinum Vein
+item.iridium_vein.name=Iridium Vein
+item.titanium_vein.name=Titanium Vein
+item.ruby_vein.name=Ruby Vein
+item.sapphire_vein.name=Sapphire Vein
+item.amethyst_vein.name=Amethyst Vein
+item.topaz_vein.name=Topaz Vein
+item.peridot_vein.name=Peridot Vein
+item.cobalt_vein.name=Cobalt Vein
+item.onyx_vein.name=Onyx Vein
+item.black_opal_vein.name=Black Opal Vein
+
 #GEARS
 item.coal_gear.name=Coal Gear
 item.charcoal_gear.name=Charcoal Gear
 item.iron_gear.name=Iron Gear
+item.quartz_gear.name=Nether Quartz Gear
 item.gold_gear.name=Gold Gear
 item.diamond_gear.name=Diamond Gear
 item.emerald_gear.name=Emerald Gear
 item.redstone_gear.name=Redstone Gear
-item.lapis_lazuli_gear.name=Lapis Lazuli Gear
+item.lapis_gear.name=Lapis Lazuli Gear
 item.copper_gear.name=Copper Gear
 item.tin_gear.name=Tin Gear
 item.bronze_gear.name=Bronze Gear
@@ -175,6 +229,7 @@ item.refined_iron_gear.name=Refined Iron Gear
 item.steel_gear.name=Steel Gear
 item.nickel_gear.name=Nickel Gear
 item.chromium_gear.name=Chromium Gear
+item.glowstone_gear.name=Glowstone Gear
 item.inconel_gear.name=Inconel Gear
 item.uranium_gear.name=Uranium Gear
 item.tungsten_gear.name=Tungsten Gear
@@ -199,11 +254,12 @@ item.black_opal_gear.name=Black Opal Gear
 item.coal_plate.name=Coal Plate
 item.charcoal_plate.name=Charcoal Plate
 item.iron_plate.name=Iron Plate
+item.quartz_plate.name=Nether Quartz Plate
 item.gold_plate.name=Gold Plate
 item.diamond_plate.name=Diamond Plate
 item.emerald_plate.name=Emerald Plate
 item.redstone_plate.name=Redstone Plate
-item.lapis_lazuli_plate.name=Lapis Lazuli Plate
+item.lapis_plate.name=Lapis Lazuli Plate
 item.copper_plate.name=Copper Plate
 item.tin_plate.name=Tin Plate
 item.bronze_plate.name=Bronze Plate
@@ -217,6 +273,7 @@ item.refined_iron_plate.name=Refined Iron Plate
 item.steel_plate.name=Steel Plate
 item.nickel_plate.name=Nickel Plate
 item.chromium_plate.name=Chromium Plate
+item.glowstone_plate.name=Glowstone Plate
 item.inconel_plate.name=Inconel Plate
 item.uranium_plate.name=Uranium Plate
 item.tungsten_plate.name=Tungsten Plate
@@ -264,15 +321,21 @@ gui.set_output.name=Set All Sides to Output
 gui.set_auto_output.name=Set All Sides to Auto-Output
 gui.energy_stored=Energy Stored
 gui.energy_usage=Energy Usage
+gui.energy_generation=Energy Generation
+gui.energy_infinite=Infinite
 gui.fluid=Fluid
 gui.fluid_stored=Fluid Stored
 gui.xp_levels=XP Levels
 gui.max_energy_input=Max Energy Input
+gui.max_energy_output=Max Energy Output
 gui.slot_disabled.name=Disabled
 gui.slot_input.name=Input
 gui.slot_auto_input.name=Auto-Input
 gui.slot_output.name=Output
 gui.slot_auto_output.name=Auto-Output
+gui.output_default.name=Output Mode: Default
+gui.output_void_excess.name=Output Mode: Void Excess
+gui.output_void_all.name=Output Mode: Void All
 gui.shift_left_click=Shift + left click
 gui.shift_left_click_desc= with empty hand on the machine disables input and output for all slots on every side
 gui.shift_right_click=Shift + right click
@@ -280,12 +343,16 @@ gui.shift_right_click_desc= with empty hand on the machine from a specific side 
 gui.left_click=Left click
 gui.left_click_desc= to collect experience if there is 10 mB or more
 
-
 #BLOCKS
 #MACHINES
 tile.alloy_furnace.name=Alloy Furnace
-tile.crusher.name=Crusher
-tile.solar_panel.name=Solar Panel
+tile.basic_solar_panel.name=Basic Solar Panel
+tile.improved_solar_panel.name=Improved Solar Panel
+tile.advanced_solar_panel.name=Advanced Solar Panel
+tile.elite_solar_panel.name=Elite Solar Panel
+tile.ultimate_solar_panel.name=Ultimate Solar Panel
+tile.supreme_solar_panel.name=Supreme Solar Panel
+tile.creative_solar_panel.name=Creative Solar Panel
 
 #ORES
 tile.copper_ore.name=Copper Ore
@@ -345,10 +412,33 @@ tile.onyx_block.name=Block of Onyx
 tile.dark_steel_block.name=Block of Dark Steel
 tile.black_opal_block.name=Block of Black Opal
 
+#OTHER BLOCKS
+tile.invisible_light.name=Invisible Light
+
 #CONTAINERS
 container.alloy_furnace=Alloy Furnace
-container.crusher=Crusher
+container.basic_solar_panel=Basic Solar Panel
+container.improved_solar_panel=Improved Solar Panel
+container.advanced_solar_panel=Advanced Solar Panel
+container.elite_solar_panel=Elite Solar Panel
+container.ultimate_solar_panel=Ultimate Solar Panel
+container.supreme_solar_panel=Supreme Solar Panel
+container.creative_solar_panel=Creative Solar Panel
 
 #KEYBINDS
 key.categories.backpacks=Backpacks
 key.toggle_auto-collect=Backpack - Toggle Auto-Collect
+
+#TOOLTIPS
+tooltip.backpack.auto_collect=Auto-Collect:
+tooltip.backpack.auto_collect.on=On
+tooltip.backpack.auto_collect.off=Off
+tooltip.ore_dict=OreDict
+tooltip.harvest_level= Harvest Level
+tooltip.mining_speed= Mining Speed
+
+#ENCHANTMENTS
+enchantment.quick_mining=Quick Mining
+enchantment.minersprosperity.quick_mining.desc=Allows you to instantly mine entire ore veins with a single block break.
+enchantment.glow=Glow
+enchantment.minersprosperity.glow.desc=Illuminates the area around the wearer.

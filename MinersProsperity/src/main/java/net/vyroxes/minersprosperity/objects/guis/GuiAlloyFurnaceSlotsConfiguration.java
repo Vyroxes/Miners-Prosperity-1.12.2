@@ -87,7 +87,7 @@ public class GuiAlloyFurnaceSlotsConfiguration extends GuiContainer
 		}
 		else if (guiButton.id == 4)
 		{
-			this.tileEntity.setSlotEditedId(4);
+			this.tileEntity.setSlotEditedId(8);
 			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOT_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
 		else if (guiButton.id == 5)

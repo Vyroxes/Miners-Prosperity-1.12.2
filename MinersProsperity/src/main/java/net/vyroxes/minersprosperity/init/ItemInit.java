@@ -2,6 +2,8 @@ package net.vyroxes.minersprosperity.init;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -9,50 +11,57 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
 import net.vyroxes.minersprosperity.Tags;
-import net.vyroxes.minersprosperity.objects.armour.ArmourEmerald;
-import net.vyroxes.minersprosperity.objects.armour.ArmourStone;
-import net.vyroxes.minersprosperity.objects.armour.ArmourWood;
-import net.vyroxes.minersprosperity.objects.items.Backpack;
-import net.vyroxes.minersprosperity.objects.items.IronBackpack;
-import net.vyroxes.minersprosperity.objects.items.ItemBase;
-import net.vyroxes.minersprosperity.objects.tools.AxeEmerald;
-import net.vyroxes.minersprosperity.objects.tools.HoeEmerald;
-import net.vyroxes.minersprosperity.objects.tools.PickaxeEmerald;
-import net.vyroxes.minersprosperity.objects.tools.ShovelEmerald;
-import net.vyroxes.minersprosperity.objects.tools.SwordEmerald;
+import net.vyroxes.minersprosperity.objects.armor.ArmorEmerald;
+import net.vyroxes.minersprosperity.objects.armor.ArmorObsidianCluster;
+import net.vyroxes.minersprosperity.objects.armor.ArmorStone;
+import net.vyroxes.minersprosperity.objects.armor.ArmorWood;
+import net.vyroxes.minersprosperity.objects.items.*;
+import net.vyroxes.minersprosperity.objects.tools.*;
+import net.vyroxes.minersprosperity.objects.tools.ToolAxeBase;
 
 public class ItemInit
 {
 	public static final List<Item> ITEMS = new ArrayList<>();
 	
 	//TOOL MATERIALS
-	public static final ToolMaterial EMERALD_TOOL = EnumHelper.addToolMaterial("emerald tool", 4, 1892, 10.0F, 4.0F, 8);
+	public static final ToolMaterial OBSIDIAN_CLUSTER_TOOL = EnumHelper.addToolMaterial("obsidian cluster tool", 3, 1892, 10.0F, 4.0F, 12);
+	public static final ToolMaterial EMERALD_TOOL = EnumHelper.addToolMaterial("emerald tool", 4, 2223, 12.0F, 5.0F, 14);
 
 	//ARMOUR MATERIALS
-	public static final ArmorMaterial WOOD_ARMOUR = EnumHelper.addArmorMaterial("wood armor", Tags.MODID + ":wood", 5, new int[]{1, 2, 3, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0F);
-	public static final ArmorMaterial STONE_ARMOUR = EnumHelper.addArmorMaterial("stone armor", Tags.MODID + ":stone", 8, new int[]{2, 3, 4, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0F);
-	public static final ArmorMaterial EMERALD_ARMOUR = EnumHelper.addArmorMaterial("emerald armor", Tags.MODID + ":emerald", 40, new int[]{4, 7, 9, 4}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0F);
+	public static final ArmorMaterial WOOD_ARMOR = EnumHelper.addArmorMaterial("wood armor", Tags.MODID + ":wood", 5, new int[]{1, 2, 3, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0F);
+	public static final ArmorMaterial STONE_ARMOR = EnumHelper.addArmorMaterial("stone armor", Tags.MODID + ":stone", 8, new int[]{2, 3, 4, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0F);
+	public static final ArmorMaterial OBSIDIAN_CLUSTER_ARMOR = EnumHelper.addArmorMaterial("obsidian cluster armor", Tags.MODID + ":obsidian_cluster", 40, new int[]{4, 7, 9, 4}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0F);
+	public static final ArmorMaterial EMERALD_ARMOR = EnumHelper.addArmorMaterial("emerald armor", Tags.MODID + ":emerald", 47, new int[]{5, 8, 10, 5}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 4.0F);
 
 	//TOOLS
-	public static final Item EMERALD_SWORD = new SwordEmerald("emerald_sword", EMERALD_TOOL);
-	public static final Item EMERALD_PICKAXE = new PickaxeEmerald("emerald_pickaxe", EMERALD_TOOL);
-	public static final Item EMERALD_AXE = new AxeEmerald("emerald_axe", EMERALD_TOOL);
-	public static final Item EMERALD_SHOVEL = new ShovelEmerald("emerald_shovel", EMERALD_TOOL);
-	public static final Item EMERALD_HOE = new HoeEmerald("emerald_hoe", EMERALD_TOOL);
+	public static final Item OBSIDIAN_CLUSTER_SWORD = new ToolSwordBase("obsidian_cluster_sword", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
+	public static final Item OBSIDIAN_CLUSTER_PICKAXE = new ToolPickaxeBase("obsidian_cluster_pickaxe", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
+	public static final Item OBSIDIAN_CLUSTER_AXE = new ToolAxeBase("obsidian_cluster_axe", OBSIDIAN_CLUSTER_TOOL, 8.0F, -2.9F, ItemInit.OBSIDIAN_CLUSTER);
+	public static final Item OBSIDIAN_CLUSTER_SHOVEL = new ToolShovelBase("obsidian_cluster_shovel", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
+	public static final Item OBSIDIAN_CLUSTER_HOE = new ToolHoeBase("obsidian_cluster_hoe", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
+	public static final Item EMERALD_SWORD = new ToolSwordBase("emerald_sword", EMERALD_TOOL, Items.EMERALD);
+	public static final Item EMERALD_PICKAXE = new ToolPickaxeBase("emerald_pickaxe", EMERALD_TOOL, Items.EMERALD);
+	public static final Item EMERALD_AXE = new ToolAxeBase("emerald_axe", EMERALD_TOOL, 9.0F, -2.9F, Items.EMERALD);
+	public static final Item EMERALD_SHOVEL = new ToolShovelBase("emerald_shovel", EMERALD_TOOL, Items.EMERALD);
+	public static final Item EMERALD_HOE = new ToolHoeBase("emerald_hoe", EMERALD_TOOL, Items.EMERALD);
 	
 	//ARMOUR
-	public static final Item WOOD_HELMET = new ArmourWood("wood_helmet", WOOD_ARMOUR, 1, EntityEquipmentSlot.HEAD);
-	public static final Item WOOD_CHESTPLATE = new ArmourWood("wood_chestplate", WOOD_ARMOUR, 1, EntityEquipmentSlot.CHEST);
-	public static final Item WOOD_LEGGINGS = new ArmourWood("wood_leggings", WOOD_ARMOUR, 2, EntityEquipmentSlot.LEGS);
-	public static final Item WOOD_BOOTS = new ArmourWood("wood_boots", WOOD_ARMOUR, 1, EntityEquipmentSlot.FEET);
-	public static final Item STONE_HELMET = new ArmourStone("stone_helmet", STONE_ARMOUR, 1, EntityEquipmentSlot.HEAD);
-	public static final Item STONE_CHESTPLATE = new ArmourStone("stone_chestplate", STONE_ARMOUR, 1, EntityEquipmentSlot.CHEST);
-	public static final Item STONE_LEGGINGS = new ArmourStone("stone_leggings", STONE_ARMOUR, 2, EntityEquipmentSlot.LEGS);
-	public static final Item STONE_BOOTS = new ArmourStone("stone_boots", STONE_ARMOUR, 1, EntityEquipmentSlot.FEET);
-	public static final Item EMERALD_HELMET = new ArmourEmerald("emerald_helmet", EMERALD_ARMOUR, 1, EntityEquipmentSlot.HEAD);
-	public static final Item EMERALD_CHESTPLATE = new ArmourEmerald("emerald_chestplate", EMERALD_ARMOUR, 1, EntityEquipmentSlot.CHEST);
-	public static final Item EMERALD_LEGGINGS = new ArmourEmerald("emerald_leggings", EMERALD_ARMOUR, 2, EntityEquipmentSlot.LEGS);
-	public static final Item EMERALD_BOOTS = new ArmourEmerald("emerald_boots", EMERALD_ARMOUR, 1, EntityEquipmentSlot.FEET);
+	public static final Item WOOD_HELMET = new ArmorWood("wood_helmet", WOOD_ARMOR, 1, EntityEquipmentSlot.HEAD);
+	public static final Item WOOD_CHESTPLATE = new ArmorWood("wood_chestplate", WOOD_ARMOR, 1, EntityEquipmentSlot.CHEST);
+	public static final Item WOOD_LEGGINGS = new ArmorWood("wood_leggings", WOOD_ARMOR, 2, EntityEquipmentSlot.LEGS);
+	public static final Item WOOD_BOOTS = new ArmorWood("wood_boots", WOOD_ARMOR, 1, EntityEquipmentSlot.FEET);
+	public static final Item STONE_HELMET = new ArmorStone("stone_helmet", STONE_ARMOR, 1, EntityEquipmentSlot.HEAD);
+	public static final Item STONE_CHESTPLATE = new ArmorStone("stone_chestplate", STONE_ARMOR, 1, EntityEquipmentSlot.CHEST);
+	public static final Item STONE_LEGGINGS = new ArmorStone("stone_leggings", STONE_ARMOR, 2, EntityEquipmentSlot.LEGS);
+	public static final Item STONE_BOOTS = new ArmorStone("stone_boots", STONE_ARMOR, 1, EntityEquipmentSlot.FEET);
+	public static final Item OBSIDIAN_CLUSTER_HELMET = new ArmorObsidianCluster("obsidian_cluster_helmet", OBSIDIAN_CLUSTER_ARMOR, 1, EntityEquipmentSlot.HEAD);
+	public static final Item OBSIDIAN_CLUSTER_CHESTPLATE = new ArmorObsidianCluster("obsidian_cluster_chestplate", OBSIDIAN_CLUSTER_ARMOR, 1, EntityEquipmentSlot.CHEST);
+	public static final Item OBSIDIAN_CLUSTER_LEGGINGS = new ArmorObsidianCluster("obsidian_cluster_leggings", OBSIDIAN_CLUSTER_ARMOR, 2, EntityEquipmentSlot.LEGS);
+	public static final Item OBSIDIAN_CLUSTER_BOOTS = new ArmorObsidianCluster("obsidian_cluster_boots", OBSIDIAN_CLUSTER_ARMOR, 1, EntityEquipmentSlot.FEET);
+	public static final Item EMERALD_HELMET = new ArmorEmerald("emerald_helmet", EMERALD_ARMOR, 1, EntityEquipmentSlot.HEAD);
+	public static final Item EMERALD_CHESTPLATE = new ArmorEmerald("emerald_chestplate", EMERALD_ARMOR, 1, EntityEquipmentSlot.CHEST);
+	public static final Item EMERALD_LEGGINGS = new ArmorEmerald("emerald_leggings", EMERALD_ARMOR, 2, EntityEquipmentSlot.LEGS);
+	public static final Item EMERALD_BOOTS = new ArmorEmerald("emerald_boots", EMERALD_ARMOR, 1, EntityEquipmentSlot.FEET);
 
 	//ITEMS
 	public static final Item CHAIN = new ItemBase("chain");
@@ -65,7 +74,11 @@ public class ItemInit
 
 	//BACKPACKS
 	public static final Item BACKPACK = new Backpack("backpack");
+	public static final Item LEAD_BACKPACK = new LeadBackpack("lead_backpack");
 	public static final Item IRON_BACKPACK = new IronBackpack("iron_backpack");
+	public static final Item GOLDEN_BACKPACK = new GoldenBackpack("golden_backpack");
+	public static final Item DIAMOND_BACKPACK = new DiamondBackpack("diamond_backpack");
+	public static final Item EMERALD_BACKPACK = new EmeraldBackpack("emerald_backpack");
 
 	//GEMS
 	public static final Item RUBY = new ItemBase("ruby");
@@ -75,6 +88,12 @@ public class ItemInit
 	public static final Item PERIDOT = new ItemBase("peridot");
 	public static final Item ONYX = new ItemBase("onyx");
 	public static final Item BLACK_OPAL = new ItemBase("black_opal");
+
+	//SHARDS
+	public static final Item GLOWSTONE_SHARD = new ItemBase("glowstone_shard");
+
+	//CLUSTERS
+	public static final Item OBSIDIAN_CLUSTER = new ItemBase("obsidian_cluster");
 
 	//INGOTS
 	public static final Item COPPER_INGOT = new ItemBase("copper_ingot");
@@ -104,6 +123,7 @@ public class ItemInit
 	public static final Item DARK_STEEL_INGOT = new ItemBase("dark_steel_ingot");
 
 	//NUGGETS
+	public static final Item QUARTZ_NUGGET = new ItemBase("quartz_nugget");
 	public static final Item DIAMOND_NUGGET = new ItemBase("diamond_nugget");
 	public static final Item EMERALD_NUGGET = new ItemBase("emerald_nugget");
 	public static final Item COPPER_NUGGET = new ItemBase("copper_nugget");
@@ -119,6 +139,7 @@ public class ItemInit
 	public static final Item STEEL_NUGGET = new ItemBase("steel_nugget");
 	public static final Item NICKEL_NUGGET = new ItemBase("nickel_nugget");
 	public static final Item CHROMIUM_NUGGET = new ItemBase("chromium_nugget");
+	public static final Item GLOWSTONE_NUGGET = new ItemBase("glowstone_nugget");
 	public static final Item INCONEL_NUGGET = new ItemBase("inconel_nugget");
 	public static final Item URANIUM_NUGGET = new ItemBase("uranium_nugget");
 	public static final Item TUNGSTEN_NUGGET = new ItemBase("tungsten_nugget");
@@ -143,6 +164,7 @@ public class ItemInit
 	public static final Item COAL_DUST = new ItemBase("coal_dust");
 	public static final Item CHARCOAL_DUST = new ItemBase("charcoal_dust");
 	public static final Item IRON_DUST = new ItemBase("iron_dust");
+	public static final Item QUARTZ_DUST = new ItemBase("quartz_dust");
 	public static final Item GOLD_DUST = new ItemBase("gold_dust");
 	public static final Item DIAMOND_DUST = new ItemBase("diamond_dust");
 	public static final Item EMERALD_DUST = new ItemBase("emerald_dust");
@@ -179,15 +201,47 @@ public class ItemInit
 	public static final Item DARK_STEEL_DUST = new ItemBase("dark_steel_dust");
 	public static final Item BLACK_OPAL_DUST = new ItemBase("black_opal_dust");
 
+	//VEINS
+	public static final Item COAL_VEIN = new ItemBase("coal_vein");
+	public static final Item IRON_VEIN = new ItemBase("iron_vein");
+	public static final Item QUARTZ_VEIN = new ItemBase("quartz_vein");
+	public static final Item LAPIS_VEIN = new ItemBase("lapis_vein");
+	public static final Item REDSTONE_VEIN = new ItemBase("redstone_vein");
+	public static final Item GOLD_VEIN = new ItemBase("gold_vein");
+	public static final Item DIAMOND_VEIN = new ItemBase("diamond_vein");
+	public static final Item EMERALD_VEIN = new ItemBase("emerald_vein");
+	public static final Item COPPER_VEIN = new ItemBase("copper_vein");
+	public static final Item TIN_VEIN = new ItemBase("tin_vein");
+	public static final Item SILVER_VEIN = new ItemBase("silver_vein");
+	public static final Item LEAD_VEIN = new ItemBase("lead_vein");
+	public static final Item ZINC_VEIN = new ItemBase("zinc_vein");
+	public static final Item ALUMINUM_VEIN = new ItemBase("aluminum_vein");
+	public static final Item NICKEL_VEIN = new ItemBase("nickel_vein");
+	public static final Item CHROMIUM_VEIN = new ItemBase("chromium_vein");
+	public static final Item URANIUM_VEIN = new ItemBase("uranium_vein");
+	public static final Item TUNGSTEN_VEIN = new ItemBase("tungsten_vein");
+	public static final Item PLATINUM_VEIN = new ItemBase("platinum_vein");
+	public static final Item IRIDIUM_VEIN = new ItemBase("iridium_vein");
+	public static final Item TITANIUM_VEIN = new ItemBase("titanium_vein");
+	public static final Item RUBY_VEIN = new ItemBase("ruby_vein");
+	public static final Item SAPPHIRE_VEIN = new ItemBase("sapphire_vein");
+	public static final Item AMETHYST_VEIN = new ItemBase("amethyst_vein");
+	public static final Item TOPAZ_VEIN = new ItemBase("topaz_vein");
+	public static final Item PERIDOT_VEIN = new ItemBase("peridot_vein");
+	public static final Item COBALT_VEIN = new ItemBase("cobalt_vein");
+	public static final Item ONYX_VEIN = new ItemBase("onyx_vein");
+	public static final Item BLACK_OPAL_VEIN = new ItemBase("black_opal_vein");
+
 	//GEARS
 	public static final Item COAL_GEAR = new ItemBase("coal_gear");
 	public static final Item CHARCOAL_GEAR = new ItemBase("charcoal_gear");
 	public static final Item IRON_GEAR = new ItemBase("iron_gear");
+	public static final Item QUARTZ_GEAR = new ItemBase("quartz_gear");
 	public static final Item GOLD_GEAR = new ItemBase("gold_gear");
 	public static final Item DIAMOND_GEAR = new ItemBase("diamond_gear");
 	public static final Item EMERALD_GEAR = new ItemBase("emerald_gear");
 	public static final Item REDSTONE_GEAR = new ItemBase("redstone_gear");
-	public static final Item LAPIS_LAZULI_GEAR = new ItemBase("lapis_lazuli_gear");
+	public static final Item LAPIS_GEAR = new ItemBase("lapis_gear");
 	public static final Item COPPER_GEAR = new ItemBase("copper_gear");
 	public static final Item TIN_GEAR = new ItemBase("tin_gear");
 	public static final Item BRONZE_GEAR = new ItemBase("bronze_gear");
@@ -201,6 +255,7 @@ public class ItemInit
 	public static final Item STEEL_GEAR = new ItemBase("steel_gear");
 	public static final Item NICKEL_GEAR = new ItemBase("nickel_gear");
 	public static final Item CHROMIUM_GEAR = new ItemBase("chromium_gear");
+	public static final Item GLOWSTONE_GEAR = new ItemBase("glowstone_gear");
 	public static final Item INCONEL_GEAR = new ItemBase("inconel_gear");
 	public static final Item URANIUM_GEAR = new ItemBase("uranium_gear");
 	public static final Item TUNGSTEN_GEAR = new ItemBase("tungsten_gear");
@@ -225,11 +280,12 @@ public class ItemInit
 	public static final Item COAL_PLATE = new ItemBase("coal_plate");
 	public static final Item CHARCOAL_PLATE = new ItemBase("charcoal_plate");
 	public static final Item IRON_PLATE = new ItemBase("iron_plate");
+	public static final Item QUARTZ_PLATE = new ItemBase("quartz_plate");
 	public static final Item GOLD_PLATE = new ItemBase("gold_plate");
 	public static final Item DIAMOND_PLATE = new ItemBase("diamond_plate");
 	public static final Item EMERALD_PLATE = new ItemBase("emerald_plate");
 	public static final Item REDSTONE_PLATE = new ItemBase("redstone_plate");
-	public static final Item LAPIS_LAZULI_PLATE = new ItemBase("lapis_lazuli_plate");
+	public static final Item LAPIS_PLATE = new ItemBase("lapis_plate");
 	public static final Item COPPER_PLATE = new ItemBase("copper_plate");
 	public static final Item TIN_PLATE = new ItemBase("tin_plate");
 	public static final Item BRONZE_PLATE = new ItemBase("bronze_plate");
@@ -243,6 +299,7 @@ public class ItemInit
 	public static final Item STEEL_PLATE = new ItemBase("steel_plate");
 	public static final Item NICKEL_PLATE = new ItemBase("nickel_plate");
 	public static final Item CHROMIUM_PLATE = new ItemBase("chromium_plate");
+	public static final Item GLOWSTONE_PLATE = new ItemBase("glowstone_plate");
 	public static final Item INCONEL_PLATE = new ItemBase("inconel_plate");
 	public static final Item URANIUM_PLATE = new ItemBase("uranium_plate");
 	public static final Item TUNGSTEN_PLATE = new ItemBase("tungsten_plate");

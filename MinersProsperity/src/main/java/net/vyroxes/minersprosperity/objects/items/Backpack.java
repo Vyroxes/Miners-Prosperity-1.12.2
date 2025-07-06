@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.vyroxes.minersprosperity.MinersProsperity;
@@ -22,8 +24,19 @@ public class Backpack extends ItemBase
     public Backpack(String name)
     {
         super(name);
+        this.addPropertyOverride(new ResourceLocation("minersprosperity", "open_backpack"), ((stack, worldIn, entityIn) -> {
+            if (stack.hasTagCompound())
+            {
+                NBTTagCompound data = stack.getSubCompound("BackpackData");
+                if (data != null && data.getBoolean("IsOpen"))
+                {
+                    return 1.0f;
+                }
+            }
+            return 0.0f;
+        }));
     }
-    
+
     @Override
     public int getItemStackLimit(@NotNull ItemStack stack)
     {
@@ -37,6 +50,7 @@ public class Backpack extends ItemBase
         if (!worldIn.isRemote)
         {
             playerIn.openGui(MinersProsperity.INSTANCE, GuiHandler.GuiTypes.BACKPACK.ordinal(), worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
+            itemStack.getOrCreateSubCompound("BackpackData").setBoolean("IsOpen", true);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStack);
     }
@@ -44,28 +58,41 @@ public class Backpack extends ItemBase
     public static InventoryBackpack getBackpackInventory(ItemStack itemStack)
     {
         NBTTagCompound compound = itemStack.getTagCompound();
+
+        int size;
+
+        if (itemStack.getItem() instanceof EmeraldBackpack)
+        {
+            size = 54;
+        } else if (itemStack.getItem() instanceof DiamondBackpack) {
+            size = 45;
+        } else if (itemStack.getItem() instanceof GoldenBackpack) {
+            size = 36;
+        } else if (itemStack.getItem() instanceof IronBackpack) {
+            size = 27;
+        } else if (itemStack.getItem() instanceof LeadBackpack) {
+            size = 18;
+        } else
+        {
+            size = 9;
+        }
+
+        InventoryBackpack inventory = new InventoryBackpack(size);
+
         if (compound != null && compound.hasKey("BackpackInventory"))
         {
-            InventoryBackpack inventory = new InventoryBackpack(27);
             inventory.readFromNBT(compound.getCompoundTag("BackpackInventory"));
-            return inventory;
         }
-        else
-        {
-            return new InventoryBackpack(27);
-        }
+
+        return inventory;
     }
 
     public static void saveBackpackInventory(ItemStack itemStack, InventoryBackpack backpackInventory)
     {
         NBTTagCompound compound = itemStack.hasTagCompound() ? itemStack.getTagCompound() : new NBTTagCompound();
-        NBTTagCompound backpackInv = new NBTTagCompound();
+        NBTTagCompound backpackInv = compound.hasKey("BackpackInventory") ? compound.getCompoundTag("BackpackInventory") : new NBTTagCompound();
         backpackInventory.writeToNBT(backpackInv);
         compound.setTag("BackpackInventory", backpackInv);
-        
-        NBTTagCompound backpackData = new NBTTagCompound();
-        backpackData.setBoolean("AutoCollect", backpackInventory.getAutoCollectState());
-        compound.setTag("BackpackData", backpackData);
         
         itemStack.setTagCompound(compound);
     }
@@ -79,12 +106,30 @@ public class Backpack extends ItemBase
         if (compound == null)
         {
             compound = new NBTTagCompound();
-            compound.setBoolean("AutoCollect", false);
             stack.setTagCompound(compound);
         }
 
-        boolean autoCollect = compound.getBoolean("AutoCollect");
-        String statusTooltip = TextFormatting.GRAY + "Auto-Collect: "  + (autoCollect ? TextFormatting.GREEN + "On" : TextFormatting.RED + "Off");
+        if (!compound.hasKey("BackpackData"))
+        {
+            NBTTagCompound backpackData = new NBTTagCompound();
+            backpackData.setBoolean("AutoCollect", false);
+            compound.setTag("BackpackData", backpackData);
+        }
+        else
+        {
+            NBTTagCompound backpackData = compound.getCompoundTag("BackpackData");
+
+            if (!backpackData.hasKey("AutoCollect"))
+            {
+                backpackData.setBoolean("AutoCollect", false);
+            }
+
+            compound.setTag("BackpackData", backpackData);
+        }
+
+        NBTTagCompound backpackData = compound.getCompoundTag("BackpackData");
+        boolean autoCollect = backpackData.getBoolean("AutoCollect");
+        String statusTooltip = TextFormatting.GRAY + I18n.format("tooltip.backpack.auto_collect") + " " + (autoCollect ? TextFormatting.GREEN + I18n.format("tooltip.backpack.auto_collect.on") : TextFormatting.RED + I18n.format("tooltip.backpack.auto_collect.off"));
         tooltip.add(statusTooltip);
     }
 }

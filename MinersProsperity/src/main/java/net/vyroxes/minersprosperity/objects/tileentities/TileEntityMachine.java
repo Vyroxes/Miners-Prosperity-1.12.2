@@ -20,17 +20,16 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.init.FluidInit;
-import net.vyroxes.minersprosperity.init.ItemInit;
-import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
-import net.vyroxes.minersprosperity.objects.energy.CustomEnergyStorage;
 import net.vyroxes.minersprosperity.objects.blocks.machines.Machine;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.energy.CustomEnergyStorage;
 import net.vyroxes.minersprosperity.objects.fluids.CustomFluidTank;
 import net.vyroxes.minersprosperity.util.handlers.CustomItemStackHandler;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
+import net.vyroxes.minersprosperity.util.handlers.SlotState;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public abstract class TileEntityMachine extends TileEntity implements ITickable
@@ -44,9 +43,8 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
     protected String customName;
     protected int redstoneControlButtonState;
     protected int slotEditedId;
-    protected long energyUsage;
-    protected int speedMultiplier;
-    protected int energyMultiplier;
+    protected int energyUsage;
+    protected int energyGeneration;
 
     protected TileEntityMachine(Builder builder)
     {
@@ -321,49 +319,54 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         this.tank.setFluidStored(fluid, fluidStored);
     }
 
-    public long getEnergyStored()
+    public int getEnergyStored()
     {
         return this.storage.getEnergyStored();
     }
 
-    public void setEnergyStored(long energyStored)
+    public void setEnergyStored(int energyStored)
     {
         this.storage.setEnergyStored(energyStored);
     }
 
-    public long getMaxEnergyStored()
+    public int getMaxEnergyStored()
     {
         return this.storage.getMaxEnergyStored();
     }
 
-    public void setMaxEnergyStored(long maxEnergyStored)
+    public void setMaxEnergyStored(int maxEnergyStored)
     {
         this.storage.setMaxEnergyStored(maxEnergyStored);
     }
 
-    public long getMaxReceive()
+    public int getMaxReceive()
     {
         return this.storage.getMaxReceive();
     }
 
-    public void setMaxReceive(long maxReceive)
+    public void setMaxReceive(int maxReceive)
     {
         this.storage.setMaxReceive(maxReceive);
     }
 
-    public long getMaxExtract()
+    public int getMaxExtract()
     {
         return this.storage.getMaxExtract();
     }
 
-    public void setMaxExtract(long maxExtract)
+    public void setMaxExtract(int maxExtract)
     {
         this.storage.setMaxExtract(maxExtract);
     }
 
-    public long getEnergyUsage()
+    public int getEnergyUsage()
     {
         return this.energyUsage;
+    }
+
+    public int getEnergyGeneration()
+    {
+        return this.energyGeneration;
     }
 
     public int getRedstoneControlButtonState()
@@ -425,17 +428,14 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
     public @NotNull NBTTagCompound writeToNBT(@NotNull NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-        tag.setTag("Inventory", this.customItemStackHandler.serializeNBT());
+        if (this.customItemStackHandler != null) tag.setTag("Inventory", this.customItemStackHandler.serializeNBT());
         tag.setInteger("CookTime", this.cookTime);
         tag.setInteger("TotalCookTime", this.totalCookTime);
 
-        this.storage.writeToNBT(tag);
-        this.tank.writeToNBT(tag);
+        if (this.storage != null) this.storage.writeToNBT(tag);
+        if (this.tank != null) this.tank.writeToNBT(tag);
 
-        if (this.hasCustomName())
-        {
-            tag.setString("CustomName", this.customName);
-        }
+        if (this.hasCustomName()) tag.setString("CustomName", this.customName);
 
         tag.setTag("States", createStatesTag());
 
@@ -467,7 +467,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
         if (tag.hasKey("Inventory", 10))
         {
-            this.customItemStackHandler.deserializeNBT(tag.getCompoundTag("Inventory"));
+            if (this.customItemStackHandler != null) this.customItemStackHandler.deserializeNBT(tag.getCompoundTag("Inventory"));
         }
 
         if (tag.hasKey("CookTime", 3))
@@ -480,8 +480,8 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             this.totalCookTime = tag.getInteger("TotalCookTime");
         }
 
-        this.storage.readFromNBT(tag);
-        this.tank.readFromNBT(tag);
+        if (this.storage != null) this.storage.readFromNBT(tag);
+        if (this.tank != null) this.tank.readFromNBT(tag);
 
         if (tag.hasKey("CustomName", 8))
         {
@@ -494,13 +494,16 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
             this.redstoneControlButtonState = statesTag.getInteger("RedstoneControlButtonState");
 
-            for (EnumFacing facing : EnumFacing.values())
+            if (this.sidedIngredientHandlers != null)
             {
-                if (statesTag.hasKey(facing.toString() + "SlotStates"))
+                for (EnumFacing facing : EnumFacing.values())
                 {
-                    SidedIngredientHandler sidedHandler = this.sidedIngredientHandlers[facing.ordinal()];
+                    if (statesTag.hasKey(facing.toString() + "SlotStates"))
+                    {
+                        SidedIngredientHandler sidedHandler = this.sidedIngredientHandlers[facing.ordinal()];
 
-                    sidedHandler.readFromNBT(statesTag);
+                        sidedHandler.readFromNBT(statesTag);
+                    }
                 }
             }
         }
@@ -508,7 +511,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         this.markDirty();
     }
 
-    private boolean isPowered()
+    public boolean isPowered()
     {
         boolean canOperate;
         if (this.redstoneControlButtonState > 0)
@@ -534,7 +537,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         };
     }
 
-    private void setEnergyStoredFromItem(ItemStack stack)
+    public void setEnergyStoredFromItem(ItemStack stack)
     {
         if (stack.isEmpty() || !stack.hasCapability(CapabilityEnergy.ENERGY, null)) return;
 
@@ -547,6 +550,19 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         this.storage.receiveEnergy(extractedEnergy, false);
     }
 
+    public void chargeItem(ItemStack stack)
+    {
+        if (stack.isEmpty() || !stack.hasCapability(CapabilityEnergy.ENERGY, null)) return;
+
+        IEnergyStorage itemEnergy = stack.getCapability(CapabilityEnergy.ENERGY, null);
+
+        if (itemEnergy == null) return;
+
+        int energyToReceive = this.storage.extractEnergy(Integer.MAX_VALUE, true);
+        int receivedEnergy = itemEnergy.receiveEnergy(energyToReceive, false);
+        this.storage.extractEnergy(receivedEnergy, false);
+    }
+
     @Override
     public void update()
     {
@@ -555,6 +571,14 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
         if (!this.world.isRemote)
         {
+            for (EnumFacing facing : EnumFacing.values())
+            {
+                SidedIngredientHandler sidedHandler = (SidedIngredientHandler) this.getSidedIngredientHandler(facing);
+                sidedHandler.autoInput();
+                sidedHandler.autoOutput();
+                sidedHandler.autoDrain();
+            }
+
             int upgradesCount = this.getCustomItemStackHandler().getStackInSlot(6).getCount();
             if (this.storage.getEnergyStored() != this.storage.setEnergyUpgraded(upgradesCount, true))
             {
@@ -623,10 +647,62 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         return baseTotalCookTime - totalCookTimeModifier * speedUpgradesCount;
     }
 
-    private long calculateEnergyUsage()
+    private int calculateInputsCount()
     {
         ItemStack input1 = customItemStackHandler.getStackInSlot(0);
         ItemStack input2 = customItemStackHandler.getStackInSlot(1);
+        ItemStack output = customItemStackHandler.getStackInSlot(3);
+
+        List<RecipesAlloyFurnace.Recipe> recipes = RecipesAlloyFurnace.getInstance().findRecipes(input1, input2);
+        if (!recipes.isEmpty())
+        {
+            RecipesAlloyFurnace.Recipe recipe = recipes.get(0);
+
+            int requiredQuantity1 = recipe.getRequiredQuantity(input1);
+            int requiredQuantity2 = recipe.getRequiredQuantity(input2);
+
+            int machineUpgradesCount;
+            if (this.getCustomItemStackHandler().getStackInSlot(4).getCount() == 8 ) machineUpgradesCount = 10;
+            else machineUpgradesCount = this.getCustomItemStackHandler().getStackInSlot(4).getCount() + 1;
+
+            int maxSetsByInput1 = 0;
+            if (requiredQuantity1 > 0) maxSetsByInput1 = input1.getCount() / requiredQuantity1;
+
+            int maxSetsByInput2 = 0;
+            if (requiredQuantity2 > 0) maxSetsByInput2 = input2.getCount() / requiredQuantity2;
+
+            int maxSets = Math.min(maxSetsByInput1, maxSetsByInput2);
+
+            if (machineUpgradesCount == 1 && maxSets > 0)
+            {
+                return 1;
+            }
+            else
+            {
+                maxSets = Math.min(maxSets, machineUpgradesCount);
+                ItemStack result = RecipesAlloyFurnace.getInstance().getResult(input1, input2);
+
+                SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) this.getSidedIngredientHandler(EnumFacing.UP);
+
+                if (!output.isEmpty() && output.isItemEqual(result) && sidedIngredientHandler.getSlotOutputMode(3) == SlotState.SlotOutputMode.DEFAULT)
+                {
+                    int count = ((output.getMaxStackSize() - output.getCount()) / result.getCount());
+                    if (count < maxSets) maxSets = count;
+                }
+
+                return maxSets;
+            }
+        }
+
+        return 0;
+    }
+
+    private int calculateEnergyUsage()
+    {
+        ItemStack input1 = customItemStackHandler.getStackInSlot(0);
+        ItemStack input2 = customItemStackHandler.getStackInSlot(1);
+
+        int machineUpgradesCount = this.calculateInputsCount();
         int speedUpgradesCount = this.getCustomItemStackHandler().getStackInSlot(5).getCount();
         int energyUpgradesCount = this.getCustomItemStackHandler().getStackInSlot(6).getCount();
         int baseTotalCookTime = RecipesAlloyFurnace.getInstance().getCookTime(input1, input2);
@@ -638,8 +714,10 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             float energyUsageModifier = (float) (baseEnergyUsage * baseTotalCookTime * 5 - baseEnergyUsage * baseTotalCookTime)/8;
             float energyUsage = (energyUsageModifier * speedUpgradesCount + baseEnergyUsage * baseTotalCookTime)/totalCookTime;
             float energyModifier = (energyUsage - energyUsage/10)/8;
+            float machineUpgradesModifier = 1;
+            if (machineUpgradesCount > 1) machineUpgradesModifier += (float) (machineUpgradesCount) * 2/10;
 
-            return (long) (energyUsage - energyModifier * energyUpgradesCount);
+            return (int) ((energyUsage - energyModifier * energyUpgradesCount) * machineUpgradesModifier);
         }
 
         return 0;
@@ -685,17 +763,25 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
                 {
                     ItemStack output = customItemStackHandler.getStackInSlot(3);
 
-                    if (output.isEmpty())
-                    {
-                        return true;
-                    }
-                    if (!output.isItemEqual(result))
-                    {
-                        return false;
-                    }
+                    SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) this.getSidedIngredientHandler(EnumFacing.UP);
 
-                    int res = output.getCount() + result.getCount();
-                    return res <= 64 && res <= output.getMaxStackSize();
+                    int upgradesCount = this.getCustomItemStackHandler().getStackInSlot(7).getCount();
+                    float experienceModifier = 1 + (float) upgradesCount/10;
+                    int experience = (int) (experienceModifier * RecipesAlloyFurnace.getInstance().getExperience(input1, input2) * 10);
+
+                    if (this.tank.getFluidAmount() + experience > this.tank.getCapacity() && sidedIngredientHandler.getSlotOutputMode(sidedIngredientHandler.getSlots()) == SlotState.SlotOutputMode.DEFAULT) return false;
+
+                    if (output.isEmpty() || sidedIngredientHandler.getSlotOutputMode(3) != SlotState.SlotOutputMode.DEFAULT) return true;
+
+                    if (!output.isItemEqual(result)) return false;
+
+                    int quantity = this.calculateInputsCount();
+
+                    if (quantity > 0)
+                    {
+                        int res = output.getCount() + result.getCount() * quantity;
+                        return res <= 64 && res <= output.getMaxStackSize();
+                    }
                 }
             }
         }
@@ -715,39 +801,49 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
             ItemStack result = RecipesAlloyFurnace.getInstance().getResult(input1, input2);
             ItemStack output = customItemStackHandler.getStackInSlot(3);
 
-            if (output.isEmpty())
-            {
-                customItemStackHandler.setStackInSlot(3, result.copy());
-                this.markDirty();
-            }
-            else if (output.isItemEqual(result))
-            {
-                output.grow(result.getCount());
-                this.markDirty();
-            }
-
             List<RecipesAlloyFurnace.Recipe> recipes = RecipesAlloyFurnace.getInstance().findRecipes(input1, input2);
             if (!recipes.isEmpty())
             {
                 RecipesAlloyFurnace.Recipe recipe = recipes.get(0);
 
+                int quantity = this.calculateInputsCount();
                 int requiredQuantity1 = recipe.getRequiredQuantity(input1);
                 int requiredQuantity2 = recipe.getRequiredQuantity(input2);
 
-                if (requiredQuantity1 > 0)
-                {
-                    input1.shrink(requiredQuantity1);
-                }
+                SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) this.getSidedIngredientHandler(EnumFacing.UP);
 
-                if (requiredQuantity2 > 0)
+                if (quantity > 0)
                 {
-                    input2.shrink(requiredQuantity2);
+                    if (sidedIngredientHandler.getSlotOutputMode(3) != SlotState.SlotOutputMode.VOID_ALL)
+                    {
+                        if (output.isEmpty())
+                        {
+                            int count = result.getCount() * quantity;
+                            customItemStackHandler.setStackInSlot(3, new ItemStack(result.getItem(), count));
+                            this.markDirty();
+                        }
+                        else if (output.isItemEqual(result) && output.getCount() + result.getCount() * quantity <= result.getMaxStackSize())
+                        {
+                            output.grow(result.getCount() * quantity);
+                            this.markDirty();
+                        }
+                        else if (output.isItemEqual(result) && output.getCount() + result.getCount() * quantity > result.getMaxStackSize())
+                        {
+                            output.grow(result.getMaxStackSize() - output.getCount());
+                            this.markDirty();
+                        }
+
+                        if (output.getCount() > this.customItemStackHandler.getStackInSlot(3).getMaxStackSize()) output.setCount(this.customItemStackHandler.getStackInSlot(3).getMaxStackSize());
+                    }
+
+                    input1.shrink(quantity * requiredQuantity1);
+                    input2.shrink(quantity * requiredQuantity2);
                 }
 
                 if (input1.isEmpty()) customItemStackHandler.setStackInSlot(0, ItemStack.EMPTY);
                 if (input2.isEmpty()) customItemStackHandler.setStackInSlot(1, ItemStack.EMPTY);
 
-                this.tank.fillInternal(new FluidStack(FluidInit.LIQUID_EXPERIENCE, experience), true);
+                if (sidedIngredientHandler.getSlotOutputMode(sidedIngredientHandler.getSlots()) != SlotState.SlotOutputMode.VOID_ALL) this.tank.fillInternal(new FluidStack(FluidInit.LIQUID_EXPERIENCE, experience), true);
 
                 this.markDirty();
             }
@@ -816,6 +912,9 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
                 this.energyUsage = value;
                 break;
             case 7:
+                this.energyGeneration = value;
+                break;
+            case 8:
                 this.tank.setFluidStored(FluidInit.LIQUID_EXPERIENCE, value);
         }
 

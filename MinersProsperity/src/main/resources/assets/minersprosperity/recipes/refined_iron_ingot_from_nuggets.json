@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "blockRefinedIron"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:refined_iron_ingot",
+        "count": 9
+    }
+}

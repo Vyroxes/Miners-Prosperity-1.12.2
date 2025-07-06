@@ -207,7 +207,8 @@ public class GuiAlloyFurnace extends GuiContainer
 			{
 				for (GuiButton guiButton : this.buttonList)
 				{
-                    guiButton.enabled = guiButton.id == 3 && this.tileEntity.getFluidStored() >= 10;
+					if (guiButton.id == 3 && this.tileEntity.getFluidStored() >= 10) guiButton.enabled = true;
+					else if (guiButton.id == 3) guiButton.enabled = false;
 				}
 
 				int fluidStored = this.tileEntity.getFluidStored();
@@ -311,7 +312,7 @@ public class GuiAlloyFurnace extends GuiContainer
 	private int getEnergyStoredScaled()
 	{
 		int i = (int) Math.round(this.tileEntity.getEnergyStored() / 100.0) * 100;
-		int j = (int) this.tileEntity.getMaxEnergyStored();
+		int j = this.tileEntity.getMaxEnergyStored();
 		return i != 0 && j != 0 ? i * 41 / j : 0;
     }
 }

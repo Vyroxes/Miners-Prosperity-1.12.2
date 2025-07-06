@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "ingotDuraluminum"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:duraluminum_nugget",
+        "count": 9
+    }
+}

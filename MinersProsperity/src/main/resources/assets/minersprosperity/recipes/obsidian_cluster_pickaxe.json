@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        " B ",
+        " B "
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "clusterObsidian"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "stickWood"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:obsidian_cluster_pickaxe",
+        "count": 1
+    }
+}

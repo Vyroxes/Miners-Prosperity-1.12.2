@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "ingotNickel"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:nickel_nugget",
+        "count": 9
+    }
+}

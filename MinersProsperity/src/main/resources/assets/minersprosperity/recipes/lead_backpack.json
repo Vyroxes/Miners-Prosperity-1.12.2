@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotLead"
+		},
+		"B":
+		{
+			"item": "minersprosperity:backpack"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:lead_backpack",
+		"count": 1
+	}
+}
