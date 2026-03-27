@@ -1,24 +1,18 @@
 package net.vyroxes.minersprosperity.objects.guis;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.vyroxes.minersprosperity.Tags;
-import net.vyroxes.minersprosperity.init.FluidInit;
-import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.containers.ContainerSolarPanel;
+import net.vyroxes.minersprosperity.objects.enums.ESolarPanelTier;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
-import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
-import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
-
-import java.io.IOException;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntitySolarPanel;
+import net.vyroxes.minersprosperity.util.UtilHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,24 +55,21 @@ public class GuiSolarPanel extends GuiContainer
 
 			if (mouseX >= energyBarX && mouseX < energyBarX + energyBarWidth && mouseY >= energyBarY && mouseY < energyBarY + energyBarHeight)
 			{
-				float energyStored = (float) this.tileEntity.getEnergyStored() / 1000;
-				String formattedEnergyStored = String.format("%.1f", energyStored);
-				int energyGeneration = this.tileEntity.getEnergyGeneration();
-				float maxEnergyStored = (float) this.tileEntity.getMaxEnergyStored() / 1000;
-				String formattedMaxEnergyStored = String.format("%.1f", maxEnergyStored);
-				int maxExtract = this.tileEntity.getMaxExtract();
+				int efficiency = (int) ((this.tileEntity.getEnergyGeneration() / (float) this.tileEntity.getMaxExtract()) * 100);
 				List<String> currentTooltip = new ArrayList<>();
-				if (this.tileEntity.getEnergyStored() == Integer.MAX_VALUE)
+				if (this.tileEntity instanceof TileEntitySolarPanel && ((TileEntitySolarPanel) this.tileEntity).getTier() == ESolarPanelTier.CREATIVE)
 				{
-					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + I18n.format("gui.energy_infinite"));
-					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + TextFormatting.GRAY + ": " + I18n.format("gui.energy_infinite"));
-					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_output") + TextFormatting.GRAY + ": " + I18n.format("gui.energy_infinite"));
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + UtilHelper.energy(0, 0, true, false, false));
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + TextFormatting.GRAY + ": " + UtilHelper.energy(0, 0, true, false, false));
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.efficiency") + TextFormatting.GRAY + ": " + efficiency + "%");
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_output") + TextFormatting.GRAY + ": " + UtilHelper.energy(0, 0, true, false, false));
 				}
 				else
 				{
-					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
-					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + TextFormatting.GRAY + ": " + energyGeneration + " FE/t");
-					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_output") + TextFormatting.GRAY + ": " + maxExtract + " FE/t");
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + UtilHelper.energy(this.tileEntity.getEnergyStored(), this.tileEntity.getMaxEnergyStored(), false,true, false));
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + TextFormatting.GRAY + ": " + UtilHelper.energy(this.tileEntity.getEnergyGeneration(), 0, false,false, true));
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.efficiency") + TextFormatting.GRAY + ": " + efficiency + "%");
+					currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_output") + TextFormatting.GRAY + ": " + UtilHelper.energy(this.tileEntity.getMaxExtract(), 0, false,false, true));
 				}
 
 				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);

@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AA",
+        "BA",
+        "B "
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "ingotLead"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "stickWood"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:lead_axe",
+        "count": 1
+    }
+}

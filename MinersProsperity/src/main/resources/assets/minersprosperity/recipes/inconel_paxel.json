@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minersprosperity:inconel_sword",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:inconel_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:inconel_axe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:inconel_shovel",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:inconel_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:inconel_paxel",
+        "count": 1
+    }
+}

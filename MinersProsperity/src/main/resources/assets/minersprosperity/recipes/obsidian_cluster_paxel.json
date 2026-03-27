@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minersprosperity:obsidian_cluster_sword",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:obsidian_cluster_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:obsidian_cluster_axe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:obsidian_cluster_shovel",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:obsidian_cluster_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:obsidian_cluster_paxel",
+        "count": 1
+    }
+}

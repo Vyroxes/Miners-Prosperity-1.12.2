@@ -22,14 +22,16 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.MinersProsperity;
+import net.vyroxes.minersprosperity.init.ItemInit;
 import net.vyroxes.minersprosperity.objects.blocks.BlockBase;
-import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import net.vyroxes.minersprosperity.util.annotations.NonnullByDefault;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
@@ -101,6 +103,16 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
                 }
             }
         }
+        else if (playerIn.getHeldItemMainhand().getItem() == ItemInit.WRENCH && playerIn.getHeldItemOffhand().isEmpty())
+        {
+            if (!worldIn.isRemote)
+            {
+                breakBlock(worldIn, pos, worldIn.getBlockState(pos));
+                harvestBlock(worldIn, playerIn, pos, worldIn.getBlockState(pos), worldIn.getTileEntity(pos), playerIn.getHeldItemMainhand());
+                worldIn.setBlockToAir(pos);
+                worldIn.playSound(null, pos, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            }
+        }
 
         super.onBlockClicked(worldIn, pos, playerIn);
     }
@@ -108,19 +120,56 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
     @Override
     @NonnullByDefault
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (playerIn.getHeldItemMainhand().isEmpty() && playerIn.getHeldItemOffhand().isEmpty()) {
-            if (playerIn.isSneaking()) {
-                TileEntityMachine tileEntity = getTileEntity(worldIn, pos);
-                if (tileEntity != null) {
-                    if (tileEntity.getSidedIngredientHandlers() != null) {
-                        EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
-                        SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(side);
-                        for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++) {
-                            sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
-                        }
+        if (!playerIn.isSneaking() && !playerIn.getHeldItemMainhand().isEmpty() && playerIn.getHeldItemMainhand().getItem() != ItemInit.WRENCH && playerIn.getHeldItemOffhand().isEmpty())
+        {
+            TileEntityMachine tileEntity = getTileEntity(worldIn, pos);
+            if (tileEntity != null && tileEntity.getFluidTank() != null)
+            {
+                ItemStack held = playerIn.getHeldItem(hand);
+
+                if (!held.isEmpty())
+                {
+                    if (tryFillContainer(playerIn, hand, tileEntity))
+                    {
+                        return true;
                     }
                 }
             }
+        }
+        else if (playerIn.isSneaking() && playerIn.getHeldItemMainhand().isEmpty() && playerIn.getHeldItemOffhand().isEmpty())
+        {
+            TileEntityMachine tileEntity = getTileEntity(worldIn, pos);
+            if (tileEntity != null) {
+                if (tileEntity.getSidedIngredientHandlers() != null) {
+                    EnumFacing side = tileEntity.getRelativeSide(tileEntity.getMachineFacing(), facing);
+                    SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(side);
+                    for (int slot = 0; slot < sidedIngredientHandler.getSlots(); slot++) {
+                        sidedIngredientHandler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+                    }
+
+                    return true;
+                }
+            }
+        }
+        else if (playerIn.getHeldItemMainhand().getItem() == ItemInit.WRENCH && playerIn.getHeldItemOffhand().isEmpty())
+        {
+            if (facing.getAxis().isHorizontal())
+            {
+                IBlockState newState = state.withProperty(FACING, facing);
+                worldIn.setBlockState(pos, newState, 3);
+                worldIn.notifyBlockUpdate(pos, state, newState, 3);
+
+            }
+            else
+            {
+                EnumFacing currentFacing = state.getValue(FACING);
+                EnumFacing nextFacing = currentFacing.rotateY();
+                IBlockState newState = state.withProperty(FACING, nextFacing);
+                worldIn.setBlockState(pos, newState, 3);
+                worldIn.notifyBlockUpdate(pos, state, newState, 3);
+
+            }
+            return true;
         }
 
         if (!worldIn.isRemote && this.guiTypes != null)
@@ -136,29 +185,34 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
         return true;
     }
 
-    @Override
-    public void harvestBlock(@NotNull World worldIn, @NotNull EntityPlayer player, @NotNull BlockPos pos, @NotNull IBlockState state, TileEntity tileEntity, @NotNull ItemStack stack) {
-        if (tileEntity != null) {
-            NBTTagCompound tileEntityData = new NBTTagCompound();
-            tileEntity.writeToNBT(tileEntityData);
-            worldIn.removeTileEntity(pos);
+    private boolean tryFillContainer(EntityPlayer player, EnumHand hand, TileEntityMachine tileEntity)
+    {
+        ItemStack held = player.getHeldItem(hand);
 
-            Item itemDropped = this.getItemDropped(state, worldIn.rand, 0);
-            ItemStack blockStack = new ItemStack(itemDropped, 1, this.damageDropped(state));
-            NBTTagCompound tag = blockStack.getTagCompound();
-            if (tag == null) {
-                tag = new NBTTagCompound();
-                blockStack.setTagCompound(tag);
-            }
-
-            for (String key : tileEntityData.getKeySet()) {
-                if (key.equals("Energy") || key.equals("FluidName") || key.equals("Amount") || key.equals("States")) {
-                    tag.setTag(key, tileEntityData.getTag(key));
-                }
-            }
-
-            spawnAsEntity(worldIn, pos, blockStack);
+        if (tileEntity.getFluidTank().getFluidAmount() <= 0)
+        {
+            return false;
         }
+
+        FluidActionResult result = FluidUtil.tryFillContainer(
+                held,
+                tileEntity.getFluidTank(),
+                Integer.MAX_VALUE,
+                player,
+                true
+        );
+
+        if (result.isSuccess())
+        {
+            ItemStack resultStack = result.getResult();
+
+            player.setHeldItem(hand, resultStack);
+            tileEntity.markDirty();
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -188,7 +242,7 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
                 if (tileEntityMachine.getSidedIngredientHandlers() != null) {
                     for (EnumFacing facing : EnumFacing.values()) {
                         if (statesTag.hasKey(facing.toString() + "SlotStates")) {
-                            SidedIngredientHandler sidedHandler = (SidedIngredientHandler) ((TileEntityMachine) tileEntity).getSidedIngredientHandler(facing);
+                            SidedIngredientHandler sidedHandler = (SidedIngredientHandler) tileEntityMachine.getSidedIngredientHandler(facing);
 
                             sidedHandler.readFromNBT(statesTag);
                         }
@@ -198,6 +252,31 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
         }
 
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    }
+
+    @Override
+    public void harvestBlock(@NotNull World worldIn, @NotNull EntityPlayer player, @NotNull BlockPos pos, @NotNull IBlockState state, TileEntity tileEntity, @NotNull ItemStack stack) {
+        if (tileEntity != null) {
+            NBTTagCompound tileEntityData = new NBTTagCompound();
+            tileEntity.writeToNBT(tileEntityData);
+            worldIn.removeTileEntity(pos);
+            Item itemDropped = this.getItemDropped(state, worldIn.rand, 0);
+            ItemStack blockStack = new ItemStack(itemDropped, 1, this.damageDropped(state));
+            NBTTagCompound tag = blockStack.getTagCompound();
+
+            if (tag == null) {
+                tag = new NBTTagCompound();
+                blockStack.setTagCompound(tag);
+            }
+
+            for (String key : tileEntityData.getKeySet()) {
+                if (key.equals("Energy") || key.equals("FluidName") || key.equals("Amount") || key.equals("States")) {
+                    tag.setTag(key, tileEntityData.getTag(key));
+                }
+            }
+
+            spawnAsEntity(worldIn, pos, blockStack);
+        }
     }
 
     @Override
@@ -320,7 +399,7 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
     @Override
     @SuppressWarnings("deprecation")
     public @NotNull IBlockState getStateFromMeta(int meta) {
-        EnumFacing facing = EnumFacing.byIndex(meta & 7);
+        EnumFacing facing = EnumFacing.byHorizontalIndex(meta & 3);
         boolean powered = (meta & 8) != 0;
 
         if (facing.getAxis() == EnumFacing.Axis.Y) {
@@ -332,7 +411,7 @@ public abstract class Machine extends BlockBase implements ITileEntityProvider {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        int meta = (state.getValue(FACING)).getIndex();
+        int meta = (state.getValue(FACING)).getHorizontalIndex();
 
         if (state.getValue(POWERED)) {
             meta |= 8;

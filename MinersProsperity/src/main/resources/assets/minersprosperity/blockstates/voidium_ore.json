@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:voidium_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:voidium_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/voidium_ore"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minersprosperity:emerald_sword",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:emerald_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:emerald_axe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:emerald_shovel",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:emerald_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:emerald_paxel",
+        "count": 1
+    }
+}

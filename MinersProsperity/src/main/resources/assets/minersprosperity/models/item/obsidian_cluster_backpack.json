@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "minersprosperity:items/obsidian_cluster_backpack"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minersprosperity:open_obsidian_cluster_backpack": 1
+      },
+      "model": "minersprosperity:item/opened_obsidian_cluster_backpack"
+    }
+  ]
+}

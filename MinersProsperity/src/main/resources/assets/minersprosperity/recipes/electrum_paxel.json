@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minersprosperity:electrum_sword",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:electrum_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:electrum_axe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:electrum_shovel",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:electrum_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:electrum_paxel",
+        "count": 1
+    }
+}

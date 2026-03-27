@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:luminosite_ore"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:luminosite_ore",
+      "textures": {
+        "all": "minersprosperity:blocks/luminosite_ore"
+      }
+    }
+  }
+}

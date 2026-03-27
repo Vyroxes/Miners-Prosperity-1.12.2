@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "minersprosperity:items/black_opal_backpack"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minersprosperity:open_black_opal_backpack": 1
+      },
+      "model": "minersprosperity:item/opened_black_opal_backpack"
+    }
+  ]
+}

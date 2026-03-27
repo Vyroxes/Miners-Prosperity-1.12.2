@@ -19,9 +19,9 @@ public class BlockOres extends BlockBase
 {
     private final Item item;
 
-    public BlockOres(String name, int harvestLevel, float hardness, float resistance, @Nullable Item item)
+    public BlockOres(String name, int harvestLevel, float hardness, float resistance, @Nullable Item item, boolean isNether, boolean isEnd)
     {
-        super(name, Material.IRON, MapColor.STONE);
+        super(name, Material.ROCK, isNether ? MapColor.NETHERRACK : isEnd ? MapColor.SAND : MapColor.STONE);
 
         setSoundType(SoundType.STONE);
         setHarvestLevel("pickaxe", harvestLevel);

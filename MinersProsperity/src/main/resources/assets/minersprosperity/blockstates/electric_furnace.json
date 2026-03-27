@@ -1,0 +1,26 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "minersprosperity:electric_furnace",
+		"textures": {
+			"front": "minersprosperity:blocks/electric_furnace_front_off"
+		}
+	},
+	"variants": {
+		"inventory": [{}],
+		"powered": {
+			"false": {},
+			"true": {
+				"textures": {
+					"front": "minersprosperity:blocks/electric_furnace_front_active"
+				}
+			}
+		},
+		"facing": {
+			"north": {},
+			"east": {"y": 90},
+			"south": {"y": 180},
+			"west": {"y": 270}
+		}
+	}
+}

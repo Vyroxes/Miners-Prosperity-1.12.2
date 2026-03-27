@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "dustTinyGlowstone"
+        }
+    },
+    "result": {
+        "item": "minecraft:glowstone_dust",
+        "count": 1
+    }
+}

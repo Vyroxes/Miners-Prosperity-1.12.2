@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:wooden_sword",
+            "count": 1
+        },
+        {
+            "item": "minecraft:wooden_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minecraft:wooden_axe",
+            "count": 1
+        },
+        {
+            "item": "minecraft:wooden_shovel",
+            "count": 1
+        },
+        {
+            "item": "minecraft:wooden_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:wooden_paxel",
+        "count": 1
+    }
+}

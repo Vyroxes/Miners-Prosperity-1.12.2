@@ -10,7 +10,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityElectricFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import net.vyroxes.minersprosperity.util.handlers.SidedIngredientHandler;
 import net.vyroxes.minersprosperity.util.handlers.SlotState;
 
@@ -74,15 +75,15 @@ public class MessageSlotsState implements IMessage
 
             if (!world.isBlockLoaded(message.pos)) return;
 
-            TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.pos);
-            if (tileEntity instanceof TileEntityAlloyFurnace tileEntityAlloyFurnace)
-            {
-                SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) tileEntityAlloyFurnace.getSidedIngredientHandler(message.side);
-                if (sidedIngredientHandler != null)
-                {
-                    sidedIngredientHandler.setSlotState(message.id, message.slotsState);
-                }
-            }
+            TileEntity tileEntity = world.getTileEntity(message.pos);
+            if (!(tileEntity instanceof TileEntityMachine machine)) return;
+
+            SidedIngredientHandler sidedIngredientHandler = (SidedIngredientHandler) machine.getSidedIngredientHandler(message.side);
+            if (sidedIngredientHandler == null) return;
+
+            if (message.id < 0 || message.id >= sidedIngredientHandler.getSlots() + 1) return;
+
+            sidedIngredientHandler.setSlotState(message.id, message.slotsState);
         }
     }
 }

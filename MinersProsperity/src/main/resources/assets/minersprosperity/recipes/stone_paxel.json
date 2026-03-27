@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:stone_sword",
+            "count": 1
+        },
+        {
+            "item": "minecraft:stone_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minecraft:stone_axe",
+            "count": 1
+        },
+        {
+            "item": "minecraft:stone_shovel",
+            "count": 1
+        },
+        {
+            "item": "minecraft:stone_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:stone_paxel",
+        "count": 1
+    }
+}

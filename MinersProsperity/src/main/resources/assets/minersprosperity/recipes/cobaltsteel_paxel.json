@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minersprosperity:cobaltsteel_sword",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:cobaltsteel_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:cobaltsteel_axe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:cobaltsteel_shovel",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:cobaltsteel_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:cobaltsteel_paxel",
+        "count": 1
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:azure_block"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:azure_block",
+      "textures": {
+        "all": "minersprosperity:blocks/azure_block"
+      }
+    }
+  }
+}

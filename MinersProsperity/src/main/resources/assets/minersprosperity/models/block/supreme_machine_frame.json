@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "minersprosperity:blocks/supreme_machine_frame"
+  }
+}

@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "nuggetLapis"
+        }
+    },
+    "result": {
+        "item": "minecraft:dye",
+        "data": 4,
+        "count": 1
+    }
+}

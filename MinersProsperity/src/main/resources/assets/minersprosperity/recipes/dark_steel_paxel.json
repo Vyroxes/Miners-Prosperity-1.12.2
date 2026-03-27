@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minersprosperity:dark_steel_sword",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:dark_steel_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:dark_steel_axe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:dark_steel_shovel",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:dark_steel_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:dark_steel_paxel",
+        "count": 1
+    }
+}

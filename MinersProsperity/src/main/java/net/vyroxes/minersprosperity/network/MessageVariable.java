@@ -9,8 +9,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
-import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 
 public class MessageVariable implements IMessage

@@ -16,6 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.*;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
@@ -23,6 +24,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.Tags;
+import net.vyroxes.minersprosperity.init.EnchantmentInit;
 
 public class TooltipHandler
 {
@@ -48,6 +50,10 @@ public class TooltipHandler
 			{
 				width += 4;
 			}
+			else if (ch == '(' || ch == ')')
+			{
+				width += 5;
+			}
 		}
 
 		int spaceCount = (int) Math.ceil(width / 4.0);
@@ -69,29 +75,31 @@ public class TooltipHandler
 		ITooltipFlag flag = event.getFlags();
 		Item item = stack.getItem();
 
-		if (!ConfigHandler.customTooltips)
+		if (!ModConfig.TOOLTIPS.customTooltips)
 			return;
 
 		if (stack.isEmpty())
 			return;
 
 		DecimalFormat df = new DecimalFormat("0.##");
+		DecimalFormat dfFood = new DecimalFormat("0.#");
 		int maxDurability = 0;
 		int currentDurability = 0;
 
 		if (stack.isItemStackDamageable())
 		{
-			maxDurability = stack.getMaxDamage();
-			currentDurability = stack.getMaxDamage() - stack.getItemDamage();
+			maxDurability = stack.getMaxDamage() + 1;
+			currentDurability = maxDurability - stack.getItemDamage();
 		}
 
 		if (item instanceof ItemFood foodItem)
 		{
-            int food = foodItem.getHealAmount(stack);
+            float food = (float) foodItem.getHealAmount(stack) / 2;
+			float saturation = foodItem.getSaturationModifier(stack);
 
 			int icons = 1;
 
-			String text = String.valueOf(food);
+			String text = dfFood.format(food) + " (" + saturation + ")";
 			String line = addLeadingSpaces(icons, text);
 			tooltip.add(1, line);
 		}
@@ -130,9 +138,45 @@ public class TooltipHandler
 				tooltip.add(2, line);
 			}
 
+			int vacuumLevel = EnchantmentHelper.getEnchantmentLevel(EnchantmentInit.VACUUM, stack);
+			if (vacuumLevel > 0)
+			{
+				String vacuumName = EnchantmentInit.VACUUM.getTranslatedName(vacuumLevel);
+				NBTTagCompound tag = stack.getTagCompound();
+				boolean vacuum = tag != null && tag.getBoolean("Vacuum");
+
+				for (int i = 0; i < tooltip.size(); i++)
+				{
+					String line = tooltip.get(i);
+					if (line.contains(vacuumName))
+					{
+						tooltip.set(i, line + TextFormatting.GRAY + ": " + (vacuum ? TextFormatting.GREEN + I18n.format("tooltip.on") : TextFormatting.RED + I18n.format("tooltip.off")));
+						break;
+					}
+				}
+			}
+
+			int glowLevel = EnchantmentHelper.getEnchantmentLevel(EnchantmentInit.GLOW, stack);
+			if (glowLevel > 0)
+			{
+				String glowName = EnchantmentInit.GLOW.getTranslatedName(glowLevel);
+				NBTTagCompound tag = stack.getTagCompound();
+				boolean glow = tag != null && tag.getBoolean("Glow");
+
+				for (int i = 0; i < tooltip.size(); i++)
+				{
+					String line = tooltip.get(i);
+					if (line.contains(glowName))
+					{
+						tooltip.set(i, line + TextFormatting.GRAY + ": " + (glow ? TextFormatting.GREEN + I18n.format("tooltip.on") : TextFormatting.RED + I18n.format("tooltip.off")));
+						break;
+					}
+				}
+			}
+
 			if (flag.isAdvanced())
 			{
-				int linesToRemove = Math.min(maxDurability == currentDurability ? armorToughness > 0 ? 4 : 3 : armorToughness > 0 ? 5 : 4, tooltip.size());
+				int linesToRemove = Math.min(maxDurability == currentDurability ? armorToughness > 0 ? 4 : 3 : armorToughness > 0 ? 5 : 4, tooltip.size() - 5);
 				for (int i = 0; i < linesToRemove; i++)
 				{
 					tooltip.remove(tooltip.size() - (stack.hasTagCompound() ? 4 : 3));
@@ -140,7 +184,7 @@ public class TooltipHandler
 			}
 			else
 			{
-				int linesToRemove = Math.min(armorToughness > 0 ? 4 : 3, tooltip.size());
+				int linesToRemove = Math.min(armorToughness > 0 ? 4 : 3, tooltip.size() - 4);
 				for (int i = 0; i < linesToRemove; i++)
 				{
 					tooltip.remove(tooltip.size() - 2);
@@ -162,7 +206,7 @@ public class TooltipHandler
 			int sharpnessLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
 			if (sharpnessLevel > 0)
 			{
-				attackDamage += 1.0 + 0.5 * sharpnessLevel;
+				attackDamage += 0.5 + 0.5 * sharpnessLevel;
 			}
 
 			for (AttributeModifier mod : modifiers.get(SharedMonsterAttributes.ATTACK_SPEED.getName()))
@@ -193,7 +237,7 @@ public class TooltipHandler
 
 			if (flag.isAdvanced())
 			{
-				int linesToRemove = Math.min(maxDurability == currentDurability ? 4 : 5, tooltip.size());
+				int linesToRemove = Math.min(maxDurability == currentDurability ? 4 : 5, tooltip.size() - 5);
 				for (int i = 0; i < linesToRemove; i++)
 				{
 					tooltip.remove(tooltip.size() - (stack.hasTagCompound() ? 4 : 3));
@@ -201,7 +245,7 @@ public class TooltipHandler
 			}
 			else
 			{
-				int linesToRemove = Math.min(4, tooltip.size());
+				int linesToRemove = Math.min(4, tooltip.size() - 4);
 				for (int i = 0; i < linesToRemove; i++)
 				{
 					tooltip.remove(tooltip.size() - 2);
@@ -223,7 +267,7 @@ public class TooltipHandler
 			int sharpnessLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
 			if (sharpnessLevel > 0)
 			{
-				attackDamage += 1.0 + 0.5 * sharpnessLevel;
+				attackDamage += 0.5 + 0.5 * sharpnessLevel;
 			}
 
 			for (AttributeModifier mod : modifiers.get(SharedMonsterAttributes.ATTACK_SPEED.getName()))
@@ -281,15 +325,15 @@ public class TooltipHandler
 
 			if (flag.isAdvanced())
 			{
-				int linesToRemove = Math.min(maxDurability == currentDurability ? 4 : 5, tooltip.size());
+				int linesToRemove = Math.min(maxDurability == currentDurability ? 4 : 5, tooltip.size() - 5);
 				for (int i = 0; i < linesToRemove; i++)
 				{
 					tooltip.remove(tooltip.size() - (stack.hasTagCompound() ? 4 : 3));
 				}
 			}
-			else if (!flag.isAdvanced())
+			else
 			{
-				int linesToRemove = Math.min(4, tooltip.size());
+				int linesToRemove = Math.min(4, tooltip.size() - 4);
 				for (int i = 0; i < linesToRemove; i++)
 				{
 					tooltip.remove(tooltip.size() - 2);
@@ -315,18 +359,17 @@ public class TooltipHandler
 
 			if (flag.isAdvanced() && maxDurability != currentDurability)
 			{
-				if (stack.hasTagCompound())
+                int linesToRemove = Math.min(1, tooltip.size() - 3);
+                if (stack.hasTagCompound())
 				{
-					int linesToRemove = Math.min(1, tooltip.size());
-					for (int i = 0; i < linesToRemove; i++)
+                    for (int i = 0; i < linesToRemove; i++)
 					{
 						tooltip.remove(tooltip.size() - 4);
 					}
 				}
 				else
 				{
-					int linesToRemove = Math.min(1, tooltip.size());
-					for (int i = 0; i < linesToRemove; i++)
+                    for (int i = 0; i < linesToRemove; i++)
 					{
 						tooltip.remove(tooltip.size() - 3);
 					}
@@ -334,7 +377,7 @@ public class TooltipHandler
 			}
 		}
 
-		if (ConfigHandler.oreDictInTooltips == 1 && !stack.isEmpty())
+		if ((ModConfig.TOOLTIPS.oreDictInTooltips == 1 && !stack.isEmpty()) || (ModConfig.TOOLTIPS.oreDictInTooltips == 2 && !stack.isEmpty() && flag.isAdvanced()))
         {
 			int[] oreIDs = OreDictionary.getOreIDs(stack);
 
@@ -377,20 +420,6 @@ public class TooltipHandler
 				}
 			}
 		}
-		else if (ConfigHandler.oreDictInTooltips == 2 && !stack.isEmpty() && flag.isAdvanced())
-		{
-			int[] oreIDs = OreDictionary.getOreIDs(stack);
-
-			if (oreIDs.length > 0)
-			{
-				tooltip.add(1, TextFormatting.GRAY + I18n.format("tooltip.ore_dict"));
-				for (int id : oreIDs)
-				{
-					String oreName = OreDictionary.getOreName(id);
-					tooltip.add(2, TextFormatting.DARK_GRAY + " - " + oreName);
-				}
-			}
-		}
 	}
 
 	@SubscribeEvent
@@ -399,7 +428,7 @@ public class TooltipHandler
 		ItemStack stack = event.getStack();
 		Item item = stack.getItem();
 
-		if (!ConfigHandler.customTooltips)
+		if (!ModConfig.TOOLTIPS.customTooltips)
 			return;
 
 		if (!stack.isEmpty())
@@ -415,6 +444,7 @@ public class TooltipHandler
 			ResourceLocation armorToughnessIcon = new ResourceLocation(Tags.MODID, "textures/gui/tooltip_armor_toughness.png");
 
 			DecimalFormat df = new DecimalFormat("0.##");
+			DecimalFormat dfFood = new DecimalFormat("0.#");
 
 			int width = 8;
 			int height = 8;
@@ -422,17 +452,19 @@ public class TooltipHandler
 			int x = event.getX();
 			int y = event.getY() + 12;
 			int ySecondLine = y + height + space;
+			int yThirdLine = ySecondLine + height + space;
 
 			if (item instanceof ItemFood foodItem)
 			{
-                int food = foodItem.getHealAmount(stack);
+                float food = (float) foodItem.getHealAmount(stack) / 2;
+				float saturation = (float) foodItem.getSaturationModifier(stack);
 
 				mc.getTextureManager().bindTexture(foodIcon);
 				GlStateManager.enableBlend();
 				GlStateManager.color(1f, 1f, 1f, 1f);
 				Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
 				GlStateManager.disableBlend();
-				mc.fontRenderer.drawStringWithShadow(String.valueOf(food), x + width + space, y, 0xFFFFFF);
+				mc.fontRenderer.drawStringWithShadow(dfFood.format(food) + " (" + saturation + ")", x + width + space, y, 0xFFFFFF);
 			}
 
 			int maxDurability = 0;
@@ -441,15 +473,15 @@ public class TooltipHandler
 
 			if (stack.isItemStackDamageable())
 			{
-				maxDurability = stack.getMaxDamage();
-				currentDurability = stack.getMaxDamage() - stack.getItemDamage();
+				maxDurability = stack.getMaxDamage() + 1;
+				currentDurability = maxDurability - stack.getItemDamage();
 				float percent = (float) currentDurability / (float) maxDurability;
 
-				if (percent >= 0.33f)
+				if (percent > 0.33f && percent <= 0.66f)
 				{
 					color = 0xFFFF00;
 				}
-				else
+				else if (percent <= 0.33f)
 				{
 					color = 0xFF5555;
 				}
@@ -507,7 +539,7 @@ public class TooltipHandler
 				int sharpnessLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
 				if (sharpnessLevel > 0)
 				{
-					attackDamage += 1.0 + 0.5 * sharpnessLevel;
+					attackDamage += 0.5 + 0.5 * sharpnessLevel;
 				}
 
 				for (AttributeModifier mod : modifiers.get(SharedMonsterAttributes.ATTACK_SPEED.getName()))
@@ -588,7 +620,9 @@ public class TooltipHandler
 				}
 				else
 				{
-					mc.fontRenderer.drawStringWithShadow(currentDurability + "/" + maxDurability, x + width + space, ySecondLine, 0xFFFFFF);
+					mc.fontRenderer.drawStringWithShadow(String.valueOf(currentDurability), x + width + space, ySecondLine, color);
+					mc.fontRenderer.drawStringWithShadow("/", x + width + space + mc.fontRenderer.getStringWidth(String.valueOf(currentDurability)), ySecondLine, 0xAAAAAA);
+					mc.fontRenderer.drawStringWithShadow(String.valueOf(maxDurability), x + width + space + mc.fontRenderer.getStringWidth(String.valueOf(currentDurability)) + mc.fontRenderer.getStringWidth("/"), ySecondLine, 0xFFFFFF);
 				}
 			}
 			else if (stack.isItemStackDamageable())
@@ -605,10 +639,11 @@ public class TooltipHandler
 				}
 				else
 				{
-					mc.fontRenderer.drawStringWithShadow(currentDurability + "/" + maxDurability, x + width + space, y, 0xFFFFFF);
+					mc.fontRenderer.drawStringWithShadow(String.valueOf(currentDurability), x + width + space, y, color);
+					mc.fontRenderer.drawStringWithShadow("/", x + width + space + mc.fontRenderer.getStringWidth(String.valueOf(currentDurability)), y, 0xAAAAAA);
+					mc.fontRenderer.drawStringWithShadow(String.valueOf(maxDurability), x + width + space + mc.fontRenderer.getStringWidth(String.valueOf(currentDurability)) + mc.fontRenderer.getStringWidth("/"), y, 0xFFFFFF);
 				}
 			}
 		}
 	}
-
 }

@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:golden_sword",
+            "count": 1
+        },
+        {
+            "item": "minecraft:golden_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minecraft:golden_axe",
+            "count": 1
+        },
+        {
+            "item": "minecraft:golden_shovel",
+            "count": 1
+        },
+        {
+            "item": "minecraft:golden_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:golden_paxel",
+        "count": 1
+    }
+}

@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "minersprosperity:items/electrum_backpack"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minersprosperity:open_electrum_backpack": 1
+      },
+      "model": "minersprosperity:item/opened_electrum_backpack"
+    }
+  ]
+}

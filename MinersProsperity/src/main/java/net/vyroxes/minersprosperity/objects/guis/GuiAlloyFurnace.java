@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -19,7 +18,9 @@ import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.init.FluidInit;
 import net.vyroxes.minersprosperity.objects.containers.ContainerAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
+import net.vyroxes.minersprosperity.util.UtilHelper;
 import net.vyroxes.minersprosperity.util.handlers.GuiHandler;
+import net.vyroxes.minersprosperity.util.handlers.ModConfig;
 import net.vyroxes.minersprosperity.util.handlers.NetworkHandler;
 
 public class GuiAlloyFurnace extends GuiContainer
@@ -84,15 +85,15 @@ public class GuiAlloyFurnace extends GuiContainer
 				this.tileEntity.setRedstoneControlButtonState(0);
 			}
 		}
-		if (guiButton.id == 1)
+		else if (guiButton.id == 1)
 		{
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.MACHINE_SLOTS_CONFIGURATION.ordinal(), this.tileEntity.getPos());
 		}
-		if (guiButton.id == 2)
+		else if (guiButton.id == 2)
 		{
-			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE_UPGRADES.ordinal(), this.tileEntity.getPos());
+			NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.MACHINE_UPGRADES.ordinal(), this.tileEntity.getPos());
 		}
-		if (guiButton.id == 3)
+		else if (guiButton.id == 3)
 		{
 			if (this.tileEntity.getWorld().isRemote)
 			{
@@ -182,16 +183,10 @@ public class GuiAlloyFurnace extends GuiContainer
 
 			if (mouseX >= energyBarX && mouseX < energyBarX + energyBarWidth && mouseY >= energyBarY && mouseY < energyBarY + energyBarHeight)
 			{
-				float energyStored = (float) this.tileEntity.getEnergyStored() / 1000;
-				String formattedEnergyStored = String.format("%.1f", energyStored);
-				int energyUsage = (int) this.tileEntity.getEnergyUsage();
-				float maxEnergyStored = (float) this.tileEntity.getMaxEnergyStored() / 1000;
-				String formattedMaxEnergyStored = String.format("%.1f", maxEnergyStored);
-				int maxReceive = (int) this.tileEntity.getMaxReceive();
 				List<String> currentTooltip = new ArrayList<>();
-				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + formattedEnergyStored + "/" + formattedMaxEnergyStored + " kFE");
-				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_usage") + TextFormatting.GRAY + ": " + energyUsage + " FE/t");
-				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_input") + TextFormatting.GRAY + ": " + maxReceive + " FE/t");
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_stored") + TextFormatting.GRAY + ": " + UtilHelper.energy(this.tileEntity.getEnergyStored(), this.tileEntity.getMaxEnergyStored(), false, true, false));
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_usage") + TextFormatting.GRAY + ": " + UtilHelper.energy(this.tileEntity.getEnergyUsage(), 0, false, false, true));
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.max_energy_input") + TextFormatting.GRAY + ": " + UtilHelper.energy(this.tileEntity.getMaxReceive(), 0, false, false, true));
 				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 			}
 		}
@@ -203,7 +198,7 @@ public class GuiAlloyFurnace extends GuiContainer
 
 		if (mouseX >= tankBarX && mouseX < tankBarX + tankBarWidth && mouseY >= tankBarY && mouseY < tankBarY + tankBarHeight)
 		{
-			if (this.tileEntity.getFluidTank() != null && this.tileEntity.getFluidTank().getFluid() != null && this.tileEntity.getFluidStored() > 0)
+			if (this.tileEntity.getFluidTank() != null && this.tileEntity.getFluidTank().getFluid() != null)
 			{
 				for (GuiButton guiButton : this.buttonList)
 				{
@@ -212,12 +207,12 @@ public class GuiAlloyFurnace extends GuiContainer
 				}
 
 				int fluidStored = this.tileEntity.getFluidStored();
-				String calculatedLevels = String.format("%.1f", calculateLevelsFromXP(fluidStored / 10));
+				String calculatedLevels = String.format("%.1f", UtilHelper.calculateLevelsFromXP(fluidStored / 10));
 				List<String> currentTooltip = new ArrayList<>();
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid") + TextFormatting.GRAY + ": " + this.tileEntity.getFluidTank().getFluid().getLocalizedName());
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid_stored") + TextFormatting.GRAY + ": " + fluidStored + " mB");
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.xp_levels") + TextFormatting.GRAY + ": " + calculatedLevels);
-				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.left_click") + TextFormatting.GRAY + I18n.format("gui.left_click_desc"));
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.left_click") + TextFormatting.GRAY + I18n.format("gui.left_click_desc") + " " + (1000 / ModConfig.MACHINES.mbToXpRatio) + " " + I18n.format("gui.left_click_desc_2"));
 				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 			}
 			else
@@ -231,7 +226,7 @@ public class GuiAlloyFurnace extends GuiContainer
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid") + TextFormatting.GRAY + ": " + FluidInit.LIQUID_EXPERIENCE.getLocalizedName(new FluidStack(FluidInit.LIQUID_EXPERIENCE, 0)));
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.fluid_stored") + TextFormatting.GRAY + ": 0 mB");
 				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.xp_levels") + TextFormatting.GRAY + ": 0.0");
-				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.left_click") + TextFormatting.GRAY + I18n.format("gui.left_click_desc"));
+				currentTooltip.add(TextFormatting.AQUA + I18n.format("gui.left_click") + TextFormatting.GRAY + I18n.format("gui.left_click_desc") + " 10 " + I18n.format("gui.left_click_desc_2"));
 				GuiUtils.drawHoveringText(currentTooltip, mouseX, mouseY, this.width, this.height, -1, this.fontRenderer);
 			}
 		}
@@ -265,41 +260,6 @@ public class GuiAlloyFurnace extends GuiContainer
 		{
 			this.drawTexturedModalRect(this.guiLeft + 139, this.guiTop + 31, 0, 0, 4, 24);
 		}
-	}
-
-	public float calculateLevelsFromXP(int xp)
-	{
-		int level = 0;
-
-		while (xp > 0)
-		{
-			int xpToNextLevel;
-
-			if (level < 16)
-			{
-				xpToNextLevel = 2 * level + 7;
-			}
-			else if (level < 31)
-			{
-				xpToNextLevel = 5 * level - 38;
-			}
-			else
-			{
-				xpToNextLevel = 9 * level - 158;
-			}
-
-			if (xp >= xpToNextLevel)
-			{
-				xp -= xpToNextLevel;
-				level++;
-			}
-			else
-			{
-				return level + (float) xp / xpToNextLevel;
-			}
-		}
-
-		return level;
 	}
 
 	private int getCookProgressScaled()

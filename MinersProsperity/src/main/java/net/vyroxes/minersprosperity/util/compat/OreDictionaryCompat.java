@@ -10,6 +10,17 @@ public class OreDictionaryCompat
 {
 	public static void registerOreDictionary()
     {
+        OreDictionary.registerOre("seed", Items.WHEAT_SEEDS);
+        OreDictionary.registerOre("seedWheat", Items.WHEAT_SEEDS);
+        OreDictionary.registerOre("seed", Items.BEETROOT_SEEDS);
+        OreDictionary.registerOre("seedBeetroot", Items.BEETROOT_SEEDS);
+        OreDictionary.registerOre("seed", Items.MELON_SEEDS);
+        OreDictionary.registerOre("seedMelon", Items.MELON_SEEDS);
+        OreDictionary.registerOre("seed", Items.PUMPKIN_SEEDS);
+        OreDictionary.registerOre("seedPumpkin", Items.PUMPKIN_SEEDS);
+
+        OreDictionary.registerOre("flint", Items.FLINT);
+        OreDictionary.registerOre("gemFlint", Items.FLINT);
         OreDictionary.registerOre("gemCoal", Items.COAL);
         OreDictionary.registerOre("gemCharcoal", new ItemStack(Items.COAL, 1, 1));
         OreDictionary.registerOre("gemRuby", ItemInit.RUBY);
@@ -19,8 +30,15 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("gemPeridot", ItemInit.PERIDOT);
         OreDictionary.registerOre("gemOnyx", ItemInit.ONYX);
         OreDictionary.registerOre("gemBlackOpal", ItemInit.BLACK_OPAL);
+        OreDictionary.registerOre("gemVoidium", ItemInit.VOIDIUM);
 
+        OreDictionary.registerOre("shardGlass", ItemInit.GLASS_SHARD);
         OreDictionary.registerOre("shardGlowstone", ItemInit.GLOWSTONE_SHARD);
+        OreDictionary.registerOre("shardRedstone", ItemInit.REDSTONE_SHARD);
+        OreDictionary.registerOre("shardAzure", ItemInit.AZURE_SHARD);
+        OreDictionary.registerOre("shardRosalite", ItemInit.ROSALITE_SHARD);
+        OreDictionary.registerOre("shardVerdite", ItemInit.VERDITE_SHARD);
+        OreDictionary.registerOre("shardLuminosite", ItemInit.LUMINOSITE_SHARD);
 
         OreDictionary.registerOre("clusterObsidian", ItemInit.OBSIDIAN_CLUSTER);
 
@@ -51,6 +69,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("ingotDarkSteel", ItemInit.DARK_STEEL_INGOT);
 
         OreDictionary.registerOre("nuggetQuartz", ItemInit.QUARTZ_NUGGET);
+        OreDictionary.registerOre("nuggetLapis", ItemInit.LAPIS_NUGGET);
         OreDictionary.registerOre("nuggetDiamond", ItemInit.DIAMOND_NUGGET);
         OreDictionary.registerOre("nuggetEmerald", ItemInit.EMERALD_NUGGET);
         OreDictionary.registerOre("nuggetCopper", ItemInit.COPPER_NUGGET);
@@ -75,6 +94,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("nuggetElectrum", ItemInit.ELECTRUM_NUGGET);
         OreDictionary.registerOre("nuggetIridium", ItemInit.IRIDIUM_NUGGET);
         OreDictionary.registerOre("nuggetTitanium", ItemInit.TITANIUM_NUGGET);
+        OreDictionary.registerOre("nuggetRedstone", ItemInit.REDSTONE_NUGGET);
         OreDictionary.registerOre("nuggetRuby", ItemInit.RUBY_NUGGET);
         OreDictionary.registerOre("nuggetSapphire", ItemInit.SAPPHIRE_NUGGET);
         OreDictionary.registerOre("nuggetAmethyst", ItemInit.AMETHYST_NUGGET);
@@ -86,12 +106,29 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("nuggetOnyx", ItemInit.ONYX_NUGGET);
         OreDictionary.registerOre("nuggetDarkSteel", ItemInit.DARK_STEEL_NUGGET);
         OreDictionary.registerOre("nuggetBlackOpal", ItemInit.BLACK_OPAL_NUGGET);
+        OreDictionary.registerOre("nuggetAzure", ItemInit.AZURE_NUGGET);
+        OreDictionary.registerOre("nuggetRosalite", ItemInit.ROSALITE_NUGGET);
+        OreDictionary.registerOre("nuggetVerdite", ItemInit.VERDITE_NUGGET);
+        OreDictionary.registerOre("nuggetVoidium", ItemInit.VOIDIUM_NUGGET);
+        OreDictionary.registerOre("nuggetLuminosite", ItemInit.LUMINOSITE_NUGGET);
 
+        OreDictionary.registerOre("dustSalt", ItemInit.SALT);
+        OreDictionary.registerOre("salt", ItemInit.SALT);
+        OreDictionary.registerOre("ashes", ItemInit.ASHES);
+        OreDictionary.registerOre("dustSulfur", ItemInit.SULFUR_DUST);
+        OreDictionary.registerOre("dustClay", ItemInit.CLAY_DUST);
+        OreDictionary.registerOre("dustWood", ItemInit.WOOD_DUST);
+        OreDictionary.registerOre("dustStone", ItemInit.STONE_DUST);
+        OreDictionary.registerOre("dustFlint", ItemInit.FLINT_DUST);
+        OreDictionary.registerOre("dustEnder", ItemInit.ENDER_DUST);
+        OreDictionary.registerOre("dustEndStone", ItemInit.END_STONE_DUST);
+        OreDictionary.registerOre("dustNetherrack", ItemInit.NETHERRACK_DUST);
         OreDictionary.registerOre("dustCoal", ItemInit.COAL_DUST);
         OreDictionary.registerOre("dustCharcoal", ItemInit.CHARCOAL_DUST);
         OreDictionary.registerOre("dustIron", ItemInit.IRON_DUST);
         OreDictionary.registerOre("dustQuartz", ItemInit.QUARTZ_DUST);
         OreDictionary.registerOre("dustGold", ItemInit.GOLD_DUST);
+        OreDictionary.registerOre("dustLapis", ItemInit.LAPIS_DUST);
         OreDictionary.registerOre("dustDiamond", ItemInit.DIAMOND_DUST);
         OreDictionary.registerOre("dustEmerald", ItemInit.EMERALD_DUST);
         OreDictionary.registerOre("dustCopper", ItemInit.COPPER_DUST);
@@ -126,7 +163,105 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("dustOnyx", ItemInit.ONYX_DUST);
         OreDictionary.registerOre("dustDarkSteel", ItemInit.DARK_STEEL_DUST);
         OreDictionary.registerOre("dustBlackOpal", ItemInit.BLACK_OPAL_DUST);
-        
+        OreDictionary.registerOre("dustAzure", ItemInit.AZURE_DUST);
+        OreDictionary.registerOre("dustRosalite", ItemInit.ROSALITE_DUST);
+        OreDictionary.registerOre("dustVerdite", ItemInit.VERDITE_DUST);
+        OreDictionary.registerOre("dustVoidium", ItemInit.VOIDIUM_DUST);
+        OreDictionary.registerOre("dustLuminosite", ItemInit.LUMINOSITE_DUST);
+
+        OreDictionary.registerOre("dustTinySulfur", ItemInit.SULFUR_TINY_DUST);
+        OreDictionary.registerOre("dustTinyClay", ItemInit.CLAY_TINY_DUST);
+        OreDictionary.registerOre("dustTinyWood", ItemInit.WOOD_TINY_DUST);
+        OreDictionary.registerOre("dustTinyStone", ItemInit.STONE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyFlint", ItemInit.FLINT_TINY_DUST);
+        OreDictionary.registerOre("dustTinyEnder", ItemInit.ENDER_TINY_DUST);
+        OreDictionary.registerOre("dustTinyEndStone", ItemInit.END_STONE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyNetherrack", ItemInit.NETHERRACK_TINY_DUST);
+        OreDictionary.registerOre("dustTinyCoal", ItemInit.COAL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyCharcoal", ItemInit.CHARCOAL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyIron", ItemInit.IRON_TINY_DUST);
+        OreDictionary.registerOre("dustTinyGlowstone", ItemInit.GLOWSTONE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyQuartz", ItemInit.QUARTZ_TINY_DUST);
+        OreDictionary.registerOre("dustTinyGold", ItemInit.GOLD_TINY_DUST);
+        OreDictionary.registerOre("dustTinyLapis", ItemInit.LAPIS_TINY_DUST);
+        OreDictionary.registerOre("dustTinyRedstone", ItemInit.REDSTONE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyDiamond", ItemInit.DIAMOND_TINY_DUST);
+        OreDictionary.registerOre("dustTinyEmerald", ItemInit.EMERALD_TINY_DUST);
+        OreDictionary.registerOre("dustTinyCopper", ItemInit.COPPER_TINY_DUST);
+        OreDictionary.registerOre("dustTinyTin", ItemInit.TIN_TINY_DUST);
+        OreDictionary.registerOre("dustTinyBronze", ItemInit.BRONZE_TINY_DUST);
+        OreDictionary.registerOre("dustTinySilver", ItemInit.SILVER_TINY_DUST);
+        OreDictionary.registerOre("dustTinyLead", ItemInit.LEAD_TINY_DUST);
+        OreDictionary.registerOre("dustTinyZinc", ItemInit.ZINC_TINY_DUST);
+        OreDictionary.registerOre("dustTinyBrass", ItemInit.BRASS_TINY_DUST);
+        OreDictionary.registerOre("dustTinyAluminum", ItemInit.ALUMINUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyDuraluminum", ItemInit.DURALUMINUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyRefinedIron", ItemInit.REFINED_IRON_TINY_DUST);
+        OreDictionary.registerOre("dustTinySteel", ItemInit.STEEL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyNickel", ItemInit.NICKEL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyChromium", ItemInit.CHROMIUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyInconel", ItemInit.INCONEL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyUranium", ItemInit.URANIUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyTungsten", ItemInit.TUNGSTEN_TINY_DUST);
+        OreDictionary.registerOre("dustTinyPlatinum", ItemInit.PLATINUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyWhiteGold", ItemInit.WHITE_GOLD_TINY_DUST);
+        OreDictionary.registerOre("dustTinyElectrum", ItemInit.ELECTRUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyIridium", ItemInit.IRIDIUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyTitanium", ItemInit.TITANIUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyRuby", ItemInit.RUBY_TINY_DUST);
+        OreDictionary.registerOre("dustTinySapphire", ItemInit.SAPPHIRE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyAmethyst", ItemInit.AMETHYST_TINY_DUST);
+        OreDictionary.registerOre("dustTinyTopaz", ItemInit.TOPAZ_TINY_DUST);
+        OreDictionary.registerOre("dustTinyPeridot", ItemInit.PERIDOT_TINY_DUST);
+        OreDictionary.registerOre("dustTinyRefinedObsidian", ItemInit.REFINED_OBSIDIAN_TINY_DUST);
+        OreDictionary.registerOre("dustTinyCobalt", ItemInit.COBALT_TINY_DUST);
+        OreDictionary.registerOre("dustTinyCobaltsteel", ItemInit.COBALTSTEEL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyOnyx", ItemInit.ONYX_TINY_DUST);
+        OreDictionary.registerOre("dustTinyDarkSteel", ItemInit.DARK_STEEL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyBlackOpal", ItemInit.BLACK_OPAL_TINY_DUST);
+        OreDictionary.registerOre("dustTinyAzure", ItemInit.AZURE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyRosalite", ItemInit.ROSALITE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyVerdite", ItemInit.VERDITE_TINY_DUST);
+        OreDictionary.registerOre("dustTinyVoidium", ItemInit.VOIDIUM_TINY_DUST);
+        OreDictionary.registerOre("dustTinyLuminosite", ItemInit.LUMINOSITE_TINY_DUST);
+
+        OreDictionary.registerOre("chunkCoal", ItemInit.COAL_CHUNK);
+        OreDictionary.registerOre("chunkIron", ItemInit.IRON_CHUNK);
+        OreDictionary.registerOre("chunkQuartz", ItemInit.QUARTZ_CHUNK);
+        OreDictionary.registerOre("chunkLapis", ItemInit.LAPIS_CHUNK);
+        OreDictionary.registerOre("chunkRedstone", ItemInit.REDSTONE_CHUNK);
+        OreDictionary.registerOre("chunkGold", ItemInit.GOLD_CHUNK);
+        OreDictionary.registerOre("chunkDiamond", ItemInit.DIAMOND_CHUNK);
+        OreDictionary.registerOre("chunkEmerald", ItemInit.EMERALD_CHUNK);
+        OreDictionary.registerOre("chunkCopper", ItemInit.COPPER_CHUNK);
+        OreDictionary.registerOre("chunkTin", ItemInit.TIN_CHUNK);
+        OreDictionary.registerOre("chunkSilver", ItemInit.SILVER_CHUNK);
+        OreDictionary.registerOre("chunkLead", ItemInit.LEAD_CHUNK);
+        OreDictionary.registerOre("chunkZinc", ItemInit.ZINC_CHUNK);
+        OreDictionary.registerOre("chunkAluminum", ItemInit.ALUMINUM_CHUNK);
+        OreDictionary.registerOre("chunkNickel", ItemInit.NICKEL_CHUNK);
+        OreDictionary.registerOre("chunkChromium", ItemInit.CHROMIUM_CHUNK);
+        OreDictionary.registerOre("chunkUranium", ItemInit.URANIUM_CHUNK);
+        OreDictionary.registerOre("chunkTungsten", ItemInit.TUNGSTEN_CHUNK);
+        OreDictionary.registerOre("chunkPlatinum", ItemInit.PLATINUM_CHUNK);
+        OreDictionary.registerOre("chunkIridium", ItemInit.IRIDIUM_CHUNK);
+        OreDictionary.registerOre("chunkTitanium", ItemInit.TITANIUM_CHUNK);
+        OreDictionary.registerOre("chunkRuby", ItemInit.RUBY_CHUNK);
+        OreDictionary.registerOre("chunkSapphire", ItemInit.SAPPHIRE_CHUNK);
+        OreDictionary.registerOre("chunkAmethyst", ItemInit.AMETHYST_CHUNK);
+        OreDictionary.registerOre("chunkTopaz", ItemInit.TOPAZ_CHUNK);
+        OreDictionary.registerOre("chunkPeridot", ItemInit.PERIDOT_CHUNK);
+        OreDictionary.registerOre("chunkCobalt", ItemInit.COBALT_CHUNK);
+        OreDictionary.registerOre("chunkOnyx", ItemInit.ONYX_CHUNK);
+        OreDictionary.registerOre("chunkBlackOpal", ItemInit.BLACK_OPAL_CHUNK);
+        OreDictionary.registerOre("chunkAzure", ItemInit.AZURE_CHUNK);
+        OreDictionary.registerOre("chunkRosalite", ItemInit.ROSALITE_CHUNK);
+        OreDictionary.registerOre("chunkVerdite", ItemInit.VERDITE_CHUNK);
+        OreDictionary.registerOre("chunkVoidium", ItemInit.VOIDIUM_CHUNK);
+        OreDictionary.registerOre("chunkLuminosite", ItemInit.LUMINOSITE_CHUNK);
+
+        OreDictionary.registerOre("gearWood", ItemInit.WOOD_GEAR);
+        OreDictionary.registerOre("gearStone", ItemInit.STONE_GEAR);
         OreDictionary.registerOre("gearCoal", ItemInit.COAL_GEAR);
         OreDictionary.registerOre("gearCharcoal", ItemInit.CHARCOAL_GEAR);
         OreDictionary.registerOre("gearIron", ItemInit.IRON_GEAR);
@@ -149,6 +284,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("gearSteel", ItemInit.STEEL_GEAR);
         OreDictionary.registerOre("gearNickel", ItemInit.NICKEL_GEAR);
         OreDictionary.registerOre("gearChromium", ItemInit.CHROMIUM_GEAR);
+        OreDictionary.registerOre("gearGlowstone", ItemInit.GLOWSTONE_GEAR);
         OreDictionary.registerOre("gearInconel", ItemInit.INCONEL_GEAR);
         OreDictionary.registerOre("gearUranium", ItemInit.URANIUM_GEAR);
         OreDictionary.registerOre("gearTungsten", ItemInit.TUNGSTEN_GEAR);
@@ -168,7 +304,14 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("gearOnyx", ItemInit.ONYX_GEAR);
         OreDictionary.registerOre("gearDarkSteel", ItemInit.DARK_STEEL_GEAR);
         OreDictionary.registerOre("gearBlackOpal", ItemInit.BLACK_OPAL_GEAR);
-        
+        OreDictionary.registerOre("gearAzure", ItemInit.AZURE_GEAR);
+        OreDictionary.registerOre("gearRosalite", ItemInit.ROSALITE_GEAR);
+        OreDictionary.registerOre("gearVerdite", ItemInit.VERDITE_GEAR);
+        OreDictionary.registerOre("gearVoidium", ItemInit.VOIDIUM_GEAR);
+        OreDictionary.registerOre("gearLuminosite", ItemInit.LUMINOSITE_GEAR);
+
+        OreDictionary.registerOre("plateWood", ItemInit.WOOD_PLATE);
+        OreDictionary.registerOre("plateStone", ItemInit.STONE_PLATE);
         OreDictionary.registerOre("plateCoal", ItemInit.COAL_PLATE);
         OreDictionary.registerOre("plateCharcoal", ItemInit.CHARCOAL_PLATE);
         OreDictionary.registerOre("plateIron", ItemInit.IRON_PLATE);
@@ -191,6 +334,7 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("plateSteel", ItemInit.STEEL_PLATE);
         OreDictionary.registerOre("plateNickel", ItemInit.NICKEL_PLATE);
         OreDictionary.registerOre("plateChromium", ItemInit.CHROMIUM_PLATE);
+        OreDictionary.registerOre("plateGlowstone", ItemInit.GLOWSTONE_PLATE);
         OreDictionary.registerOre("plateInconel", ItemInit.INCONEL_PLATE);
         OreDictionary.registerOre("plateUranium", ItemInit.URANIUM_PLATE);
         OreDictionary.registerOre("plateTungsten", ItemInit.TUNGSTEN_PLATE);
@@ -210,6 +354,61 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("plateOnyx", ItemInit.ONYX_PLATE);
         OreDictionary.registerOre("plateDarkSteel", ItemInit.DARK_STEEL_PLATE);
         OreDictionary.registerOre("plateBlackOpal", ItemInit.BLACK_OPAL_PLATE);
+        OreDictionary.registerOre("plateAzure", ItemInit.AZURE_PLATE);
+        OreDictionary.registerOre("plateRosalite", ItemInit.ROSALITE_PLATE);
+        OreDictionary.registerOre("plateVerdite", ItemInit.VERDITE_PLATE);
+        OreDictionary.registerOre("plateVoidium", ItemInit.VOIDIUM_PLATE);
+        OreDictionary.registerOre("plateLuminosite", ItemInit.LUMINOSITE_PLATE);
+
+        OreDictionary.registerOre("rodWood", Items.STICK);
+        OreDictionary.registerOre("rodStone", ItemInit.STONE_ROD);
+        OreDictionary.registerOre("rodCoal", ItemInit.COAL_ROD);
+        OreDictionary.registerOre("rodCharcoal", ItemInit.CHARCOAL_ROD);
+        OreDictionary.registerOre("rodIron", ItemInit.IRON_ROD);
+        OreDictionary.registerOre("rodQuartz", ItemInit.QUARTZ_ROD);
+        OreDictionary.registerOre("rodGold", ItemInit.GOLD_ROD);
+        OreDictionary.registerOre("rodDiamond", ItemInit.DIAMOND_ROD);
+        OreDictionary.registerOre("rodEmerald", ItemInit.EMERALD_ROD);
+        OreDictionary.registerOre("rodRedstone", ItemInit.REDSTONE_ROD);
+        OreDictionary.registerOre("rodLapis", ItemInit.LAPIS_ROD);
+        OreDictionary.registerOre("rodCopper", ItemInit.COPPER_ROD);
+        OreDictionary.registerOre("rodTin", ItemInit.TIN_ROD);
+        OreDictionary.registerOre("rodBronze", ItemInit.BRONZE_ROD);
+        OreDictionary.registerOre("rodSilver", ItemInit.SILVER_ROD);
+        OreDictionary.registerOre("rodLead", ItemInit.LEAD_ROD);
+        OreDictionary.registerOre("rodZinc", ItemInit.ZINC_ROD);
+        OreDictionary.registerOre("rodBrass", ItemInit.BRASS_ROD);
+        OreDictionary.registerOre("rodAluminum", ItemInit.ALUMINUM_ROD);
+        OreDictionary.registerOre("rodDuraluminum", ItemInit.DURALUMINUM_ROD);
+        OreDictionary.registerOre("rodRefinedIron", ItemInit.REFINED_IRON_ROD);
+        OreDictionary.registerOre("rodSteel", ItemInit.STEEL_ROD);
+        OreDictionary.registerOre("rodNickel", ItemInit.NICKEL_ROD);
+        OreDictionary.registerOre("rodChromium", ItemInit.CHROMIUM_ROD);
+        OreDictionary.registerOre("rodGlowstone", ItemInit.GLOWSTONE_ROD);
+        OreDictionary.registerOre("rodInconel", ItemInit.INCONEL_ROD);
+        OreDictionary.registerOre("rodUranium", ItemInit.URANIUM_ROD);
+        OreDictionary.registerOre("rodTungsten", ItemInit.TUNGSTEN_ROD);
+        OreDictionary.registerOre("rodPlatinum", ItemInit.PLATINUM_ROD);
+        OreDictionary.registerOre("rodWhiteGold", ItemInit.WHITE_GOLD_ROD);
+        OreDictionary.registerOre("rodElectrum", ItemInit.ELECTRUM_ROD);
+        OreDictionary.registerOre("rodIridium", ItemInit.IRIDIUM_ROD);
+        OreDictionary.registerOre("rodTitanium", ItemInit.TITANIUM_ROD);
+        OreDictionary.registerOre("rodRuby", ItemInit.RUBY_ROD);
+        OreDictionary.registerOre("rodSapphire", ItemInit.SAPPHIRE_ROD);
+        OreDictionary.registerOre("rodAmethyst", ItemInit.AMETHYST_ROD);
+        OreDictionary.registerOre("rodTopaz", ItemInit.TOPAZ_ROD);
+        OreDictionary.registerOre("rodPeridot", ItemInit.PERIDOT_ROD);
+        OreDictionary.registerOre("rodRefinedObsidian", ItemInit.REFINED_OBSIDIAN_ROD);
+        OreDictionary.registerOre("rodCobalt", ItemInit.COBALT_ROD);
+        OreDictionary.registerOre("rodCobaltsteel", ItemInit.COBALTSTEEL_ROD);
+        OreDictionary.registerOre("rodOnyx", ItemInit.ONYX_ROD);
+        OreDictionary.registerOre("rodDarkSteel", ItemInit.DARK_STEEL_ROD);
+        OreDictionary.registerOre("rodBlackOpal", ItemInit.BLACK_OPAL_ROD);
+        OreDictionary.registerOre("rodAzure", ItemInit.AZURE_ROD);
+        OreDictionary.registerOre("rodRosalite", ItemInit.ROSALITE_ROD);
+        OreDictionary.registerOre("rodVerdite", ItemInit.VERDITE_ROD);
+        OreDictionary.registerOre("rodVoidium", ItemInit.VOIDIUM_ROD);
+        OreDictionary.registerOre("rodLuminosite", ItemInit.LUMINOSITE_ROD);
 
         OreDictionary.registerOre("oreCopper", BlockInit.COPPER_ORE);
         OreDictionary.registerOre("oreTin", BlockInit.TIN_ORE);
@@ -232,6 +431,13 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("oreCobalt", BlockInit.COBALT_ORE);
         OreDictionary.registerOre("oreOnyx", BlockInit.ONYX_ORE);
         OreDictionary.registerOre("oreBlackOpal", BlockInit.BLACK_OPAL_ORE);
+
+        OreDictionary.registerOre("oreAzure", BlockInit.AZURE_ORE);
+        OreDictionary.registerOre("oreRosalite", BlockInit.ROSALITE_ORE);
+        OreDictionary.registerOre("oreVerdite", BlockInit.VERDITE_ORE);
+
+        OreDictionary.registerOre("oreVoidium", BlockInit.VOIDIUM_ORE);
+        OreDictionary.registerOre("oreLuminosite", BlockInit.LUMINOSITE_ORE);
 
         OreDictionary.registerOre("blockCharcoal", BlockInit.CHARCOAL_BLOCK);
         OreDictionary.registerOre("blockCopper", BlockInit.COPPER_BLOCK);
@@ -266,5 +472,10 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("blockOnyx", BlockInit.ONYX_BLOCK);
         OreDictionary.registerOre("blockDarkSteel", BlockInit.DARK_STEEL_BLOCK);
         OreDictionary.registerOre("blockBlackOpal", BlockInit.BLACK_OPAL_BLOCK);
+        OreDictionary.registerOre("blockAzure", BlockInit.AZURE_BLOCK);
+        OreDictionary.registerOre("blockRosalite", BlockInit.ROSALITE_BLOCK);
+        OreDictionary.registerOre("blockVerdite", BlockInit.VERDITE_BLOCK);
+        OreDictionary.registerOre("blockVoidium", BlockInit.VOIDIUM_BLOCK);
+        OreDictionary.registerOre("blockLuminosite", BlockInit.LUMINOSITE_BLOCK);
     }
 }

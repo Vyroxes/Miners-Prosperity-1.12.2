@@ -5,8 +5,18 @@
   "minVersion": "0.8",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ChunkGeneratorFlatAccessor",
+    "MixinContainer",
+    "MixinContainerWorkbench",
+    "MixinEntityLivingBase",
+    "MixinEntityPlayer",
+    "MixinItemBow",
+    "MixinNetHandlerPlayServer",
     "MixinWorld"
   ],
-  "client": [],
+  "client": [
+    "MixinEntityRenderer",
+    "MixinItemRenderer"
+  ],
   "server": []
 }

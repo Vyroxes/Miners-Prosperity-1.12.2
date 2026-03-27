@@ -2,39 +2,73 @@ package net.vyroxes.minersprosperity.util.handlers;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import net.vyroxes.minersprosperity.objects.items.Backpack;
+import net.minecraftforge.items.ItemStackHandler;
+import net.vyroxes.minersprosperity.objects.items.ItemBackpackBase;
 
+@Mod.EventBusSubscriber
 public class CraftingHandler
 {
 	@SubscribeEvent
-	public void onItemCrafted(ItemCraftedEvent event)
+	public static void onItemCrafted(ItemCraftedEvent event)
 	{
 		ItemStack crafted = event.crafting;
 
-		if (crafted.getItem() instanceof Backpack)
+		if (crafted.getItem() instanceof ItemBackpackBase)
 		{
 			for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++)
 			{
 				ItemStack slotStack = event.craftMatrix.getStackInSlot(i);
 
-				if (!slotStack.isEmpty() && slotStack.getItem() instanceof Backpack && slotStack.hasTagCompound())
+				if (!slotStack.isEmpty() && slotStack.getItem() instanceof ItemBackpackBase && slotStack.hasTagCompound())
 				{
-					NBTTagCompound originalNBT = slotStack.getTagCompound();
+					ItemStackHandler oldInventory = ItemBackpackBase.getBackpackInventory(slotStack);
+					ItemStackHandler oldConfigurationInventory = ItemBackpackBase.getConfigurationInventory(slotStack);
 
-					if (originalNBT != null)
+					ItemStackHandler newInventory = ItemBackpackBase.getBackpackInventory(crafted);
+					ItemStackHandler newConfigurationInventory = ItemBackpackBase.getConfigurationInventory(crafted);
+
+					for (int slot = 0; slot < oldInventory.getSlots(); slot++)
 					{
-						NBTTagCompound newNBT = originalNBT.copy();
-
-						if (originalNBT.hasKey("BackpackData"))
+						ItemStack stackInSlot = oldInventory.extractItem(slot, oldInventory.getStackInSlot(slot).getCount(), true);
+						if (!stackInSlot.isEmpty())
 						{
-							newNBT.setTag("BackpackData", originalNBT.getTag("BackpackData"));
+							newInventory.insertItem(slot, stackInSlot.copy(), false);
 						}
+					}
 
-						crafted.setTagCompound(newNBT);
-						crafted.setStackDisplayName(slotStack.getDisplayName());
-						break;
+					for (int slot = 0; slot < oldConfigurationInventory.getSlots(); slot++)
+					{
+						ItemStack stackInSlot = oldConfigurationInventory.extractItem(slot, oldConfigurationInventory.getStackInSlot(slot).getCount(), true);
+						if (!stackInSlot.isEmpty())
+						{
+							newConfigurationInventory.insertItem(slot, stackInSlot.copy(), false);
+						}
+					}
+
+					if (slotStack.hasTagCompound())
+					{
+						NBTTagCompound originalNBT = slotStack.getTagCompound();
+						if (originalNBT != null)
+						{
+							NBTTagCompound newNBT = originalNBT.copy();
+
+							if (originalNBT.hasKey("BackpackData"))
+							{
+								newNBT.setTag("BackpackData", originalNBT.getTag("BackpackData"));
+							}
+
+							crafted.setTagCompound(newNBT);
+
+							if (slotStack.hasDisplayName())
+							{
+								crafted.setStackDisplayName(slotStack.getDisplayName());
+							}
+
+							break;
+						}
 					}
 				}
 			}

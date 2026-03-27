@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "shardLuminosite"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:luminosite_nugget",
+        "count": 9
+    }
+}

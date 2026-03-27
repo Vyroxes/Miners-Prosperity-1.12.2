@@ -3,11 +3,9 @@ package net.vyroxes.minersprosperity.objects.blocks.machines.recipes;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
-import net.vyroxes.minersprosperity.init.ItemInit;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -19,9 +17,6 @@ public class RecipesAlloyFurnace
 	public RecipesAlloyFurnace()
 	{
 		this.lookupTable = new LookupTable();
-		addRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.GOLD_INGOT), null, null, 2, 1, new ItemStack(Items.DIAMOND, 1), 200, 20, 0.7f);
-		addRecipe(new ItemStack(ItemInit.DIAMOND_DUST), new ItemStack(ItemInit.EMERALD_DUST), null, null, 1, 1, new ItemStack(Items.REDSTONE, 1), 200, 20, 0.1F);
-		addRecipe(null, null, "ingotCopper", "ingotTin", 2, 1, new ItemStack(Items.COAL, 1), 200, 20, 0.7f);
 	}
 
 	public static RecipesAlloyFurnace getInstance()
@@ -400,18 +395,6 @@ public class RecipesAlloyFurnace
 		if (!recipes.isEmpty())
 		{
 			return recipes.get(0).experience;
-		}
-		return 0.0f;
-	}
-
-	public float getExperience(ItemStack result)
-	{
-		for (Recipe recipe : this.lookupTable.recipes)
-		{
-			if (ItemStack.areItemsEqual(recipe.result, result))
-			{
-				return recipe.experience;
-			}
 		}
 		return 0.0f;
 	}

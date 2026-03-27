@@ -1,14 +1,15 @@
 package net.vyroxes.minersprosperity.objects.containers;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import net.vyroxes.minersprosperity.objects.items.Backpack;
-import net.vyroxes.minersprosperity.util.handlers.ConfigHandler;
+import net.vyroxes.minersprosperity.objects.items.ItemBackpackBase;
+import net.vyroxes.minersprosperity.util.handlers.ModConfig;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class SlotBackpack extends SlotItemHandler
 {
@@ -26,7 +27,7 @@ public class SlotBackpack extends SlotItemHandler
             return false;
         }
 
-        if (!ConfigHandler.allowBackpackLooping && stack.getItem() instanceof Backpack)
+        if (!ModConfig.BACKPACKS.allowBackpackLooping && stack.getItem() instanceof ItemBackpackBase)
         {
             return false;
         }
@@ -37,8 +38,10 @@ public class SlotBackpack extends SlotItemHandler
             String baseId = id.toString();
             String fullId = baseId + "/" + stack.getMetadata();
 
-            boolean baseBlacklisted = ConfigHandler.backpackItemBlacklist.contains(baseId);
-            boolean fullBlacklisted = ConfigHandler.backpackItemBlacklist.contains(fullId);
+            List<String> blacklist = Arrays.asList(ModConfig.BACKPACKS.backpackItemBlacklist);
+
+            boolean baseBlacklisted = blacklist.contains(baseId);
+            boolean fullBlacklisted = blacklist.contains(fullId);
 
             if (fullBlacklisted)
             {

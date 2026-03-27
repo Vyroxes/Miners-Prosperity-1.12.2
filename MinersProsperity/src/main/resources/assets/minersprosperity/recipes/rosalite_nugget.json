@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "shardRosalite"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:rosalite_nugget",
+        "count": 9
+    }
+}

@@ -2,83 +2,51 @@ package net.vyroxes.minersprosperity.init;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraftforge.common.util.EnumHelper;
-import net.vyroxes.minersprosperity.Tags;
-import net.vyroxes.minersprosperity.objects.armor.ArmorEmerald;
-import net.vyroxes.minersprosperity.objects.armor.ArmorObsidianCluster;
-import net.vyroxes.minersprosperity.objects.armor.ArmorStone;
-import net.vyroxes.minersprosperity.objects.armor.ArmorWood;
+import net.vyroxes.minersprosperity.objects.enums.EBackpackTier;
+import net.vyroxes.minersprosperity.objects.enums.EBatteryTier;
 import net.vyroxes.minersprosperity.objects.items.*;
-import net.vyroxes.minersprosperity.objects.tools.*;
-import net.vyroxes.minersprosperity.objects.tools.ToolAxeBase;
 
 public class ItemInit
 {
 	public static final List<Item> ITEMS = new ArrayList<>();
-	
-	//TOOL MATERIALS
-	public static final ToolMaterial OBSIDIAN_CLUSTER_TOOL = EnumHelper.addToolMaterial("obsidian cluster tool", 3, 1892, 10.0F, 4.0F, 12);
-	public static final ToolMaterial EMERALD_TOOL = EnumHelper.addToolMaterial("emerald tool", 4, 2223, 12.0F, 5.0F, 14);
-
-	//ARMOUR MATERIALS
-	public static final ArmorMaterial WOOD_ARMOR = EnumHelper.addArmorMaterial("wood armor", Tags.MODID + ":wood", 5, new int[]{1, 2, 3, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0F);
-	public static final ArmorMaterial STONE_ARMOR = EnumHelper.addArmorMaterial("stone armor", Tags.MODID + ":stone", 8, new int[]{2, 3, 4, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0F);
-	public static final ArmorMaterial OBSIDIAN_CLUSTER_ARMOR = EnumHelper.addArmorMaterial("obsidian cluster armor", Tags.MODID + ":obsidian_cluster", 40, new int[]{4, 7, 9, 4}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 3.0F);
-	public static final ArmorMaterial EMERALD_ARMOR = EnumHelper.addArmorMaterial("emerald armor", Tags.MODID + ":emerald", 47, new int[]{5, 8, 10, 5}, 8, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 4.0F);
-
-	//TOOLS
-	public static final Item OBSIDIAN_CLUSTER_SWORD = new ToolSwordBase("obsidian_cluster_sword", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
-	public static final Item OBSIDIAN_CLUSTER_PICKAXE = new ToolPickaxeBase("obsidian_cluster_pickaxe", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
-	public static final Item OBSIDIAN_CLUSTER_AXE = new ToolAxeBase("obsidian_cluster_axe", OBSIDIAN_CLUSTER_TOOL, 8.0F, -2.9F, ItemInit.OBSIDIAN_CLUSTER);
-	public static final Item OBSIDIAN_CLUSTER_SHOVEL = new ToolShovelBase("obsidian_cluster_shovel", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
-	public static final Item OBSIDIAN_CLUSTER_HOE = new ToolHoeBase("obsidian_cluster_hoe", OBSIDIAN_CLUSTER_TOOL, ItemInit.OBSIDIAN_CLUSTER);
-	public static final Item EMERALD_SWORD = new ToolSwordBase("emerald_sword", EMERALD_TOOL, Items.EMERALD);
-	public static final Item EMERALD_PICKAXE = new ToolPickaxeBase("emerald_pickaxe", EMERALD_TOOL, Items.EMERALD);
-	public static final Item EMERALD_AXE = new ToolAxeBase("emerald_axe", EMERALD_TOOL, 9.0F, -2.9F, Items.EMERALD);
-	public static final Item EMERALD_SHOVEL = new ToolShovelBase("emerald_shovel", EMERALD_TOOL, Items.EMERALD);
-	public static final Item EMERALD_HOE = new ToolHoeBase("emerald_hoe", EMERALD_TOOL, Items.EMERALD);
-	
-	//ARMOUR
-	public static final Item WOOD_HELMET = new ArmorWood("wood_helmet", WOOD_ARMOR, 1, EntityEquipmentSlot.HEAD);
-	public static final Item WOOD_CHESTPLATE = new ArmorWood("wood_chestplate", WOOD_ARMOR, 1, EntityEquipmentSlot.CHEST);
-	public static final Item WOOD_LEGGINGS = new ArmorWood("wood_leggings", WOOD_ARMOR, 2, EntityEquipmentSlot.LEGS);
-	public static final Item WOOD_BOOTS = new ArmorWood("wood_boots", WOOD_ARMOR, 1, EntityEquipmentSlot.FEET);
-	public static final Item STONE_HELMET = new ArmorStone("stone_helmet", STONE_ARMOR, 1, EntityEquipmentSlot.HEAD);
-	public static final Item STONE_CHESTPLATE = new ArmorStone("stone_chestplate", STONE_ARMOR, 1, EntityEquipmentSlot.CHEST);
-	public static final Item STONE_LEGGINGS = new ArmorStone("stone_leggings", STONE_ARMOR, 2, EntityEquipmentSlot.LEGS);
-	public static final Item STONE_BOOTS = new ArmorStone("stone_boots", STONE_ARMOR, 1, EntityEquipmentSlot.FEET);
-	public static final Item OBSIDIAN_CLUSTER_HELMET = new ArmorObsidianCluster("obsidian_cluster_helmet", OBSIDIAN_CLUSTER_ARMOR, 1, EntityEquipmentSlot.HEAD);
-	public static final Item OBSIDIAN_CLUSTER_CHESTPLATE = new ArmorObsidianCluster("obsidian_cluster_chestplate", OBSIDIAN_CLUSTER_ARMOR, 1, EntityEquipmentSlot.CHEST);
-	public static final Item OBSIDIAN_CLUSTER_LEGGINGS = new ArmorObsidianCluster("obsidian_cluster_leggings", OBSIDIAN_CLUSTER_ARMOR, 2, EntityEquipmentSlot.LEGS);
-	public static final Item OBSIDIAN_CLUSTER_BOOTS = new ArmorObsidianCluster("obsidian_cluster_boots", OBSIDIAN_CLUSTER_ARMOR, 1, EntityEquipmentSlot.FEET);
-	public static final Item EMERALD_HELMET = new ArmorEmerald("emerald_helmet", EMERALD_ARMOR, 1, EntityEquipmentSlot.HEAD);
-	public static final Item EMERALD_CHESTPLATE = new ArmorEmerald("emerald_chestplate", EMERALD_ARMOR, 1, EntityEquipmentSlot.CHEST);
-	public static final Item EMERALD_LEGGINGS = new ArmorEmerald("emerald_leggings", EMERALD_ARMOR, 2, EntityEquipmentSlot.LEGS);
-	public static final Item EMERALD_BOOTS = new ArmorEmerald("emerald_boots", EMERALD_ARMOR, 1, EntityEquipmentSlot.FEET);
 
 	//ITEMS
-	public static final Item CHAIN = new ItemBase("chain");
+	public static final Item WRENCH = new ItemBase("wrench");
+	public static final Item IRON_GEAR_DIE = new ItemBase("iron_gear_die", 1, 128);
+	public static final Item IRON_PLATE_DIE = new ItemBase("iron_plate_die", 1, 128);
+	public static final Item IRON_ROD_DIE = new ItemBase("iron_rod_die", 1, 128);
+	public static final Item REFINED_OBSIDIAN_GEAR_DIE = new ItemBase("refined_obsidian_gear_die", 1, 384);
+	public static final Item REFINED_OBSIDIAN_PLATE_DIE = new ItemBase("refined_obsidian_plate_die", 1, 384);
+	public static final Item REFINED_OBSIDIAN_ROD_DIE = new ItemBase("refined_obsidian_rod_die", 1, 384);
+	public static final Item PORTABLE_CRAFTING_TABLE = new ItemPortableCraftingTable("portable_crafting_table");
+	public static final Item BASIC_BATTERY = new ItemBattery("basic_battery", EBatteryTier.BASIC);
+	public static final Item IMPROVED_BATTERY = new ItemBattery("improved_battery", EBatteryTier.IMPROVED);
+	public static final Item ADVANCED_BATTERY = new ItemBattery("advanced_battery", EBatteryTier.ADVANCED);
+	public static final Item ELITE_BATTERY = new ItemBattery("elite_battery", EBatteryTier.ELITE);
+	public static final Item ULTIMATE_BATTERY = new ItemBattery("ultimate_battery", EBatteryTier.ULTIMATE);
+	public static final Item SUPREME_BATTERY = new ItemBattery("supreme_battery", EBatteryTier.SUPREME);
+	public static final Item CREATIVE_BATTERY = new ItemBattery("creative_battery", EBatteryTier.CREATIVE);
 
 	//UPGRADES
+	public static final Item MACHINE_UPGRADE = new ItemBase("machine_upgrade");
 	public static final Item SPEED_UPGRADE = new ItemBase("speed_upgrade");
 	public static final Item ENERGY_UPGRADE = new ItemBase("energy_upgrade");
 	public static final Item XP_UPGRADE = new ItemBase("xp_upgrade");
-	public static final Item MACHINE_UPGRADE = new ItemBase("machine_upgrade");
 
 	//BACKPACKS
-	public static final Item BACKPACK = new Backpack("backpack");
-	public static final Item LEAD_BACKPACK = new LeadBackpack("lead_backpack");
-	public static final Item IRON_BACKPACK = new IronBackpack("iron_backpack");
-	public static final Item GOLDEN_BACKPACK = new GoldenBackpack("golden_backpack");
-	public static final Item DIAMOND_BACKPACK = new DiamondBackpack("diamond_backpack");
-	public static final Item EMERALD_BACKPACK = new EmeraldBackpack("emerald_backpack");
+	public static final Item BACKPACK = new ItemBackpack("backpack", EBackpackTier.BASIC);
+	public static final Item LEAD_BACKPACK = new ItemBackpack("lead_backpack", EBackpackTier.LEAD);
+	public static final Item IRON_BACKPACK = new ItemBackpack("iron_backpack", EBackpackTier.IRON);
+	public static final Item INCONEL_BACKPACK = new ItemBackpack("inconel_backpack", EBackpackTier.INCONEL);
+	public static final Item GOLDEN_BACKPACK = new ItemBackpack("golden_backpack", EBackpackTier.GOLDEN);
+	public static final Item ELECTRUM_BACKPACK = new ItemBackpack("electrum_backpack", EBackpackTier.ELECTRUM);
+	public static final Item DIAMOND_BACKPACK = new ItemBackpack("diamond_backpack", EBackpackTier.DIAMOND);
+	public static final Item OBSIDIAN_CLUSTER_BACKPACK = new ItemBackpack("obsidian_cluster_backpack", EBackpackTier.OBSIDIAN_CLUSTER);
+	public static final Item EMERALD_BACKPACK = new ItemBackpack("emerald_backpack", EBackpackTier.EMERALD);
+	public static final Item COBALTSTEEL_BACKPACK = new ItemBackpack("cobaltsteel_backpack", EBackpackTier.COBALTSTEEL);
+	public static final Item DARK_STEEL_BACKPACK = new ItemBackpack("dark_steel_backpack", EBackpackTier.DARK_STEEL);
+	public static final Item BLACK_OPAL_BACKPACK = new ItemBackpack("black_opal_backpack", EBackpackTier.BLACK_OPAL);
 
 	//GEMS
 	public static final Item RUBY = new ItemBase("ruby");
@@ -88,9 +56,16 @@ public class ItemInit
 	public static final Item PERIDOT = new ItemBase("peridot");
 	public static final Item ONYX = new ItemBase("onyx");
 	public static final Item BLACK_OPAL = new ItemBase("black_opal");
+	public static final Item VOIDIUM = new ItemBase("voidium");
 
 	//SHARDS
+	public static final Item GLASS_SHARD = new ItemBase("glass_shard");
 	public static final Item GLOWSTONE_SHARD = new ItemBase("glowstone_shard");
+	public static final Item REDSTONE_SHARD = new ItemBase("redstone_shard");
+	public static final Item AZURE_SHARD = new ItemBase("azure_shard");
+	public static final Item ROSALITE_SHARD = new ItemBase("rosalite_shard");
+	public static final Item VERDITE_SHARD = new ItemBase("verdite_shard");
+	public static final Item LUMINOSITE_SHARD = new ItemBase("luminosite_shard");
 
 	//CLUSTERS
 	public static final Item OBSIDIAN_CLUSTER = new ItemBase("obsidian_cluster");
@@ -148,6 +123,8 @@ public class ItemInit
 	public static final Item ELECTRUM_NUGGET = new ItemBase("electrum_nugget");
 	public static final Item IRIDIUM_NUGGET = new ItemBase("iridium_nugget");
 	public static final Item TITANIUM_NUGGET = new ItemBase("titanium_nugget");
+	public static final Item LAPIS_NUGGET = new ItemBase("lapis_nugget");
+	public static final Item REDSTONE_NUGGET = new ItemBase("redstone_nugget");
 	public static final Item RUBY_NUGGET = new ItemBase("ruby_nugget");
 	public static final Item SAPPHIRE_NUGGET = new ItemBase("sapphire_nugget");
 	public static final Item AMETHYST_NUGGET = new ItemBase("amethyst_nugget");
@@ -159,13 +136,29 @@ public class ItemInit
 	public static final Item ONYX_NUGGET = new ItemBase("onyx_nugget");
 	public static final Item DARK_STEEL_NUGGET = new ItemBase("dark_steel_nugget");
 	public static final Item BLACK_OPAL_NUGGET = new ItemBase("black_opal_nugget");
+	public static final Item AZURE_NUGGET = new ItemBase("azure_nugget");
+	public static final Item ROSALITE_NUGGET = new ItemBase("rosalite_nugget");
+	public static final Item VERDITE_NUGGET = new ItemBase("verdite_nugget");
+	public static final Item VOIDIUM_NUGGET = new ItemBase("voidium_nugget");
+	public static final Item LUMINOSITE_NUGGET = new ItemBase("luminosite_nugget");
 
 	//DUSTS
+	public static final Item SALT = new ItemBase("salt");
+	public static final Item ASHES = new ItemBase("ashes");
+	public static final Item SULFUR_DUST = new ItemBase("sulfur_dust");
+	public static final Item CLAY_DUST = new ItemBase("clay_dust");
+	public static final Item WOOD_DUST = new ItemBase("wood_dust");
+	public static final Item STONE_DUST = new ItemBase("stone_dust");
+	public static final Item FLINT_DUST = new ItemBase("flint_dust");
+	public static final Item ENDER_DUST = new ItemBase("ender_dust");
+	public static final Item END_STONE_DUST = new ItemBase("end_stone_dust");
+	public static final Item NETHERRACK_DUST = new ItemBase("netherrack_dust");
 	public static final Item COAL_DUST = new ItemBase("coal_dust");
 	public static final Item CHARCOAL_DUST = new ItemBase("charcoal_dust");
 	public static final Item IRON_DUST = new ItemBase("iron_dust");
 	public static final Item QUARTZ_DUST = new ItemBase("quartz_dust");
 	public static final Item GOLD_DUST = new ItemBase("gold_dust");
+	public static final Item LAPIS_DUST = new ItemBase("lapis_dust");
 	public static final Item DIAMOND_DUST = new ItemBase("diamond_dust");
 	public static final Item EMERALD_DUST = new ItemBase("emerald_dust");
 	public static final Item COPPER_DUST = new ItemBase("copper_dust");
@@ -200,39 +193,108 @@ public class ItemInit
 	public static final Item ONYX_DUST = new ItemBase("onyx_dust");
 	public static final Item DARK_STEEL_DUST = new ItemBase("dark_steel_dust");
 	public static final Item BLACK_OPAL_DUST = new ItemBase("black_opal_dust");
+	public static final Item AZURE_DUST = new ItemBase("azure_dust");
+	public static final Item ROSALITE_DUST = new ItemBase("rosalite_dust");
+	public static final Item VERDITE_DUST = new ItemBase("verdite_dust");
+	public static final Item VOIDIUM_DUST = new ItemBase("voidium_dust");
+	public static final Item LUMINOSITE_DUST = new ItemBase("luminosite_dust");
 
-	//VEINS
-	public static final Item COAL_VEIN = new ItemBase("coal_vein");
-	public static final Item IRON_VEIN = new ItemBase("iron_vein");
-	public static final Item QUARTZ_VEIN = new ItemBase("quartz_vein");
-	public static final Item LAPIS_VEIN = new ItemBase("lapis_vein");
-	public static final Item REDSTONE_VEIN = new ItemBase("redstone_vein");
-	public static final Item GOLD_VEIN = new ItemBase("gold_vein");
-	public static final Item DIAMOND_VEIN = new ItemBase("diamond_vein");
-	public static final Item EMERALD_VEIN = new ItemBase("emerald_vein");
-	public static final Item COPPER_VEIN = new ItemBase("copper_vein");
-	public static final Item TIN_VEIN = new ItemBase("tin_vein");
-	public static final Item SILVER_VEIN = new ItemBase("silver_vein");
-	public static final Item LEAD_VEIN = new ItemBase("lead_vein");
-	public static final Item ZINC_VEIN = new ItemBase("zinc_vein");
-	public static final Item ALUMINUM_VEIN = new ItemBase("aluminum_vein");
-	public static final Item NICKEL_VEIN = new ItemBase("nickel_vein");
-	public static final Item CHROMIUM_VEIN = new ItemBase("chromium_vein");
-	public static final Item URANIUM_VEIN = new ItemBase("uranium_vein");
-	public static final Item TUNGSTEN_VEIN = new ItemBase("tungsten_vein");
-	public static final Item PLATINUM_VEIN = new ItemBase("platinum_vein");
-	public static final Item IRIDIUM_VEIN = new ItemBase("iridium_vein");
-	public static final Item TITANIUM_VEIN = new ItemBase("titanium_vein");
-	public static final Item RUBY_VEIN = new ItemBase("ruby_vein");
-	public static final Item SAPPHIRE_VEIN = new ItemBase("sapphire_vein");
-	public static final Item AMETHYST_VEIN = new ItemBase("amethyst_vein");
-	public static final Item TOPAZ_VEIN = new ItemBase("topaz_vein");
-	public static final Item PERIDOT_VEIN = new ItemBase("peridot_vein");
-	public static final Item COBALT_VEIN = new ItemBase("cobalt_vein");
-	public static final Item ONYX_VEIN = new ItemBase("onyx_vein");
-	public static final Item BLACK_OPAL_VEIN = new ItemBase("black_opal_vein");
+	//TINY DUSTS
+	public static final Item SULFUR_TINY_DUST = new ItemBase("sulfur_tiny_dust");
+	public static final Item CLAY_TINY_DUST = new ItemBase("clay_tiny_dust");
+	public static final Item WOOD_TINY_DUST = new ItemBase("wood_tiny_dust");
+	public static final Item STONE_TINY_DUST = new ItemBase("stone_tiny_dust");
+	public static final Item FLINT_TINY_DUST = new ItemBase("flint_tiny_dust");
+	public static final Item ENDER_TINY_DUST = new ItemBase("ender_tiny_dust");
+	public static final Item END_STONE_TINY_DUST = new ItemBase("end_stone_tiny_dust");
+	public static final Item NETHERRACK_TINY_DUST = new ItemBase("netherrack_tiny_dust");
+	public static final Item COAL_TINY_DUST = new ItemBase("coal_tiny_dust");
+	public static final Item CHARCOAL_TINY_DUST = new ItemBase("charcoal_tiny_dust");
+	public static final Item IRON_TINY_DUST = new ItemBase("iron_tiny_dust");
+	public static final Item GLOWSTONE_TINY_DUST = new ItemBase("glowstone_tiny_dust");
+	public static final Item QUARTZ_TINY_DUST = new ItemBase("quartz_tiny_dust");
+	public static final Item GOLD_TINY_DUST = new ItemBase("gold_tiny_dust");
+	public static final Item LAPIS_TINY_DUST = new ItemBase("lapis_tiny_dust");
+	public static final Item REDSTONE_TINY_DUST = new ItemBase("redstone_tiny_dust");
+	public static final Item DIAMOND_TINY_DUST = new ItemBase("diamond_tiny_dust");
+	public static final Item EMERALD_TINY_DUST = new ItemBase("emerald_tiny_dust");
+	public static final Item COPPER_TINY_DUST = new ItemBase("copper_tiny_dust");
+	public static final Item TIN_TINY_DUST = new ItemBase("tin_tiny_dust");
+	public static final Item BRONZE_TINY_DUST = new ItemBase("bronze_tiny_dust");
+	public static final Item SILVER_TINY_DUST = new ItemBase("silver_tiny_dust");
+	public static final Item LEAD_TINY_DUST = new ItemBase("lead_tiny_dust");
+	public static final Item ZINC_TINY_DUST = new ItemBase("zinc_tiny_dust");
+	public static final Item BRASS_TINY_DUST = new ItemBase("brass_tiny_dust");
+	public static final Item ALUMINUM_TINY_DUST = new ItemBase("aluminum_tiny_dust");
+	public static final Item DURALUMINUM_TINY_DUST = new ItemBase("duraluminum_tiny_dust");
+	public static final Item REFINED_IRON_TINY_DUST = new ItemBase("refined_iron_tiny_dust");
+	public static final Item STEEL_TINY_DUST = new ItemBase("steel_tiny_dust");
+	public static final Item NICKEL_TINY_DUST = new ItemBase("nickel_tiny_dust");
+	public static final Item CHROMIUM_TINY_DUST = new ItemBase("chromium_tiny_dust");
+	public static final Item INCONEL_TINY_DUST = new ItemBase("inconel_tiny_dust");
+	public static final Item URANIUM_TINY_DUST = new ItemBase("uranium_tiny_dust");
+	public static final Item TUNGSTEN_TINY_DUST = new ItemBase("tungsten_tiny_dust");
+	public static final Item PLATINUM_TINY_DUST = new ItemBase("platinum_tiny_dust");
+	public static final Item WHITE_GOLD_TINY_DUST = new ItemBase("white_gold_tiny_dust");
+	public static final Item ELECTRUM_TINY_DUST = new ItemBase("electrum_tiny_dust");
+	public static final Item IRIDIUM_TINY_DUST = new ItemBase("iridium_tiny_dust");
+	public static final Item TITANIUM_TINY_DUST = new ItemBase("titanium_tiny_dust");
+	public static final Item RUBY_TINY_DUST = new ItemBase("ruby_tiny_dust");
+	public static final Item SAPPHIRE_TINY_DUST = new ItemBase("sapphire_tiny_dust");
+	public static final Item AMETHYST_TINY_DUST = new ItemBase("amethyst_tiny_dust");
+	public static final Item TOPAZ_TINY_DUST = new ItemBase("topaz_tiny_dust");
+	public static final Item PERIDOT_TINY_DUST = new ItemBase("peridot_tiny_dust");
+	public static final Item REFINED_OBSIDIAN_TINY_DUST = new ItemBase("refined_obsidian_tiny_dust");
+	public static final Item COBALT_TINY_DUST = new ItemBase("cobalt_tiny_dust");
+	public static final Item COBALTSTEEL_TINY_DUST = new ItemBase("cobaltsteel_tiny_dust");
+	public static final Item ONYX_TINY_DUST = new ItemBase("onyx_tiny_dust");
+	public static final Item DARK_STEEL_TINY_DUST = new ItemBase("dark_steel_tiny_dust");
+	public static final Item BLACK_OPAL_TINY_DUST = new ItemBase("black_opal_tiny_dust");
+	public static final Item AZURE_TINY_DUST = new ItemBase("azure_tiny_dust");
+	public static final Item ROSALITE_TINY_DUST = new ItemBase("rosalite_tiny_dust");
+	public static final Item VERDITE_TINY_DUST = new ItemBase("verdite_tiny_dust");
+	public static final Item VOIDIUM_TINY_DUST = new ItemBase("voidium_tiny_dust");
+	public static final Item LUMINOSITE_TINY_DUST = new ItemBase("luminosite_tiny_dust");
+
+	//CHUNKS
+	public static final Item COAL_CHUNK = new ItemBase("coal_chunk");
+	public static final Item IRON_CHUNK = new ItemBase("iron_chunk");
+	public static final Item QUARTZ_CHUNK = new ItemBase("quartz_chunk");
+	public static final Item LAPIS_CHUNK = new ItemBase("lapis_chunk");
+	public static final Item REDSTONE_CHUNK = new ItemBase("redstone_chunk");
+	public static final Item GOLD_CHUNK = new ItemBase("gold_chunk");
+	public static final Item DIAMOND_CHUNK = new ItemBase("diamond_chunk");
+	public static final Item EMERALD_CHUNK = new ItemBase("emerald_chunk");
+	public static final Item COPPER_CHUNK = new ItemBase("copper_chunk");
+	public static final Item TIN_CHUNK = new ItemBase("tin_chunk");
+	public static final Item SILVER_CHUNK = new ItemBase("silver_chunk");
+	public static final Item LEAD_CHUNK = new ItemBase("lead_chunk");
+	public static final Item ZINC_CHUNK = new ItemBase("zinc_chunk");
+	public static final Item ALUMINUM_CHUNK = new ItemBase("aluminum_chunk");
+	public static final Item NICKEL_CHUNK = new ItemBase("nickel_chunk");
+	public static final Item CHROMIUM_CHUNK = new ItemBase("chromium_chunk");
+	public static final Item URANIUM_CHUNK = new ItemBase("uranium_chunk");
+	public static final Item TUNGSTEN_CHUNK = new ItemBase("tungsten_chunk");
+	public static final Item PLATINUM_CHUNK = new ItemBase("platinum_chunk");
+	public static final Item IRIDIUM_CHUNK = new ItemBase("iridium_chunk");
+	public static final Item TITANIUM_CHUNK = new ItemBase("titanium_chunk");
+	public static final Item RUBY_CHUNK = new ItemBase("ruby_chunk");
+	public static final Item SAPPHIRE_CHUNK = new ItemBase("sapphire_chunk");
+	public static final Item AMETHYST_CHUNK = new ItemBase("amethyst_chunk");
+	public static final Item TOPAZ_CHUNK = new ItemBase("topaz_chunk");
+	public static final Item PERIDOT_CHUNK = new ItemBase("peridot_chunk");
+	public static final Item COBALT_CHUNK = new ItemBase("cobalt_chunk");
+	public static final Item ONYX_CHUNK = new ItemBase("onyx_chunk");
+	public static final Item BLACK_OPAL_CHUNK = new ItemBase("black_opal_chunk");
+	public static final Item AZURE_CHUNK = new ItemBase("azure_chunk");
+	public static final Item ROSALITE_CHUNK = new ItemBase("rosalite_chunk");
+	public static final Item VERDITE_CHUNK = new ItemBase("verdite_chunk");
+	public static final Item VOIDIUM_CHUNK = new ItemBase("voidium_chunk");
+	public static final Item LUMINOSITE_CHUNK = new ItemBase("luminosite_chunk");
 
 	//GEARS
+	public static final Item WOOD_GEAR = new ItemBase("wood_gear");
+	public static final Item STONE_GEAR = new ItemBase("stone_gear");
 	public static final Item COAL_GEAR = new ItemBase("coal_gear");
 	public static final Item CHARCOAL_GEAR = new ItemBase("charcoal_gear");
 	public static final Item IRON_GEAR = new ItemBase("iron_gear");
@@ -275,8 +337,15 @@ public class ItemInit
 	public static final Item ONYX_GEAR = new ItemBase("onyx_gear");
 	public static final Item DARK_STEEL_GEAR = new ItemBase("dark_steel_gear");
 	public static final Item BLACK_OPAL_GEAR = new ItemBase("black_opal_gear");
+	public static final Item AZURE_GEAR = new ItemBase("azure_gear");
+	public static final Item ROSALITE_GEAR = new ItemBase("rosalite_gear");
+	public static final Item VERDITE_GEAR = new ItemBase("verdite_gear");
+	public static final Item VOIDIUM_GEAR = new ItemBase("voidium_gear");
+	public static final Item LUMINOSITE_GEAR = new ItemBase("luminosite_gear");
 
 	//PLATES
+	public static final Item WOOD_PLATE = new ItemBase("wood_plate");
+	public static final Item STONE_PLATE = new ItemBase("stone_plate");
 	public static final Item COAL_PLATE = new ItemBase("coal_plate");
 	public static final Item CHARCOAL_PLATE = new ItemBase("charcoal_plate");
 	public static final Item IRON_PLATE = new ItemBase("iron_plate");
@@ -319,4 +388,62 @@ public class ItemInit
 	public static final Item ONYX_PLATE = new ItemBase("onyx_plate");
 	public static final Item DARK_STEEL_PLATE = new ItemBase("dark_steel_plate");
 	public static final Item BLACK_OPAL_PLATE = new ItemBase("black_opal_plate");
+	public static final Item AZURE_PLATE = new ItemBase("azure_plate");
+	public static final Item ROSALITE_PLATE = new ItemBase("rosalite_plate");
+	public static final Item VERDITE_PLATE = new ItemBase("verdite_plate");
+	public static final Item VOIDIUM_PLATE = new ItemBase("voidium_plate");
+	public static final Item LUMINOSITE_PLATE = new ItemBase("luminosite_plate");
+
+	//RODS
+	public static final Item STONE_ROD = new ItemBase("stone_rod");
+	public static final Item COAL_ROD = new ItemBase("coal_rod");
+	public static final Item CHARCOAL_ROD = new ItemBase("charcoal_rod");
+	public static final Item IRON_ROD = new ItemBase("iron_rod");
+	public static final Item QUARTZ_ROD = new ItemBase("quartz_rod");
+	public static final Item GOLD_ROD = new ItemBase("gold_rod");
+	public static final Item DIAMOND_ROD = new ItemBase("diamond_rod");
+	public static final Item EMERALD_ROD = new ItemBase("emerald_rod");
+	public static final Item REDSTONE_ROD = new ItemBase("redstone_rod");
+	public static final Item LAPIS_ROD = new ItemBase("lapis_rod");
+	public static final Item COPPER_ROD = new ItemBase("copper_rod");
+	public static final Item TIN_ROD = new ItemBase("tin_rod");
+	public static final Item BRONZE_ROD = new ItemBase("bronze_rod");
+	public static final Item SILVER_ROD = new ItemBase("silver_rod");
+	public static final Item LEAD_ROD = new ItemBase("lead_rod");
+	public static final Item ZINC_ROD = new ItemBase("zinc_rod");
+	public static final Item BRASS_ROD = new ItemBase("brass_rod");
+	public static final Item ALUMINUM_ROD = new ItemBase("aluminum_rod");
+	public static final Item DURALUMINUM_ROD = new ItemBase("duraluminum_rod");
+	public static final Item REFINED_IRON_ROD = new ItemBase("refined_iron_rod");
+	public static final Item STEEL_ROD = new ItemBase("steel_rod");
+	public static final Item NICKEL_ROD = new ItemBase("nickel_rod");
+	public static final Item CHROMIUM_ROD = new ItemBase("chromium_rod");
+	public static final Item GLOWSTONE_ROD = new ItemBase("glowstone_rod");
+	public static final Item INCONEL_ROD = new ItemBase("inconel_rod");
+	public static final Item URANIUM_ROD = new ItemBase("uranium_rod");
+	public static final Item TUNGSTEN_ROD = new ItemBase("tungsten_rod");
+	public static final Item PLATINUM_ROD = new ItemBase("platinum_rod");
+	public static final Item WHITE_GOLD_ROD = new ItemBase("white_gold_rod");
+	public static final Item ELECTRUM_ROD = new ItemBase("electrum_rod");
+	public static final Item IRIDIUM_ROD = new ItemBase("iridium_rod");
+	public static final Item TITANIUM_ROD = new ItemBase("titanium_rod");
+	public static final Item RUBY_ROD = new ItemBase("ruby_rod");
+	public static final Item SAPPHIRE_ROD = new ItemBase("sapphire_rod");
+	public static final Item AMETHYST_ROD = new ItemBase("amethyst_rod");
+	public static final Item TOPAZ_ROD = new ItemBase("topaz_rod");
+	public static final Item PERIDOT_ROD = new ItemBase("peridot_rod");
+	public static final Item REFINED_OBSIDIAN_ROD = new ItemBase("refined_obsidian_rod");
+	public static final Item COBALT_ROD = new ItemBase("cobalt_rod");
+	public static final Item COBALTSTEEL_ROD = new ItemBase("cobaltsteel_rod");
+	public static final Item ONYX_ROD = new ItemBase("onyx_rod");
+	public static final Item DARK_STEEL_ROD = new ItemBase("dark_steel_rod");
+	public static final Item BLACK_OPAL_ROD = new ItemBase("black_opal_rod");
+	public static final Item AZURE_ROD = new ItemBase("azure_rod");
+	public static final Item ROSALITE_ROD = new ItemBase("rosalite_rod");
+	public static final Item VERDITE_ROD = new ItemBase("verdite_rod");
+	public static final Item VOIDIUM_ROD = new ItemBase("voidium_rod");
+	public static final Item LUMINOSITE_ROD = new ItemBase("luminosite_rod");
+
+	//OTHERS
+	public static final Item FIRE_EXTINGUISHER = new ItemFireExtinguisher("fire_extinguisher");
 }

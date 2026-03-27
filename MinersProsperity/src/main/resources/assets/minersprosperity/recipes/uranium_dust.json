@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "dustTinyUranium"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:uranium_dust",
+        "count": 1
+    }
+}

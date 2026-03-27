@@ -1,0 +1,29 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minersprosperity:lead_sword",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:lead_pickaxe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:lead_axe",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:lead_shovel",
+            "count": 1
+        },
+        {
+            "item": "minersprosperity:lead_hoe",
+            "count": 1
+        }
+    ],
+    "result": {
+        "item": "minersprosperity:lead_paxel",
+        "count": 1
+    }
+}

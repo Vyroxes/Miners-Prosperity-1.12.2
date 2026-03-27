@@ -1,22 +1,26 @@
 package net.vyroxes.minersprosperity.util.handlers;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.vyroxes.minersprosperity.Tags;
 
+@Mod.EventBusSubscriber
 public class ClientEventHandler
 {
-    private Float cachedToughness = null;
-    private int lastTick = -1;
+    private static Float cachedToughness = null;
+    private static int lastTick = -1;
 
-    public float getCachedArmorToughness(EntityPlayer player)
+    public static float getCachedArmorToughness(EntityPlayer player)
     {
         int currentTick = Minecraft.getMinecraft().player.ticksExisted;
         if (cachedToughness == null || lastTick != currentTick)
@@ -43,9 +47,9 @@ public class ClientEventHandler
     }
 
     @SubscribeEvent
-    public void onRenderGameOverlayEventPre(RenderGameOverlayEvent.Pre event)
+    public static void onRenderGameOverlayEventPre(RenderGameOverlayEvent.Pre event)
     {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.ARMOR && ConfigHandler.armorOverlay)
+        if (event.getType() == RenderGameOverlayEvent.ElementType.ARMOR && ModConfig.GUI.armorOverlay)
         {
             event.setCanceled(true);
 
@@ -61,9 +65,9 @@ public class ClientEventHandler
     }
 
     @SubscribeEvent
-    public void onRenderGameOverlayEventPost(RenderGameOverlayEvent.Post event)
+    public static void onRenderGameOverlayEventPost(RenderGameOverlayEvent.Post event)
     {
-        if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD && ConfigHandler.toughnessOverlay)
+        if (event.getType() == RenderGameOverlayEvent.ElementType.FOOD && ModConfig.GUI.toughnessOverlay)
         {
             Minecraft mc = Minecraft.getMinecraft();
             EntityPlayer player = mc.player;
@@ -85,21 +89,69 @@ public class ClientEventHandler
 
     private static final float[][] COLORS = new float[][] {
             {1.0f, 1.0f, 1.0f},
-            {ConfigHandler.colorRed21to40, ConfigHandler.colorGreen21to40, ConfigHandler.colorBlue21to40},
-            {ConfigHandler.colorRed41to60, ConfigHandler.colorGreen41to60, ConfigHandler.colorBlue41to60},
-            {ConfigHandler.colorRed61to80, ConfigHandler.colorGreen61to80, ConfigHandler.colorBlue61to80},
-            {ConfigHandler.colorRed81to100, ConfigHandler.colorGreen81to100, ConfigHandler.colorBlue81to100},
-            {ConfigHandler.colorRed101to120, ConfigHandler.colorGreen101to120, ConfigHandler.colorBlue101to120},
-            {ConfigHandler.colorRed121to140, ConfigHandler.colorGreen121to140, ConfigHandler.colorBlue121to140}
+            {ModConfig.GUI.color21to40.red, ModConfig.GUI.color21to40.green, ModConfig.GUI.color21to40.blue},
+            {ModConfig.GUI.color41to60.red, ModConfig.GUI.color41to60.green, ModConfig.GUI.color41to60.blue},
+            {ModConfig.GUI.color61to80.red, ModConfig.GUI.color61to80.green, ModConfig.GUI.color61to80.blue},
+            {ModConfig.GUI.color81to100.red, ModConfig.GUI.color81to100.green, ModConfig.GUI.color81to100.blue},
+            {ModConfig.GUI.color101to120.red, ModConfig.GUI.color101to120.green, ModConfig.GUI.color101to120.blue},
+            {ModConfig.GUI.color121to140.red, ModConfig.GUI.color121to140.green, ModConfig.GUI.color121to140.blue}
     };
 
-    private void renderCustomArmorOverlay(ScaledResolution resolution, int armor)
+    private static void renderCustomArmorOverlay(ScaledResolution resolution, int armor)
     {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(ARMOR_TEXTURE);
 
-        int baseX = resolution.getScaledWidth() / 2 + ConfigHandler.armorX;
-        int y = resolution.getScaledHeight() + ConfigHandler.armorY;
+        int baseX = resolution.getScaledWidth() / 2 + ModConfig.GUI.armorX;
+        int y = resolution.getScaledHeight() + ModConfig.GUI.armorY;
+
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+
+        if (ModConfig.GUI.armorOverlayHealthShift && player.getMaxHealth() > 140)
+        {
+            y -= 28;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && player.getMaxHealth() > 100)
+        {
+            y -= 30;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && player.getMaxHealth() > 80)
+        {
+            y -= 28;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && player.getMaxHealth() > 60)
+        {
+            y -= 24;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && player.getMaxHealth() > 40)
+        {
+            y -= 18;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && player.getMaxHealth() > 20)
+        {
+            y -= 10;
+        } else if (ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION))
+        {
+            y -= 10;
+        }
+
+        if (ModConfig.GUI.armorOverlayHealthShift && ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION) && player.getMaxHealth() > 140)
+        {
+            y -= -4;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION) && player.getMaxHealth() > 120)
+        {
+            y -= -2;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION) && player.getMaxHealth() > 100)
+        {
+            y -= 0;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION) && player.getMaxHealth() > 80)
+        {
+            y -= 2;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION) && player.getMaxHealth() > 60)
+        {
+            y -= 4;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION) && player.getMaxHealth() > 40)
+        {
+            y -= 6;
+        } else if (ModConfig.GUI.armorOverlayHealthShift && ModConfig.GUI.armorOverlayAbsorptionShift && player.isPotionActive(MobEffects.ABSORPTION) && player.getMaxHealth() > 20)
+        {
+            y -= 8;
+        }
 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
@@ -116,7 +168,7 @@ public class ClientEventHandler
 
             for (int i = 0; i < ICONS_PER_RANGE; i++)
             {
-                if (ConfigHandler.armorOverlayTexture)
+                if (ModConfig.GUI.armorOverlayTexture)
                 {
                     GlStateManager.color(1f, 1f, 1f, 1f);
                     mc.ingameGUI.drawTexturedModalRect(baseX + i * 8, y, 0, rangeIndex * 9, 9, 9);
@@ -141,7 +193,7 @@ public class ClientEventHandler
 
             for (int i = 0; i < fullIcons && i < ICONS_PER_RANGE; i++)
             {
-                if (ConfigHandler.armorOverlayTexture)
+                if (ModConfig.GUI.armorOverlayTexture)
                 {
                     GlStateManager.color(1f, 1f, 1f, 1f);
                     mc.ingameGUI.drawTexturedModalRect(baseX + i * 8, y, 18, rangeIndex * 9, 9, 9);
@@ -155,7 +207,7 @@ public class ClientEventHandler
 
             if (hasHalf && fullIcons < ICONS_PER_RANGE)
             {
-                if (ConfigHandler.armorOverlayTexture)
+                if (ModConfig.GUI.armorOverlayTexture)
                 {
                     GlStateManager.color(1f, 1f, 1f, 1f);
                     mc.ingameGUI.drawTexturedModalRect(baseX + fullIcons * 8, y, 9, rangeIndex * 9, 9, 9);
@@ -183,13 +235,13 @@ public class ClientEventHandler
         mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/icons.png"));
     }
 
-    private void renderCustomToughnessOverlay(ScaledResolution resolution, float toughness)
+    private static void renderCustomToughnessOverlay(ScaledResolution resolution, float toughness)
     {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(TOUGHNESS_TEXTURE);
 
-        int baseX = resolution.getScaledWidth() / 2 + ConfigHandler.toughnessX;
-        int y = resolution.getScaledHeight() + ConfigHandler.toughnessY;
+        int baseX = resolution.getScaledWidth() / 2 + ModConfig.GUI.toughnessX;
+        int y = resolution.getScaledHeight() + ModConfig.GUI.toughnessY;
 
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
@@ -207,22 +259,22 @@ public class ClientEventHandler
 
             for (int i = 0; i < ICONS_PER_RANGE; i++)
             {
-                if (ConfigHandler.toughnessOverlayTexture)
+                if (ModConfig.GUI.toughnessOverlayTexture)
                 {
                     GlStateManager.color(1f, 1f, 1f, 1f);
-                    mc.ingameGUI.drawTexturedModalRect(baseX + i * 8, y, 0, rangeIndex * 9, 9, 9);
+                    mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - i) * 8, y, 0, rangeIndex * 9, 9, 9);
                 }
                 else
                 {
                     if (totalRanges == 1)
                     {
                         GlStateManager.color(1f, 1f, 1f, 1f);
-                        mc.ingameGUI.drawTexturedModalRect(baseX + i * 8, y, 0, 0, 9, 9);
+                        mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - i) * 8, y, 0, 0, 9, 9);
                     }
                     else
                     {
                         GlStateManager.color(previousColor[0], previousColor[1], previousColor[2], 1f);
-                        mc.ingameGUI.drawTexturedModalRect(baseX + i * 8, y, 18, 0, 9, 9);
+                        mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - i) * 8, y, 18, 0, 9, 9);
                     }
                 }
             }
@@ -232,37 +284,36 @@ public class ClientEventHandler
 
             for (int i = 0; i < fullIcons && i < ICONS_PER_RANGE; i++)
             {
-                if (ConfigHandler.toughnessOverlayTexture)
+                if (ModConfig.GUI.toughnessOverlayTexture)
                 {
                     GlStateManager.color(1f, 1f, 1f, 1f);
-                    mc.ingameGUI.drawTexturedModalRect(baseX + i * 8, y, 18, rangeIndex * 9, 9, 9);
+                    mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - i) * 8, y, 18, rangeIndex * 9, 9, 9);
                 }
                 else
                 {
                     GlStateManager.color(color[0], color[1], color[2], 1f);
-                    mc.ingameGUI.drawTexturedModalRect(baseX + i * 8, y, 18, 0, 9, 9);
+                    mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - i) * 8, y, 18, 0, 9, 9);
                 }
             }
 
             if (hasHalf && fullIcons < ICONS_PER_RANGE)
             {
-                if (ConfigHandler.toughnessOverlayTexture)
+                if (ModConfig.GUI.toughnessOverlayTexture)
                 {
                     GlStateManager.color(1f, 1f, 1f, 1f);
-                    mc.ingameGUI.drawTexturedModalRect(baseX + fullIcons * 8, y, 9, rangeIndex * 9, 9, 9);
+                    mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - fullIcons) * 8, y, 9, rangeIndex * 9, 9, 9);
                 }
                 else
                 {
                     if (totalRanges == 1)
                     {
                         GlStateManager.color(1f, 1f, 1f, 1f);
-                        mc.ingameGUI.drawTexturedModalRect(baseX + fullIcons * 8, y, 9, 0, 9, 9);
+                        mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - fullIcons) * 8, y, 9, 0, 9, 9);
                     }
                     else
                     {
-                        mc.ingameGUI.drawTexturedModalRect(baseX + fullIcons * 8, y, 9, 0, 5, 9);
-                        GlStateManager.color(previousColor[0], previousColor[1], previousColor[2], 1f);
-                        mc.ingameGUI.drawTexturedModalRect(baseX + fullIcons * 8 + 5, y, 18 + 5, 0, 4, 9);
+                        GlStateManager.color(color[0], color[1], color[2], 1f);
+                        mc.ingameGUI.drawTexturedModalRect(baseX + (ICONS_PER_RANGE - 1 - fullIcons) * 8 + 4, y, 9 + 4, 0, 5, 9);
                     }
                 }
             }

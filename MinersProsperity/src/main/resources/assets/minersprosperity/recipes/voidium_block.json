@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "gemVoidium"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:voidium_block",
+        "count": 1
+    }
+}

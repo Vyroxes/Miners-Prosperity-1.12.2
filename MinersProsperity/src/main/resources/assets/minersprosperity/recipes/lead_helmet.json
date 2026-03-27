@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "A A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "ingotLead"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:lead_helmet",
+        "count": 1
+    }
+}

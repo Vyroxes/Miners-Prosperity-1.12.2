@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A A",
+        "A A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "ingotInconel"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:inconel_boots",
+        "count": 1
+    }
+}

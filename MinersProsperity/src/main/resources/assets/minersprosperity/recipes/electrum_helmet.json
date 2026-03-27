@@ -1,0 +1,17 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "A A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "ingotElectrum"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:electrum_helmet",
+        "count": 1
+    }
+}

@@ -1,0 +1,9 @@
+{
+	"parent": "minersprosperity:block/machine",
+	"textures":
+	{
+		"up": "minersprosperity:blocks/metal_press_top",
+		"front": "#front",
+		"side": "minersprosperity:blocks/metal_press_side"
+	}
+}

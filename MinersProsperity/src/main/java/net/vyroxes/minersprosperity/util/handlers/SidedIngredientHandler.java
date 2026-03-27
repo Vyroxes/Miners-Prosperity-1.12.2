@@ -293,8 +293,6 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler
     @Override
     public int getSlots()
     {
-//        if (this.tank != null) return this.customItemStackHandler.getSlots() + 1;
-//        else return this.customItemStackHandler.getSlots();
         return this.customItemStackHandler.getSlots();
     }
 

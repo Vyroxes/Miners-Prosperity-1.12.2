@@ -2,7 +2,8 @@ package net.vyroxes.minersprosperity.objects.tabs;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.vyroxes.minersprosperity.init.ItemInit;
+import net.vyroxes.minersprosperity.init.ToolInit;
+import org.jetbrains.annotations.NotNull;
 
 public class TabTools extends CreativeTabs
 {
@@ -12,8 +13,8 @@ public class TabTools extends CreativeTabs
 	}
 
 	@Override
-	public ItemStack createIcon()
+	public @NotNull ItemStack createIcon()
 	{
-		return new ItemStack(ItemInit.EMERALD_PICKAXE);
+		return new ItemStack(ToolInit.EMERALD_PICKAXE);
 	}
 }

@@ -21,8 +21,14 @@ public class NetworkHandler
         NETWORK.registerMessage(MessageSlotsState.Handler.class, MessageSlotsState.class, id++, Side.SERVER);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.CLIENT);
         NETWORK.registerMessage(MessageOpenGui.Handler.class, MessageOpenGui.class, id++, Side.SERVER);
-        NETWORK.registerMessage(MessageAutoCollect.Handler.class, MessageAutoCollect.class, id++, Side.CLIENT);
-        NETWORK.registerMessage(MessageAutoCollect.Handler.class, MessageAutoCollect.class, id++, Side.SERVER);
+        NETWORK.registerMessage(MessageBackpackState.Handler.class, MessageBackpackState.class, id++, Side.CLIENT);
+        NETWORK.registerMessage(MessageBackpackState.Handler.class, MessageBackpackState.class, id++, Side.SERVER);
+        NETWORK.registerMessage(MessageEnchantmentState.Handler.class, MessageEnchantmentState.class, id++, Side.CLIENT);
+        NETWORK.registerMessage(MessageEnchantmentState.Handler.class, MessageEnchantmentState.class, id++, Side.SERVER);
+        NETWORK.registerMessage(MessageOpenPortableCraftingTable.Handler.class, MessageOpenPortableCraftingTable.class, id++, Side.CLIENT);
+        NETWORK.registerMessage(MessageOpenPortableCraftingTable.Handler.class, MessageOpenPortableCraftingTable.class, id++, Side.SERVER);
+        NETWORK.registerMessage(MessageOpenBackpack.Handler.class, MessageOpenBackpack.class, id++, Side.CLIENT);
+        NETWORK.registerMessage(MessageOpenBackpack.Handler.class, MessageOpenBackpack.class, id++, Side.SERVER);
     }
 
     public static void sendVariableUpdate(int id, int variable, BlockPos pos)
@@ -40,8 +46,23 @@ public class NetworkHandler
         NETWORK.sendToServer(new MessageOpenGui(guiId, pos));
     }
 
-    public static void sendAutoCollectUpdate(boolean autoCollect)
+    public static void sendBackpackStateUpdate(boolean value, String state, boolean fromBaubles)
     {
-        NETWORK.sendToServer(new MessageAutoCollect(autoCollect));
+        NETWORK.sendToServer(new MessageBackpackState(value, state, fromBaubles));
+    }
+
+    public static void sendVacuumStateUpdate(boolean value, String state, int enchantmentID)
+    {
+        NETWORK.sendToServer(new MessageEnchantmentState(value, state, enchantmentID));
+    }
+
+    public static void sendOpenPortableCraftingTableUpdate()
+    {
+        NETWORK.sendToServer(new MessageOpenPortableCraftingTable());
+    }
+
+    public static void sendOpenBackpackUpdate()
+    {
+        NETWORK.sendToServer(new MessageOpenBackpack());
     }
 }

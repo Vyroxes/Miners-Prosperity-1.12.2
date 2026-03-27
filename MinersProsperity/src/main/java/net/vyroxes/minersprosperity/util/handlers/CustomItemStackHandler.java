@@ -1,23 +1,40 @@
 package net.vyroxes.minersprosperity.util.handlers;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.ItemStackHandler;
 import net.vyroxes.minersprosperity.init.ItemInit;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesMetalPress;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityAlloyFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityElectricFurnace;
+import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMetalPress;
 import org.jetbrains.annotations.NotNull;
 
 public class CustomItemStackHandler extends ItemStackHandler
 {
+    private final TileEntity tile;
     private final int inputSlots;
     private final int energySlots;
     private final int outputSlots;
     private final int upgradeSlots;
+    public static final ItemStack[] DIES =
+    {
+            new ItemStack(ItemInit.IRON_GEAR_DIE),
+            new ItemStack(ItemInit.IRON_PLATE_DIE),
+            new ItemStack(ItemInit.IRON_ROD_DIE),
+            new ItemStack(ItemInit.REFINED_OBSIDIAN_GEAR_DIE),
+            new ItemStack(ItemInit.REFINED_OBSIDIAN_PLATE_DIE),
+            new ItemStack(ItemInit.REFINED_OBSIDIAN_ROD_DIE)
+    };
 
-    public CustomItemStackHandler(int inputSlots, int energySlots, int outputSlots, int upgradeSlots)
+    public CustomItemStackHandler(TileEntity tile, int inputSlots, int energySlots, int outputSlots, int upgradeSlots)
     {
         super(inputSlots + energySlots + outputSlots + upgradeSlots);
+        this.tile = tile;
         this.inputSlots = inputSlots;
         this.energySlots = energySlots;
         this.outputSlots = outputSlots;
@@ -60,7 +77,22 @@ public class CustomItemStackHandler extends ItemStackHandler
     {
         if (slot < this.inputSlots)
         {
-            return RecipesAlloyFurnace.getInstance().getLookupTable().isItemValid(this, 0, this.inputSlots, slot, stack);
+            if (tile instanceof TileEntityAlloyFurnace)
+            {
+                return RecipesAlloyFurnace.getInstance().getLookupTable().isItemValid(this, 0, this.inputSlots, slot, stack);
+            }
+            else if (tile instanceof TileEntityMetalPress)
+            {
+                return RecipesMetalPress.getInstance().getLookupTable().isItemValid(this, slot, stack);
+            }
+            else if (tile instanceof TileEntityElectricFurnace)
+            {
+                return !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty();
+            }
+            else
+            {
+                return false;
+            }
         }
         else if (slot < this.inputSlots + this.energySlots)
         {
@@ -74,6 +106,19 @@ public class CustomItemStackHandler extends ItemStackHandler
         {
             return false;
         }
+    }
+
+    public boolean isDieItemValid(ItemStack stack)
+    {
+        for (ItemStack die : DIES)
+        {
+            if (ItemStack.areItemsEqualIgnoreDurability(stack, die))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean isEnergyItemValid(ItemStack stack)

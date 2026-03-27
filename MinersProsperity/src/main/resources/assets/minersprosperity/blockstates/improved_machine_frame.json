@@ -1,0 +1,17 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minersprosperity:improved_machine_frame"
+  },
+  "variants": {
+    "inventory": [
+      {}
+    ],
+    "normal": {
+      "model": "minersprosperity:improved_machine_frame",
+      "textures": {
+        "all": "minersprosperity:blocks/improved_machine_frame"
+      }
+    }
+  }
+}

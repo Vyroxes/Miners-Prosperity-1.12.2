@@ -1,33 +1,33 @@
 package net.vyroxes.minersprosperity.objects.tools;
 
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.MinersProsperity;
-import net.vyroxes.minersprosperity.init.ItemInit;
+import net.vyroxes.minersprosperity.init.ToolInit;
 import net.vyroxes.minersprosperity.util.interfaces.IHasModel;
+import org.jetbrains.annotations.NotNull;
 
 public class ToolHoeBase extends ItemHoe implements IHasModel
 {
-	private final Item repairItem;
-
-	public ToolHoeBase(String name, ToolMaterial material, Item repairItem)
+	public ToolHoeBase(String name, ToolMaterial material)
 	{
 		super(material);
-		this.repairItem = repairItem;
 		setTranslationKey(name);
 		setRegistryName(name);
 		setCreativeTab(MinersProsperity.tools_tab);
 		
-		ItemInit.ITEMS.add(this);
+		ToolInit.TOOLS.add(this);
 	}
-	
+
 	@Override
-	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+	public boolean getIsRepairable(@NotNull ItemStack toRepair, @NotNull ItemStack repair)
 	{
-        return repair.getItem() == repairItem || super.getIsRepairable(toRepair, repair);
+		ItemStack mat = this.toolMaterial.getRepairItemStack();
+		if (!mat.isEmpty() && OreDictionary.itemMatches(mat, repair, false)) return true;
+		return super.getIsRepairable(toRepair, repair);
 	}
-	
+
 	@Override
 	public void registerModels()
 	{

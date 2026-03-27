@@ -13,7 +13,7 @@
 		"A":
 		{
 			"type": "forge:ore_dict",
-			"ore": "ingotGold"
+			"ore": "gemDiamond"
 		},
 		"B":
 		{

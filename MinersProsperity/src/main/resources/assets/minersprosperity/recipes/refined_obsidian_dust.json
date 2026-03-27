@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "dustTinyRefinedObsidian"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:refined_obsidian_dust",
+        "count": 1
+    }
+}

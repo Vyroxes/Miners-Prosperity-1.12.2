@@ -14,16 +14,18 @@ import org.jetbrains.annotations.NotNull;
 public class ContainerUpgrades extends Container
 {
     private final TileEntityMachine tileEntity;
+    private final int inputs;
 
     public ContainerUpgrades(InventoryPlayer playerInventory, TileEntityMachine tileEntity)
     {
         this.tileEntity = tileEntity;
         IItemHandler handler = this.tileEntity.getCustomItemStackHandler();
+        this.inputs = this.tileEntity.getCustomItemStackHandler().getInputSlots();
 
-        this.addSlotToContainer(new SlotItemHandler(handler, 4, 50, 35));
-        this.addSlotToContainer(new SlotItemHandler(handler, 5, 70, 35));
-        this.addSlotToContainer(new SlotItemHandler(handler, 6, 90, 35));
-        this.addSlotToContainer(new SlotItemHandler(handler, 7, 110, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 4 : 3, 50, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 5 : 4, 70, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 6 : 5, 90, 35));
+        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 7 : 6, 110, 35));
 
         for (int i = 0; i < 3; ++i)
         {

@@ -39,7 +39,9 @@ public class AlloyFurnaceRecipe implements IRecipeWrapper
     {
         FontRenderer renderer = minecraft.fontRenderer;
         RecipesAlloyFurnace recipes = RecipesAlloyFurnace.getInstance();
-        float experience = recipes.getExperience(output);
+        ItemStack input1 = inputs.get(0).get(0);
+        ItemStack input2 = inputs.get(1).get(0);
+        float experience = recipes.getExperience(input1, input2);
 
         String experienceString = JEICompat.translateToLocalFormatted("gui.jei.category.smelting.experience", experience);
         int experienceStringWidth = renderer.getStringWidth(experienceString);

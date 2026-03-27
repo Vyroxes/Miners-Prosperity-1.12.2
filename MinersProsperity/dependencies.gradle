@@ -38,5 +38,6 @@
  * For more details, see https://docs.gradle.org/8.4/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-
+    compileOnlyApi(rfg.deobf("curse.maven:baubles-227083:2518667"))
+    devOnlyNonPublishable(rfg.deobf("curse.maven:baubles-227083:2518667"))
 }

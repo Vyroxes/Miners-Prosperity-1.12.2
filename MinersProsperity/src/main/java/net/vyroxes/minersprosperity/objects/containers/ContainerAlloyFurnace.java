@@ -14,6 +14,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.vyroxes.minersprosperity.objects.blocks.machines.recipes.RecipesAlloyFurnace;
 import net.vyroxes.minersprosperity.objects.tileentities.TileEntityMachine;
 import net.vyroxes.minersprosperity.util.annotations.NonnullByDefault;
+import net.vyroxes.minersprosperity.util.handlers.ModConfig;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerAlloyFurnace extends Container
@@ -70,7 +71,7 @@ public class ContainerAlloyFurnace extends Container
 
     public void giveExperienceToPlayer(EntityPlayer entityPlayer)
     {
-        int totalExperience = this.tileEntity.getFluidStored() / 10;
+        int totalExperience = this.tileEntity.getFluidStored() / (1000 / ModConfig.MACHINES.mbToXpRatio);
         int drainedExperience = 0;
 
         while (totalExperience > 0)
@@ -81,7 +82,7 @@ public class ContainerAlloyFurnace extends Container
             entityPlayer.world.spawnEntity(new EntityXPOrb(entityPlayer.world, entityPlayer.posX, entityPlayer.posY + 0.5D, entityPlayer.posZ + 0.5D, xpSplit));
         }
 
-        this.tileEntity.getFluidTank().drainInternal(drainedExperience * 10, true);
+        this.tileEntity.getFluidTank().drainInternal(drainedExperience * (1000 / ModConfig.MACHINES.mbToXpRatio), true);
     }
 
     @Override

@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "dustTinyEndStone"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:end_stone_dust",
+        "count": 1
+    }
+}
