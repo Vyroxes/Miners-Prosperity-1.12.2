@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "gemEmerald"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "stickWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:upgrade_emerald_chest",
+		"count": 1
+	}
+}

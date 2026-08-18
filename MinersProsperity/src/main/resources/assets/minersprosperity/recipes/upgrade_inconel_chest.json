@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotInconel"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "stickWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:upgrade_inconel_chest",
+		"count": 1
+	}
+}

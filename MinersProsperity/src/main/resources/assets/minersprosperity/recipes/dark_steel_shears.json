@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A",
+    "A "
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "ingotDarkSteel"
+    }
+  },
+  "result": {
+    "item": "minersprosperity:dark_steel_shears",
+    "count": 1
+  }
+}

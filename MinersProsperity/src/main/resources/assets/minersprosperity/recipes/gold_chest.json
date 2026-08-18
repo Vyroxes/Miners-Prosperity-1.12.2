@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "ingotGold"
+		},
+		"B": {
+			"item": "minersprosperity:inconel_chest"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:gold_chest",
+		"count": 1
+	}
+}

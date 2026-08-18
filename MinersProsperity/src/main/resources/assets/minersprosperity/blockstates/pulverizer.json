@@ -1,0 +1,47 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "minersprosperity:pulverizer",
+		"textures": {
+			"front": "minersprosperity:blocks/pulverizer_front_off"
+		}
+	},
+	"variants": {
+		"inventory": [
+			{
+				"textures": {
+					"front": "minersprosperity:blocks/pulverizer_front_off"
+				}
+			}
+		],
+		"state": {
+			"off": {
+				"textures": {
+					"front": "minersprosperity:blocks/pulverizer_front_off"
+				}
+			},
+			"powered": {
+				"textures": {
+					"front": "minersprosperity:blocks/pulverizer_front_powered"
+				}
+			},
+			"active": {
+				"textures": {
+					"front": "minersprosperity:blocks/pulverizer_front_active"
+				}
+			}
+		},
+		"facing": {
+			"north": {},
+			"east": {
+				"y": 90
+			},
+			"south": {
+				"y": 180
+			},
+			"west": {
+				"y": 270
+			}
+		}
+	}
+}

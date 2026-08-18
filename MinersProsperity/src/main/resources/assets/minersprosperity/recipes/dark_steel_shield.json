@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABA",
+		"AAA",
+		" A "
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "ingotDarkSteel"
+		},
+		"B": {
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:dark_steel_shield",
+		"count": 1
+	}
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:item/shield",
+  "overrides":
+  [
+    {
+      "predicate":
+      {
+        "blocking": 1
+      },
+      "model": "minersprosperity:item/custom_shield_blocking"
+    }
+  ]
+}

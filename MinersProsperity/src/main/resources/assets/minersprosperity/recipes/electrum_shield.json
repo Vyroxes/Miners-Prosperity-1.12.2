@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABA",
+		"AAA",
+		" A "
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "ingotElectrum"
+		},
+		"B": {
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:electrum_shield",
+		"count": 1
+	}
+}

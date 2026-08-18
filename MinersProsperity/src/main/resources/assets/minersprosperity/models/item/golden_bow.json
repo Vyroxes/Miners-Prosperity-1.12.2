@@ -1,0 +1,25 @@
+{
+  "parent": "minersprosperity:item/golden_bow_standby",
+  "overrides": [
+    {
+      "predicate": {
+        "minersprosperity:pulling": 1
+      },
+      "model": "minersprosperity:item/golden_bow_pulling_0"
+    },
+    {
+      "predicate": {
+        "minersprosperity:pulling": 1,
+        "minersprosperity:pull": 0.65
+      },
+      "model": "minersprosperity:item/golden_bow_pulling_1"
+    },
+    {
+      "predicate": {
+        "minersprosperity:pulling": 1,
+        "minersprosperity:pull": 0.9
+      },
+      "model": "minersprosperity:item/golden_bow_pulling_2"
+    }
+  ]
+}

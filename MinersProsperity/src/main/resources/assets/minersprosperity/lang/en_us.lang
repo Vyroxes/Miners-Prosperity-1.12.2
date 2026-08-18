@@ -6,21 +6,52 @@ itemGroup.blocks_tab=Miner's Prosperity Blocks
 
 #FLUIDS
 fluid.liquid_experience=Liquid Experience
+fluid.crude_oil=Crude Oil
 
 #TOOLS
-item.wooden_paxel.name=Wooden Paxel
-item.stone_paxel.name=Stone Paxel
-item.lead_paxel.name=Lead Paxel
-item.iron_paxel.name=Iron Paxel
-item.inconel_paxel.name=Inconel Paxel
-item.golden_paxel.name=Golden Paxel
-item.electrum_paxel.name=Electrum Paxel
-item.diamond_paxel.name=Diamond Paxel
-item.obsidian_cluster_paxel.name=Obsidian Cluster Paxel
-item.emerald_paxel.name=Emerald Paxel
-item.cobaltsteel_paxel.name=Cobaltsteel Paxel
-item.dark_steel_paxel.name=Dark Steel Paxel
-item.black_opal_paxel.name=Black Opal Paxel
+#SHEARS
+item.wooden_shears.name=Wooden Shears
+item.stone_shears.name=Stone Shears
+item.lead_shears.name=Lead Shears
+item.inconel_shears.name=Inconel Shears
+item.golden_shears.name=Golden Shears
+item.electrum_shears.name=Electrum Shears
+item.diamond_shears.name=Diamond Shears
+item.obsidian_cluster_shears.name=Obsidian Cluster Shears
+item.emerald_shears.name=Emerald Shears
+item.cobaltsteel_shears.name=Cobaltsteel Shears
+item.dark_steel_shears.name=Dark Steel Shears
+item.black_opal_shears.name=Black Opal Shears
+
+#SHIELDS
+item.stone_shield.name=Stone Shield
+item.lead_shield.name=Lead Shield
+item.iron_shield.name=Iron Shield
+item.inconel_shield.name=Inconel Shield
+item.golden_shield.name=Golden Shield
+item.electrum_shield.name=Electrum Shield
+item.diamond_shield.name=Diamond Shield
+item.obsidian_cluster_shield.name=Obsidian Cluster Shield
+item.emerald_shield.name=Emerald Shield
+item.cobaltsteel_shield.name=Cobaltsteel Shield
+item.dark_steel_shield.name=Dark Steel Shield
+item.black_opal_shield.name=Black Opal Shield
+
+#BOWS
+item.stone_bow.name=Stone Bow
+item.lead_bow.name=Lead Bow
+item.iron_bow.name=Iron Bow
+item.inconel_bow.name=Inconel Bow
+item.golden_bow.name=Golden Bow
+item.electrum_bow.name=Electrum Bow
+item.diamond_bow.name=Diamond Bow
+item.obsidian_cluster_bow.name=Obsidian Cluster Bow
+item.emerald_bow.name=Emerald Bow
+item.cobaltsteel_bow.name=Cobaltsteel Bow
+item.dark_steel_bow.name=Dark Steel Bow
+item.black_opal_bow.name=Black Opal Bow
+
+#TOOLS
 item.lead_sword.name=Lead Sword
 item.lead_pickaxe.name=Lead Pickaxe
 item.lead_axe.name=Lead Axe
@@ -61,6 +92,21 @@ item.black_opal_pickaxe.name=Black Opal Pickaxe
 item.black_opal_axe.name=Black Opal Axe
 item.black_opal_shovel.name=Black Opal Shovel
 item.black_opal_hoe.name=Black Opal Hoe
+
+#PAXELS
+item.wooden_paxel.name=Wooden Paxel
+item.stone_paxel.name=Stone Paxel
+item.lead_paxel.name=Lead Paxel
+item.iron_paxel.name=Iron Paxel
+item.inconel_paxel.name=Inconel Paxel
+item.golden_paxel.name=Golden Paxel
+item.electrum_paxel.name=Electrum Paxel
+item.diamond_paxel.name=Diamond Paxel
+item.obsidian_cluster_paxel.name=Obsidian Cluster Paxel
+item.emerald_paxel.name=Emerald Paxel
+item.cobaltsteel_paxel.name=Cobaltsteel Paxel
+item.dark_steel_paxel.name=Dark Steel Paxel
+item.black_opal_paxel.name=Black Opal Paxel
 
 #ARMOR
 item.wooden_helmet.name=Wooden Helmet
@@ -104,15 +150,50 @@ item.black_opal_chestplate.name=Black Opal Chestplate
 item.black_opal_leggings.name=Black Opal Leggings
 item.black_opal_boots.name=Black Opal Boots
 
+#HORSE ARMOR
+item.leather_horse_armor.name=Leather Horse Armor
+item.wooden_horse_armor.name=Wooden Horse Armor
+item.stone_horse_armor.name=Stone Horse Armor
+item.lead_horse_armor.name=Lead Horse Armor
+item.inconel_horse_armor.name=Inconel Horse Armor
+item.electrum_horse_armor.name=Electrum Horse Armor
+item.obsidian_cluster_horse_armor.name=Obsidian Cluster Horse Armor
+item.emerald_horse_armor.name=Emerald Horse Armor
+item.cobaltsteel_horse_armor.name=Cobaltsteel Horse Armor
+item.dark_steel_horse_armor.name=Dark Steel Horse Armor
+item.black_opal_horse_armor.name=Black Opal Horse Armor
+
 #ITEMS
 item.wrench.name=Wrench
+item.wooden_treetap.name=Wooden Treetap
+item.iron_treetap.name=Iron Treetap
+item.refined_obsidian_treetap.name=Refined Obsidian Treetap
+item.fire_extinguisher.name=Fire Extinguisher
+item.portable_crafting_table.name=Portable Crafting Table
+item.entity_relocator.name=Entity Relocator
+
+#MATERIALS
+item.resin.name=Resin
+item.rubber.name=Rubber
+item.silicon.name=Silicon
+
+#DIES
 item.iron_gear_die.name=Iron Gear Die
 item.iron_plate_die.name=Iron Plate Die
 item.iron_rod_die.name=Iron Rod Die
 item.refined_obsidian_gear_die.name=Refined Obsidian Gear Die
 item.refined_obsidian_plate_die.name=Refined Obsidian Plate Die
 item.refined_obsidian_rod_die.name=Refined Obsidian Rod Die
-item.portable_crafting_table.name=Portable Crafting Table
+
+#CIRCUIT BOARDS
+item.basic_circuit_board.name=Basic Circuit Board
+item.improved_circuit_board.name=Improved Circuit Board
+item.advanced_circuit_board.name=Advanced Circuit Board
+item.elite_circuit_board.name=Elite Circuit Board
+item.ultimate_circuit_board.name=Ultimate Circuit Board
+item.supreme_circuit_board.name=Supreme Circuit Board
+
+#BATTERIES
 item.basic_battery.name=Battery
 item.improved_battery.name=Improved Battery
 item.advanced_battery.name=Advanced Battery
@@ -120,9 +201,21 @@ item.elite_battery.name=Elite Battery
 item.ultimate_battery.name=Ultimate Battery
 item.supreme_battery.name=Supreme Battery
 item.creative_battery.name=Creative Battery
-item.fire_extinguisher.name=Fire Extinguisher
 
-#UPGRADES
+#CHEST UPGRADES
+item.upgrade_lead_chest.name=Wood To Lead Chest Upgrade
+item.upgrade_iron_chest.name=Lead To Iron Chest Upgrade
+item.upgrade_inconel_chest.name=Iron To Inconel Chest Upgrade
+item.upgrade_gold_chest.name=Inconel To Gold Chest Upgrade
+item.upgrade_electrum_chest.name=Gold To Electrum Chest Upgrade
+item.upgrade_diamond_chest.name=Electrum To Diamond Chest Upgrade
+item.upgrade_obsidian_cluster_chest.name=Diamond To Obsidian Cluster Chest Upgrade
+item.upgrade_emerald_chest.name=Obsidian Cluster To Emerald Chest Upgrade
+item.upgrade_cobaltsteel_chest.name=Emerald To Cobaltsteel Chest Upgrade
+item.upgrade_dark_steel_chest.name=Cobaltsteel To Dark Steel Chest Upgrade
+item.upgrade_black_opal_chest.name=Dark Steel To Black Opal Chest Upgrade
+
+#MACHINE UPGRADES
 item.machine_upgrade.name=Machine Upgrade
 item.speed_upgrade.name=Speed Upgrade
 item.energy_upgrade.name=Energy Upgrade
@@ -143,6 +236,8 @@ item.dark_steel_backpack.name=Dark Steel Backpack
 item.black_opal_backpack.name=Black Opal Backpack
 
 #GEMS
+item.graphite.name=Graphite
+item.coke.name=Coke
 item.ruby.name=Ruby
 item.sapphire.name=Sapphire
 item.amethyst.name=Amethyst
@@ -239,7 +334,7 @@ item.luminosite_nugget.name=Luminosite Nugget
 #DUSTS
 item.salt.name=Salt
 item.ashes.name=Ashes
-item.sulfur_dust.name=Sulfur Dust
+item.sulfur.name=Sulfur
 item.clay_dust.name=Clay Dust
 item.wood_dust.name=Wood Dust
 item.stone_dust.name=Stone Dust
@@ -249,6 +344,9 @@ item.end_stone_dust.name=End Stone Dust
 item.netherrack_dust.name=Netherrack Dust
 item.coal_dust.name=Coal Dust
 item.charcoal_dust.name=Charcoal Dust
+item.graphite_dust.name=Graphite Dust
+item.carbon_dust.name=Carbon Dust
+item.coke_dust.name=Coke Dust
 item.iron_dust.name=Iron Dust
 item.quartz_dust.name=Nether Quartz Dust
 item.gold_dust.name=Gold Dust
@@ -294,6 +392,7 @@ item.voidium_dust.name=Voidium Dust
 item.luminosite_dust.name=Luminosite Dust
 
 #TINY DUSTS
+item.salt_tiny_dust.name=Salt Tiny Dust
 item.sulfur_tiny_dust.name=Sulfur Tiny Dust
 item.clay_tiny_dust.name=Clay Tiny Dust
 item.wood_tiny_dust.name=Wood Tiny Dust
@@ -304,6 +403,9 @@ item.end_stone_tiny_dust.name=End Stone Tiny Dust
 item.netherrack_tiny_dust.name=Netherrack Tiny Dust
 item.coal_tiny_dust.name=Coal Tiny Dust
 item.charcoal_tiny_dust.name=Charcoal Tiny Dust
+item.graphite_tiny_dust.name=Graphite Tiny Dust
+item.carbon_tiny_dust.name=Carbon Tiny Dust
+item.coke_tiny_dust.name=Coke Tiny Dust
 item.iron_tiny_dust.name=Iron Tiny Dust
 item.glowstone_tiny_dust.name=Glowstone Tiny Dust
 item.quartz_tiny_dust.name=Nether Quartz Tiny Dust
@@ -527,6 +629,7 @@ item.amethyst_rod.name=Amethyst Rod
 item.topaz_rod.name=Topaz Rod
 item.peridot_rod.name=Peridot Rod
 item.refined_obsidian_rod.name=Refined Obsidian Rod
+item.obsidian_cluster_rod.name=Obsidian Cluster Rod
 item.cobalt_rod.name=Cobalt Rod
 item.cobaltsteel_rod.name=Cobaltsteel Rod
 item.onyx_rod.name=Onyx Rod
@@ -540,15 +643,16 @@ item.luminosite_rod.name=Luminosite Rod
 
 #GUI
 gui.input.name=Input
-gui.input_1.name=Input 1 Slot
-gui.input_2.name=Input 2 Slot
-gui.input_3.name=Input 3 Slot
-gui.energy.name=Energy Slot
-gui.output.name=Output
-gui.output_1.name=Output 1 Slot
-gui.output_2.name=Output 2 Slot
-gui.output_3.name=Output 3 Slot
-gui.experience.name=Liquid Experience Tank
+gui.input_1_slot.name=Input 1 Slot
+gui.input_2_slot.name=Input 2 Slot
+gui.input_3_slot.name=Input 3 Slot
+gui.energy.name=Energy
+gui.energy_slot.name=Energy Slot
+gui.output_slot.name=Output Slot
+gui.output_1_slot.name=Output 1 Slot
+gui.output_2_slot.name=Output 2 Slot
+gui.output_3_slot.name=Output 3 Slot
+gui.experience_tank.name=Liquid Experience Tank
 gui.back.name=Back
 gui.side_front.name=Front
 gui.side_back.name=Back
@@ -559,7 +663,6 @@ gui.side_bottom.name=Bottom
 gui.redstone_ignored.name=Ignored
 gui.redstone_low_signal.name=Low Signal
 gui.redstone_high_signal.name=High Signal
-gui.slots_configuration.name=Slots Configuration
 gui.upgrades.name=Upgrades
 gui.set_all_disabled.name=Set All Sides in All Slots to Disabled
 gui.set_all_default.name=Set All Sides in All Slots to Default
@@ -568,6 +671,7 @@ gui.set_input.name=Set All Sides to Input
 gui.set_auto_input.name=Set All Sides to Auto-Input
 gui.set_output.name=Set All Sides to Output
 gui.set_auto_output.name=Set All Sides to Auto-Output
+gui.set_input_output.name=Set All Sides to Input/Output
 gui.energy_stored=Energy Stored
 gui.energy_usage=Energy Usage
 gui.energy_generation=Energy Generation
@@ -583,6 +687,10 @@ gui.slot_input.name=Input
 gui.slot_auto_input.name=Auto-Input
 gui.slot_output.name=Output
 gui.slot_auto_output.name=Auto-Output
+gui.slot_input_output.name=Input/Output
+gui.slot_condition.name=Condition
+gui.slot_condition_when_empty.name=When Energy Item Is Empty
+gui.slot_condition_when_full.name=When Energy Item Is Full
 gui.output_default.name=Output Mode: Default
 gui.output_void_excess.name=Output Mode: Void Excess
 gui.output_void_all.name=Output Mode: Void All
@@ -612,7 +720,42 @@ gui.backpack.ore_dict.off=Ignore OreDict
 gui.backpack.modid.on=Use ModID
 gui.backpack.modid.off=Ignore ModID
 
+#CONFIG
+config.minersprosperity.category.ores=Ores
+config.minersprosperity.category.world_generation=World Generation
+config.minersprosperity.category.machines=Machines
+config.minersprosperity.category.blocks=Blocks
+config.minersprosperity.category.items=Items
+config.minersprosperity.category.others=Others
+config.minersprosperity.category.gui=GUI
+config.minersprosperity.category.enchantments=Enchantments
+config.minersprosperity.category.integration=Integration
+config.minersprosperity.category.tooltips=Tooltips
+config.minersprosperity.gui.armor_toughness_color_21_40=Armor/Toughness Color 21-40
+config.minersprosperity.gui.armor_toughness_color_41_60=Armor/Toughness Color 41-60
+config.minersprosperity.gui.armor_toughness_color_61_80=Armor/Toughness Color 61-80
+config.minersprosperity.gui.armor_toughness_color_81_100=Armor/Toughness Color 81-100
+config.minersprosperity.gui.armor_toughness_color_101_120=Armor/Toughness Color 101-120
+config.minersprosperity.gui.armor_toughness_color_121_140=Armor/Toughness Color 121-140
+
 #BLOCKS
+#BLOCKS
+tile.resin_block.name=Resin
+tile.resin_block_empty.name=Growing Resin
+
+#CHESTS
+tile.lead_chest.name=Lead Chest
+tile.iron_chest.name=Iron Chest
+tile.inconel_chest.name=Inconel Chest
+tile.gold_chest.name=Gold Chest
+tile.electrum_chest.name=Electrum Chest
+tile.diamond_chest.name=Diamond Chest
+tile.obsidian_cluster_chest.name=Obsidian Cluster Chest
+tile.emerald_chest.name=Emerald Chest
+tile.cobaltsteel_chest.name=Cobaltsteel Chest
+tile.dark_steel_chest.name=Dark Steel Chest
+tile.black_opal_chest.name=Black Opal Chest
+
 #MACHINE FRAMES
 tile.basic_machine_frame.name=Basic Machine Frame
 tile.improved_machine_frame.name=Improved Machine Frame
@@ -623,9 +766,12 @@ tile.supreme_machine_frame.name=Supreme Machine Frame
 
 #MACHINES
 tile.alloy_furnace.name=Alloy Furnace
+tile.pulverizer.name=Pulverizer
+tile.rock_crusher.name=Rock Crusher
+tile.grinder.name=Grinder
 tile.metal_press.name=Metal Press
+tile.crystallizer.name=Crystallizer
 tile.electric_furnace.name=Electric Furnace
-tile.crusher.name=Crusher
 tile.basic_solar_panel.name=Basic Solar Panel
 tile.improved_solar_panel.name=Improved Solar Panel
 tile.advanced_solar_panel.name=Advanced Solar Panel
@@ -635,6 +781,9 @@ tile.supreme_solar_panel.name=Supreme Solar Panel
 tile.creative_solar_panel.name=Creative Solar Panel
 
 #ORES
+tile.halite_ore.name=Halite Ore
+tile.sulfur_ore.name=Sulfur Ore
+tile.graphite_ore.name=Graphite Ore
 tile.copper_ore.name=Copper Ore
 tile.tin_ore.name=Tin Ore
 tile.silver_ore.name=Silver Ore
@@ -708,9 +857,12 @@ tile.luminosite_block.name=Block of Luminosite
 
 #CONTAINERS
 container.alloy_furnace=Alloy Furnace
+container.pulverizer=Pulverizer
+container.rock_crusher=Rock Crusher
+container.grinder=Grinder
 container.metal_press=Metal Press
+container.crystallizer=Crystallizer
 container.electric_furnace=Electric Furnace
-container.crusher=Crusher
 container.basic_solar_panel=Basic Solar Panel
 container.improved_solar_panel=Improved Solar Panel
 container.advanced_solar_panel=Advanced Solar Panel
@@ -734,6 +886,9 @@ tooltip.off=Off
 tooltip.ore_dict=OreDict
 tooltip.harvest_level= Harvest Level
 tooltip.mining_speed= Mining Speed
+tooltip.entity_relocator.empty=Empty
+tooltip.entity_relocator.entity=Stored Entity
+tooltip.entity_relocator.health=Health
 
 #ENCHANTMENTS
 enchantment.quick_mining=Quick Mining
@@ -743,7 +898,7 @@ enchantment.minersprosperity.glow.desc=Illuminates the area around the player.
 enchantment.unrestricted=Unrestricted
 enchantment.minersprosperity.unrestricted.desc=Increases mining speed while flying.
 enchantment.vacuum=Vacuum
-enchantment.minersprosperity.vacuum.desc=Automatically transfers mined items directly to the player's inventory.
+enchantment.minersprosperity.vacuum.desc=Automatically transfers collected items directly to the player's inventory.
 enchantment.far_reach=Far Reach
 enchantment.minersprosperity.far_reach.desc=Allows the player to interact with blocks and entities from a greater distance.
 enchantment.flameproof=Flameproof

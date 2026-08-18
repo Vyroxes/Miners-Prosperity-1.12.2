@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" A ",
+		"A A",
+		" A "
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "stickWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:wood_gear",
+		"count": 1
+	}
+}

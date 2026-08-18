@@ -1,0 +1,6 @@
+{
+  "parent": "minersprosperity:item/black_opal_bow_standby",
+  "textures": {
+    "layer0": "minersprosperity:items/black_opal_bow_pulling_1"
+  }
+}

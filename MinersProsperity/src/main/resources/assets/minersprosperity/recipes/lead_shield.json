@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABA",
+		"AAA",
+		" A "
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "ingotLead"
+		},
+		"B": {
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:lead_shield",
+		"count": 1
+	}
+}

@@ -1,0 +1,36 @@
+package net.vyroxes.minersprosperity.enchantment;
+
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.vyroxes.minersprosperity.init.ModEnchantments;
+import org.jetbrains.annotations.NotNull;
+
+public class EnchantmentImmovable extends Enchantment
+{
+    public EnchantmentImmovable(Rarity rarityIn, EnumEnchantmentType typeIn, EntityEquipmentSlot[] slots) {
+        super(rarityIn, typeIn, slots);
+        this.setRegistryName("immovable");
+        this.setName("immovable");
+    }
+
+    @Override
+    public int getMinEnchantability(int level)
+    {
+        return 15;
+    }
+
+    @Override
+    public int getMaxEnchantability(int level)
+    {
+        return 100;
+    }
+
+    @Override
+    public boolean canApply(@NotNull ItemStack stack) {
+        return super.canApply(stack) || stack.getItem() == Items.BOOK || stack.getItem() == Items.ELYTRA || stack.getItem() instanceof ItemArmor && ((ItemArmor) stack.getItem()).armorType == EntityEquipmentSlot.CHEST;
+    }
+}

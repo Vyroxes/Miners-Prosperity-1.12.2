@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" A ",
+		"ABA",
+		" A "
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotRefinedObsidian"
+		},
+	"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "rodStone"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:refined_obsidian_rod_die",
+		"count": 1
+	}
+}

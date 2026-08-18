@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"ABA",
+		"AAA",
+		" A "
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "cobblestone"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:stone_shield",
+		"count": 1
+	}
+}

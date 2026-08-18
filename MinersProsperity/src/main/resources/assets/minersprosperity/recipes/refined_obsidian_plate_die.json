@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" A ",
+		"ABA",
+		" A "
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotRefinedObsidian"
+		},
+	"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "plateStone"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:refined_obsidian_plate_die",
+		"count": 1
+	}
+}

@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " AB",
+        "A B",
+        " AB"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "rodLead"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "string"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:lead_bow",
+        "count": 1
+    }
+}

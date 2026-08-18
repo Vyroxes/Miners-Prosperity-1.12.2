@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "stickWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:upgrade_iron_chest",
+		"count": 1
+	}
+}

@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" A ",
+		"ABA",
+		" A "
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		},
+	"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "gearStone"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:iron_gear_die",
+		"count": 1
+	}
+}

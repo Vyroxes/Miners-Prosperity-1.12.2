@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "ingotDarkSteel"
+		},
+		"B": {
+			"item": "minersprosperity:cobaltsteel_chest"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:dark_steel_chest",
+		"count": 1
+	}
+}

@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotLead"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "chestWood"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:lead_chest",
+		"count": 1
+	}
+}

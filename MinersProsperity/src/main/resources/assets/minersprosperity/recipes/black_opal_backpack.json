@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "gemBlackOpal"
+		},
+		"B":
+		{
+			"item": "minersprosperity:dark_steel_backpack"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:black_opal_backpack",
+		"count": 1
+	}
+}

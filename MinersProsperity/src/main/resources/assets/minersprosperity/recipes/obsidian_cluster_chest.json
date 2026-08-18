@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "clusterObsidian"
+		},
+		"B": {
+			"item": "minersprosperity:diamond_chest"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:obsidian_cluster_chest",
+		"count": 1
+	}
+}

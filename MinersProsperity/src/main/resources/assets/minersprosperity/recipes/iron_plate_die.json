@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" A ",
+		"ABA",
+		" A "
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		},
+	"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "plateStone"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:iron_plate_die",
+		"count": 1
+	}
+}

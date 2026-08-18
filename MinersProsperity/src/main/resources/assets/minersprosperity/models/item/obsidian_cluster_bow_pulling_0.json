@@ -1,0 +1,6 @@
+{
+  "parent": "minersprosperity:item/obsidian_cluster_bow_standby",
+  "textures": {
+    "layer0": "minersprosperity:items/obsidian_cluster_bow_pulling_0"
+  }
+}

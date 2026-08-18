@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=north,variant=0": { "model": "minersprosperity:resin_block_empty", "y": 0,   "uvlock": true },
+    "facing=north,variant=1": { "model": "minersprosperity:resin_block_2_empty", "y": 0,   "uvlock": true },
+    "facing=north,variant=2": { "model": "minersprosperity:resin_block_3_empty", "y": 0,   "uvlock": true },
+    "facing=north,variant=3": { "model": "minersprosperity:resin_block_4_empty", "y": 0,   "uvlock": true },
+
+    "facing=south,variant=0": { "model": "minersprosperity:resin_block_empty", "y": 180, "uvlock": true },
+    "facing=south,variant=1": { "model": "minersprosperity:resin_block_2_empty", "y": 180, "uvlock": true },
+    "facing=south,variant=2": { "model": "minersprosperity:resin_block_3_empty", "y": 180, "uvlock": true },
+    "facing=south,variant=3": { "model": "minersprosperity:resin_block_4_empty", "y": 180, "uvlock": true },
+
+    "facing=west,variant=0":  { "model": "minersprosperity:resin_block_empty", "y": 270, "uvlock": true },
+    "facing=west,variant=1":  { "model": "minersprosperity:resin_block_2_empty", "y": 270, "uvlock": true },
+    "facing=west,variant=2":  { "model": "minersprosperity:resin_block_3_empty", "y": 270, "uvlock": true },
+    "facing=west,variant=3":  { "model": "minersprosperity:resin_block_4_empty", "y": 270, "uvlock": true },
+
+    "facing=east,variant=0":  { "model": "minersprosperity:resin_block_empty", "y": 90,  "uvlock": true },
+    "facing=east,variant=1":  { "model": "minersprosperity:resin_block_2_empty", "y": 90,  "uvlock": true },
+    "facing=east,variant=2":  { "model": "minersprosperity:resin_block_3_empty", "y": 90,  "uvlock": true },
+    "facing=east,variant=3":  { "model": "minersprosperity:resin_block_4_empty", "y": 90,  "uvlock": true }
+  }
+}

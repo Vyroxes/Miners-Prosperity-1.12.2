@@ -1,0 +1,6 @@
+{
+  "parent": "minersprosperity:item/stone_bow_standby",
+  "textures": {
+    "layer0": "minersprosperity:items/stone_bow_pulling_0"
+  }
+}

@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "ingotInconel"
+		},
+		"B":
+		{
+			"item": "minersprosperity:iron_backpack"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:inconel_backpack",
+		"count": 1
+	}
+}

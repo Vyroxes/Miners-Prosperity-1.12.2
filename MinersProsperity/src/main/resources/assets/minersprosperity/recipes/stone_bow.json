@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " AB",
+        "A B",
+        " AB"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "rodStone"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "string"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:stone_bow",
+        "count": 1
+    }
+}

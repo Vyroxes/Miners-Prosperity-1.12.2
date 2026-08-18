@@ -1,0 +1,17 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "minersprosperity:blocks/resin_block_empty",
+    "particle": "minersprosperity:blocks/resin_block_empty"
+  },
+  "elements": [
+    {
+      "from": [6, 5, 15.9],
+      "to":   [10, 11, 16],
+      "faces": {
+        "north": { "texture": "#all" },
+        "south": { "texture": "#all" }
+      }
+    }
+  ]
+}

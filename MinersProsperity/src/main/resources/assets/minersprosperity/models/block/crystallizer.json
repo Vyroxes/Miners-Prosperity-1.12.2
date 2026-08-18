@@ -1,0 +1,9 @@
+{
+	"parent": "minersprosperity:block/machine",
+	"textures":
+	{
+		"up": "minersprosperity:blocks/crystallizer_top",
+		"front": "#front",
+		"side": "minersprosperity:blocks/crystallizer_side"
+	}
+}

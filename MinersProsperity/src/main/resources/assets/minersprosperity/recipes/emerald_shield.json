@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ABA",
+		"AAA",
+		" A "
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "gemEmerald"
+		},
+		"B": {
+			"type": "forge:ore_dict",
+			"ore": "ingotIron"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:emerald_shield",
+		"count": 1
+	}
+}

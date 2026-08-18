@@ -7,10 +7,25 @@
 		}
 	},
 	"variants": {
-		"inventory": [{}],
-		"powered": {
-			"false": {},
-			"true": {
+		"inventory": [
+			{
+				"textures": {
+					"front": "minersprosperity:blocks/alloy_furnace_front_off"
+				}
+			}
+		],
+		"state": {
+			"off": {
+				"textures": {
+					"front": "minersprosperity:blocks/alloy_furnace_front_off"
+				}
+			},
+			"powered": {
+				"textures": {
+					"front": "minersprosperity:blocks/alloy_furnace_front_powered"
+				}
+			},
+			"active": {
 				"textures": {
 					"front": "minersprosperity:blocks/alloy_furnace_front_active"
 				}
@@ -18,9 +33,15 @@
 		},
 		"facing": {
 			"north": {},
-			"east": {"y": 90},
-			"south": {"y": 180},
-			"west": {"y": 270}
+			"east": {
+				"y": 90
+			},
+			"south": {
+				"y": 180
+			},
+			"west": {
+				"y": 270
+			}
 		}
 	}
 }

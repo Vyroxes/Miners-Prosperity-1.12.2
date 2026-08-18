@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "gemDiamond"
+		},
+		"B": {
+			"item": "minersprosperity:electrum_chest"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:diamond_chest",
+		"count": 1
+	}
+}

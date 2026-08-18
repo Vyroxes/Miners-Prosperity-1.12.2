@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A",
+    "A "
+  ],
+  "key": {
+    "A": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    }
+  },
+  "result": {
+    "item": "minersprosperity:diamond_shears",
+    "count": 1
+  }
+}

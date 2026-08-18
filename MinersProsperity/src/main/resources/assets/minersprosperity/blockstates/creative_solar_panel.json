@@ -1,21 +1,31 @@
 {
 	"forge_marker": 1,
 	"defaults": {
-		"model": "minersprosperity:creative_solar_panel",
+		"model": "minersprosperity:solar_panel",
 		"textures": {
 			"up": "minersprosperity:blocks/creative_solar_panel_top_off"
 		}
 	},
 	"variants": {
-		"inventory": {
-			"model": "minersprosperity:creative_solar_panel",
-			"textures": {
-				"up": "minersprosperity:blocks/creative_solar_panel_top_active"
+		"inventory": [
+			{
+				"textures": {
+					"up": "minersprosperity:blocks/creative_solar_panel_top_off"
+				}
 			}
-		},
-		"powered": {
-			"false": {},
-			"true": {
+		],
+		"state": {
+			"off": {
+				"textures": {
+					"up": "minersprosperity:blocks/creative_solar_panel_top_off"
+				}
+			},
+			"powered": {
+				"textures": {
+					"up": "minersprosperity:blocks/creative_solar_panel_top_powered"
+				}
+			},
+			"active": {
 				"textures": {
 					"up": "minersprosperity:blocks/creative_solar_panel_top_active"
 				}

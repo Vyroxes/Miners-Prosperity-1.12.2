@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shaped",
+	
+	"pattern":
+	[
+		" A ",
+		"BAA",
+		"  A"
+	],
+	
+	"key":
+	{
+		"A":
+		{
+			"type": "forge:ore_dict",
+			"ore": "plankWood"
+		},
+		"B":
+		{
+			"type": "forge:ore_dict",
+			"ore": "cobblestone"
+		}
+	},
+	
+	"result":
+	{
+		"item": "minersprosperity:wooden_treetap",
+		"count": 1
+	}
+}

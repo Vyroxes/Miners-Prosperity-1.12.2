@@ -1,0 +1,44 @@
+{
+    "machine.powered": {
+        "category": "block",
+        "sounds": [
+            "minersprosperity:machines/machine_powered"
+        ]
+    },
+    "machine.alloy_furnace_active": {
+        "category": "block",
+        "sounds": [
+            "minersprosperity:machines/alloy_furnace_active"
+        ]
+    },
+    "machine.pulverizer_active": {
+        "category": "block",
+        "sounds": [
+            "minersprosperity:machines/pulverizer_active"
+        ]
+    },
+    "machine.electric_furnace_active": {
+        "category": "block",
+        "sounds": [
+            "minersprosperity:machines/electric_furnace_active"
+        ]
+    },
+    "machine.metal_press_active": {
+        "category": "block",
+        "sounds": [
+            "minersprosperity:machines/metal_press_active"
+        ]
+    },
+    "machine.metal_press_clank": {
+        "category": "block",
+        "sounds": [
+            "minersprosperity:machines/metal_press_clank"
+        ]
+    },
+    "machine.solar_panel_active": {
+        "category": "block",
+        "sounds": [
+            "minersprosperity:machines/solar_panel_active"
+        ]
+    }
+}

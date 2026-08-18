@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"AAA",
+		"ABA",
+		"AAA"
+	],
+	"key": {
+		"A": {
+			"type": "forge:ore_dict",
+			"ore": "ingotElectrum"
+		},
+		"B": {
+			"item": "minersprosperity:gold_chest"
+		}
+	},
+	"result": {
+		"item": "minersprosperity:electrum_chest",
+		"count": 1
+	}
+}
