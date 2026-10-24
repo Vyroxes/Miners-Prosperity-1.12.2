@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "minersprosperity:items/machine_relocator"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minersprosperity:filled": 1.0
+      },
+      "model": "minersprosperity:item/machine_relocator_filled"
+    }
+  ]
+}

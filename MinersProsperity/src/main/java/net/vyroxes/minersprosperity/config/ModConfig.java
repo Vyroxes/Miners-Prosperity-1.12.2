@@ -652,6 +652,31 @@ public class ModConfig
                 "mod:*",
                 "mod:entity"
         };
+        @Config.Name("Enable Machine Relocator")
+        public boolean enableMachineRelocator = true;
+        @Config.Name("Machine Relocator Blacklist")
+        @Comment({
+                "List of blocks and Tile Entity classes that cannot be moved by the Machine Relocator",
+                "Multiblock controllers and multiblock parts should be blacklisted to prevent breaking their structures",
+                "Supported formats:",
+                "  - modid:*                                      (all blocks from a mod)",
+                "  - modid:block                                  (specific block)",
+                "  - modid:block/meta                             (only specific metadata)",
+                "  - modid:block/*                                (all metadata variants of the block)",
+                "  - class:fully.qualified.TileEntityClass        (specific Tile Entity class)",
+                "  - class:fully.qualified.package.*              (all Tile Entity classes from a package)"
+        })
+        public String[] machineRelocatorBlacklist = new String[]{
+                "mod:*",
+                "mod:machine",
+                "mod:machine/2",
+                "mod:machine/*",
+                "class:some.mod.tile.TileMultiblockController",
+                "class:some.mod.multiblock.*"
+        };
+        @Config.Name("Machine Relocator Cross-Dimension")
+        @Comment("Whether machines stored in a Machine Relocator can be placed in a different dimension. Disabled by default for compatibility with machines that store dimension-specific data")
+        public boolean machineRelocatorCrossDimension = false;
         @Config.Name("Enable Batteries")
         public boolean enableBatteries = true;
     }

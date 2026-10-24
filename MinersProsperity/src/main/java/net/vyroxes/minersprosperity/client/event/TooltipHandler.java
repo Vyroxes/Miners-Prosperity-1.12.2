@@ -2,7 +2,6 @@ package net.vyroxes.minersprosperity.client.event;
 
 import java.text.DecimalFormat;
 import java.util.*;
-
 import com.github.bsideup.jabel.Desugar;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.state.IBlockState;
@@ -26,13 +25,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.config.ModConfig;
 import net.vyroxes.minersprosperity.init.ModEnchantments;
 
+@Mod.EventBusSubscriber(modid = Tags.MODID, value = Side.CLIENT)
 public class TooltipHandler
 {
     private static final int ICON_SIZE = 7;
@@ -56,9 +58,9 @@ public class TooltipHandler
 
     private static final EntityEquipmentSlot[] ARMOR_SLOTS = {EntityEquipmentSlot.HEAD, EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
 
-    private TooltipRenderData renderData;
-    private CustomTooltipBlacklist blacklist = new CustomTooltipBlacklist(new String[0]);
-    private int blacklistHash = Integer.MIN_VALUE;
+    private static TooltipRenderData renderData;
+    private static CustomTooltipBlacklist blacklist = new CustomTooltipBlacklist(new String[0]);
+    private static int blacklistHash = Integer.MIN_VALUE;
 
     private static ResourceLocation icon(String name)
     {
@@ -66,64 +68,64 @@ public class TooltipHandler
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onItemTooltip(ItemTooltipEvent event)
+    public static void onItemTooltip(ItemTooltipEvent event)
     {
         ItemStack stack = event.getItemStack();
 
-        if (!ModConfig.TOOLTIPS.customTooltips || stack.isEmpty() || this.getBlacklist().isBlacklisted(stack))
+        if (!ModConfig.TOOLTIPS.customTooltips || stack.isEmpty() || TooltipHandler.getBlacklist().isBlacklisted(stack))
         {
-            this.renderData = null;
+            TooltipHandler.renderData = null;
             return;
         }
 
-        List<TooltipRow> rows = this.buildRows(stack, event.getFlags());
-        this.renderData = new TooltipRenderData(rows);
+        List<TooltipRow> rows = TooltipHandler.buildRows(stack, event.getFlags());
+        TooltipHandler.renderData = new TooltipRenderData(rows);
 
-        if (ModConfig.TOOLTIPS.hideVanillaAttributeTooltips) this.removeVanillaAttributeTooltips(stack, event.getToolTip());
+        if (ModConfig.TOOLTIPS.hideVanillaAttributeTooltips) TooltipHandler.removeVanillaAttributeTooltips(stack, event.getToolTip());
 
-        this.appendEnchantmentState(stack, event.getToolTip(), ModEnchantments.VACUUM, "Vacuum");
-        this.appendEnchantmentState(stack, event.getToolTip(), ModEnchantments.GLOW, "Glow");
+        TooltipHandler.appendEnchantmentState(stack, event.getToolTip(), ModEnchantments.VACUUM, "Vacuum");
+        TooltipHandler.appendEnchantmentState(stack, event.getToolTip(), ModEnchantments.GLOW, "Glow");
 
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         int insertIndex = Math.min(1, event.getToolTip().size());
 
-        for (TooltipRow row : rows) event.getToolTip().add(insertIndex++, this.createPlaceholder(row, font));
+        for (TooltipRow row : rows) event.getToolTip().add(insertIndex++, TooltipHandler.createPlaceholder(row, font));
 
-        this.addOreDictionaryTooltip(stack, event.getToolTip(), event.getFlags(), insertIndex);
+        TooltipHandler.addOreDictionaryTooltip(stack, event.getToolTip(), event.getFlags(), insertIndex);
     }
 
     @SubscribeEvent
-    public void onTooltipRender(RenderTooltipEvent.PostText event)
+    public static void onTooltipRender(RenderTooltipEvent.PostText event)
     {
-        if (!ModConfig.TOOLTIPS.customTooltips || this.renderData == null || this.renderData.rows.isEmpty()) return;
+        if (!ModConfig.TOOLTIPS.customTooltips || renderData == null || renderData.rows.isEmpty()) return;
 
         int x = event.getX();
         int y = event.getY() + 12;
 
-        for (TooltipRow row : this.renderData.rows)
+        for (TooltipRow row : TooltipHandler.renderData.rows)
         {
-            this.drawRow(row, event.getFontRenderer(), x, y);
+            TooltipHandler.drawRow(row, event.getFontRenderer(), x, y);
             y += LINE_HEIGHT;
         }
 
-        this.renderData = null;
+        TooltipHandler.renderData = null;
     }
 
-    private List<TooltipRow> buildRows(ItemStack stack, ITooltipFlag flag)
+    private static List<TooltipRow> buildRows(ItemStack stack, ITooltipFlag flag)
     {
         List<TooltipRow> rows = new ArrayList<>();
 
-        if (ModConfig.TOOLTIPS.foodStats) this.addFoodRow(stack, rows);
-        if (ModConfig.TOOLTIPS.armorStats) this.addArmorRow(stack, rows);
-        if (ModConfig.TOOLTIPS.combatStats) this.addCombatRow(stack, rows);
-        if (ModConfig.TOOLTIPS.miningStats) this.addMiningRow(stack, rows);
-        if (ModConfig.TOOLTIPS.durabilityStats) this.addDurabilityRow(stack, rows);
-        if (ModConfig.TOOLTIPS.fuelBurnTime) this.addFuelBurnTimeRow(stack, flag, rows);
+        if (ModConfig.TOOLTIPS.foodStats) TooltipHandler.addFoodRow(stack, rows);
+        if (ModConfig.TOOLTIPS.armorStats) TooltipHandler.addArmorRow(stack, rows);
+        if (ModConfig.TOOLTIPS.combatStats) TooltipHandler.addCombatRow(stack, rows);
+        if (ModConfig.TOOLTIPS.miningStats) TooltipHandler.addMiningRow(stack, rows);
+        if (ModConfig.TOOLTIPS.durabilityStats) TooltipHandler.addDurabilityRow(stack, rows);
+        if (ModConfig.TOOLTIPS.fuelBurnTime) TooltipHandler.addFuelBurnTimeRow(stack, flag, rows);
 
         return rows;
     }
 
-    private void addFoodRow(ItemStack stack, List<TooltipRow> rows)
+    private static void addFoodRow(ItemStack stack, List<TooltipRow> rows)
     {
         if (!(stack.getItem() instanceof ItemFood food)) return;
 
@@ -133,9 +135,9 @@ public class TooltipHandler
         rows.add(new TooltipRow().add(FOOD_ICON, DF_FOOD.format(foodValue) + " (" + DF_FOOD.format(saturation) + ")", 0xFFFFFF));
     }
 
-    private void addArmorRow(ItemStack stack, List<TooltipRow> rows)
+    private static void addArmorRow(ItemStack stack, List<TooltipRow> rows)
     {
-        ArmorStats stats = this.getArmorStats(stack);
+        ArmorStats stats = TooltipHandler.getArmorStats(stack);
         if (stats == null) return;
 
         TooltipRow row = new TooltipRow().add(ARMOR_ICON, DF.format(stats.armor), 0xFFFFFF);
@@ -144,7 +146,7 @@ public class TooltipHandler
         rows.add(row);
     }
 
-    private ArmorStats getArmorStats(ItemStack stack)
+    private static ArmorStats getArmorStats(ItemStack stack)
     {
         ArmorStats best = null;
 
@@ -156,8 +158,8 @@ public class TooltipHandler
 
             if (armorModifiers.isEmpty() && toughnessModifiers.isEmpty()) continue;
 
-            double armor = this.applyModifiers(0.0D, armorModifiers);
-            double toughness = this.applyModifiers(0.0D, toughnessModifiers);
+            double armor = TooltipHandler.applyModifiers(0.0D, armorModifiers);
+            double toughness = TooltipHandler.applyModifiers(0.0D, toughnessModifiers);
 
             if (best == null || armor + toughness > best.armor + best.toughness) best = new ArmorStats(armor, toughness);
         }
@@ -165,7 +167,7 @@ public class TooltipHandler
         return best;
     }
 
-    private void addCombatRow(ItemStack stack, List<TooltipRow> rows)
+    private static void addCombatRow(ItemStack stack, List<TooltipRow> rows)
     {
         Multimap<String, AttributeModifier> modifiers = stack.getItem().getAttributeModifiers(EntityEquipmentSlot.MAINHAND, stack);
         Collection<AttributeModifier> damageModifiers = modifiers.get(SharedMonsterAttributes.ATTACK_DAMAGE.getName());
@@ -173,8 +175,8 @@ public class TooltipHandler
 
         if (damageModifiers.isEmpty() && speedModifiers.isEmpty()) return;
 
-        double attackDamage = this.applyModifiers(1.0D, damageModifiers);
-        double attackSpeed = this.applyModifiers(4.0D, speedModifiers);
+        double attackDamage = TooltipHandler.applyModifiers(1.0D, damageModifiers);
+        double attackSpeed = TooltipHandler.applyModifiers(4.0D, speedModifiers);
 
         int sharpnessLevel = Enchantments.SHARPNESS == null ? 0 : EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, stack);
         if (sharpnessLevel > 0) attackDamage += 0.5D + 0.5D * sharpnessLevel;
@@ -182,7 +184,7 @@ public class TooltipHandler
         rows.add(new TooltipRow().add(ATTACK_DAMAGE_ICON, DF.format(attackDamage), 0xFFFFFF).add(ATTACK_SPEED_ICON, DF.format(attackSpeed), 0xFFFFFF));
     }
 
-    private void addMiningRow(ItemStack stack, List<TooltipRow> rows)
+    private static void addMiningRow(ItemStack stack, List<TooltipRow> rows)
     {
         Item item = stack.getItem();
         int harvestLevel = -1;
@@ -208,7 +210,7 @@ public class TooltipHandler
         if (!row.parts.isEmpty()) rows.add(row);
     }
 
-    private void addDurabilityRow(ItemStack stack, List<TooltipRow> rows)
+    private static void addDurabilityRow(ItemStack stack, List<TooltipRow> rows)
     {
         if (!stack.isItemStackDamageable()) return;
 
@@ -231,7 +233,7 @@ public class TooltipHandler
         rows.add(new TooltipRow().add(part));
     }
 
-    private void addFuelBurnTimeRow(ItemStack stack, ITooltipFlag flag, List<TooltipRow> rows)
+    private static void addFuelBurnTimeRow(ItemStack stack, ITooltipFlag flag, List<TooltipRow> rows)
     {
         int burnTime = TileEntityFurnace.getItemBurnTime(stack);
         if (burnTime <= 0) return;
@@ -242,7 +244,7 @@ public class TooltipHandler
         rows.add(new TooltipRow().add(FUEL_BURN_TIME_ICON, text, 0xFFFFFF));
     }
 
-    private double applyModifiers(double baseValue, Collection<AttributeModifier> modifiers)
+    private static double applyModifiers(double baseValue, Collection<AttributeModifier> modifiers)
     {
         double value = baseValue;
 
@@ -253,7 +255,7 @@ public class TooltipHandler
         return value;
     }
 
-    private String createPlaceholder(TooltipRow row, FontRenderer font)
+    private static String createPlaceholder(TooltipRow row, FontRenderer font)
     {
         int spaceWidth = Math.max(1, font.getCharWidth(' '));
         int spaceCount = (int) Math.ceil((row.getWidth(font) + 1) / (double) spaceWidth);
@@ -264,7 +266,7 @@ public class TooltipHandler
         return builder.toString();
     }
 
-    private void drawRow(TooltipRow row, FontRenderer font, int x, int y)
+    private static void drawRow(TooltipRow row, FontRenderer font, int x, int y)
     {
         int currentX = x;
 
@@ -297,7 +299,7 @@ public class TooltipHandler
         GlStateManager.popMatrix();
     }
 
-    private void appendEnchantmentState(ItemStack stack, List<String> tooltip, Enchantment enchantment, String nbtKey)
+    private static void appendEnchantmentState(ItemStack stack, List<String> tooltip, Enchantment enchantment, String nbtKey)
     {
         if (enchantment == null) return;
 
@@ -317,7 +319,7 @@ public class TooltipHandler
         }
     }
 
-    private void addOreDictionaryTooltip(ItemStack stack, List<String> tooltip, ITooltipFlag flag, int insertIndex)
+    private static void addOreDictionaryTooltip(ItemStack stack, List<String> tooltip, ITooltipFlag flag, int insertIndex)
     {
         int mode = ModConfig.TOOLTIPS.oreDictInTooltips;
         if (mode == 0 || mode == 2 && !flag.isAdvanced()) return;
@@ -331,28 +333,28 @@ public class TooltipHandler
         for (int oreId : oreIds) tooltip.add(insertIndex++, TextFormatting.DARK_GRAY + " - " + OreDictionary.getOreName(oreId));
     }
 
-    private CustomTooltipBlacklist getBlacklist()
+    private static CustomTooltipBlacklist getBlacklist()
     {
         String[] entries = ModConfig.TOOLTIPS.customTooltipsBlacklist == null ? new String[0] : ModConfig.TOOLTIPS.customTooltipsBlacklist;
         int hash = Arrays.hashCode(entries);
 
-        if (hash != this.blacklistHash)
+        if (hash != TooltipHandler.blacklistHash)
         {
-            this.blacklist = new CustomTooltipBlacklist(entries);
-            this.blacklistHash = hash;
+            TooltipHandler.blacklist = new CustomTooltipBlacklist(entries);
+            TooltipHandler.blacklistHash = hash;
         }
 
-        return this.blacklist;
+        return TooltipHandler.blacklist;
     }
 
-    private void removeVanillaAttributeTooltips(ItemStack stack, List<String> tooltip)
+    private static void removeVanillaAttributeTooltips(ItemStack stack, List<String> tooltip)
     {
-        if (ModConfig.TOOLTIPS.armorStats) for (EntityEquipmentSlot slot : ARMOR_SLOTS) this.removeVanillaAttributeSection(stack, tooltip, slot, SharedMonsterAttributes.ARMOR.getName(), SharedMonsterAttributes.ARMOR_TOUGHNESS.getName());
+        if (ModConfig.TOOLTIPS.armorStats) for (EntityEquipmentSlot slot : ARMOR_SLOTS) TooltipHandler.removeVanillaAttributeSection(stack, tooltip, slot, SharedMonsterAttributes.ARMOR.getName(), SharedMonsterAttributes.ARMOR_TOUGHNESS.getName());
 
-        if (ModConfig.TOOLTIPS.combatStats) this.removeVanillaAttributeSection(stack, tooltip, EntityEquipmentSlot.MAINHAND, SharedMonsterAttributes.ATTACK_DAMAGE.getName(), SharedMonsterAttributes.ATTACK_SPEED.getName());
+        if (ModConfig.TOOLTIPS.combatStats) TooltipHandler.removeVanillaAttributeSection(stack, tooltip, EntityEquipmentSlot.MAINHAND, SharedMonsterAttributes.ATTACK_DAMAGE.getName(), SharedMonsterAttributes.ATTACK_SPEED.getName());
     }
 
-    private void removeVanillaAttributeSection(ItemStack stack, List<String> tooltip, EntityEquipmentSlot slot, String... targetAttributeKeys)
+    private static void removeVanillaAttributeSection(ItemStack stack, List<String> tooltip, EntityEquipmentSlot slot, String... targetAttributeKeys)
     {
         Multimap<String, AttributeModifier> modifiers = stack.getAttributeModifiers(slot);
         if (modifiers.isEmpty()) return;
@@ -375,7 +377,7 @@ public class TooltipHandler
         if (targetModifierCount == 0) return;
 
         String header = I18n.format("item.modifiers." + slot.getName());
-        int headerIndex = this.findTooltipLine(tooltip, header);
+        int headerIndex = TooltipHandler.findTooltipLine(tooltip, header);
         if (headerIndex < 0) return;
 
         List<Integer> removeIndices = new ArrayList<>();
@@ -383,9 +385,9 @@ public class TooltipHandler
 
         for (int i = headerIndex + 1; i < tooltip.size(); i++)
         {
-            String clean = this.stripFormatting(tooltip.get(i));
+            String clean = TooltipHandler.stripFormatting(tooltip.get(i));
 
-            if (this.isVanillaAttributeHeader(clean)) break;
+            if (TooltipHandler.isVanillaAttributeHeader(clean)) break;
 
             String matchedKey = null;
 
@@ -416,25 +418,25 @@ public class TooltipHandler
             tooltip.remove(headerIndex);
 
             int previousIndex = headerIndex - 1;
-            if (previousIndex >= 0 && this.stripFormatting(tooltip.get(previousIndex)).trim().isEmpty()) tooltip.remove(previousIndex);
+            if (previousIndex >= 0 && TooltipHandler.stripFormatting(tooltip.get(previousIndex)).trim().isEmpty()) tooltip.remove(previousIndex);
         }
     }
 
-    private int findTooltipLine(List<String> tooltip, String text)
+    private static int findTooltipLine(List<String> tooltip, String text)
     {
-        for (int i = 0; i < tooltip.size(); i++) if (this.stripFormatting(tooltip.get(i)).equals(text)) return i;
+        for (int i = 0; i < tooltip.size(); i++) if (TooltipHandler.stripFormatting(tooltip.get(i)).equals(text)) return i;
 
         return -1;
     }
 
-    private boolean isVanillaAttributeHeader(String line)
+    private static boolean isVanillaAttributeHeader(String line)
     {
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) if (line.equals(I18n.format("item.modifiers." + slot.getName()))) return true;
 
         return false;
     }
 
-    private String stripFormatting(String text)
+    private static String stripFormatting(String text)
     {
         String stripped = TextFormatting.getTextWithoutFormattingCodes(text);
         return stripped == null ? "" : stripped;

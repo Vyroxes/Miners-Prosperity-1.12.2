@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.config.ModConfig;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class ClientEventHandler
 {
     private static Float cachedToughness = null;

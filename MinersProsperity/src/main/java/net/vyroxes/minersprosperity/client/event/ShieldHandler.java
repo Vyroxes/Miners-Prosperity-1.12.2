@@ -8,9 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.item.ItemShieldCustom;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class ShieldHandler
 {
     @SubscribeEvent

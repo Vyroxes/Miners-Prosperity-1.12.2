@@ -1,5 +1,6 @@
 package net.vyroxes.minersprosperity.tile;
 
+import com.github.bsideup.jabel.Desugar;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;

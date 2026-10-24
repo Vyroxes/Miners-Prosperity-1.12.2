@@ -6,21 +6,17 @@ import net.minecraft.client.particle.ParticleSplash;
 import net.minecraft.client.particle.ParticleWaterWake;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.client.event.KeyInputHandler;
-import net.vyroxes.minersprosperity.client.event.TooltipHandler;
 import net.vyroxes.minersprosperity.client.particle.FluidTintParticleFactory;
 import net.vyroxes.minersprosperity.client.render.MachineProgressTESR;
 import net.vyroxes.minersprosperity.client.render.RenderCustomChest;
 import net.vyroxes.minersprosperity.client.sound.MachineSoundManager;
 import net.vyroxes.minersprosperity.tile.*;
-
-import java.util.Objects;
 
 public class ClientProxy extends CommonProxy
 {
@@ -28,7 +24,6 @@ public class ClientProxy extends CommonProxy
     public void preInit(FMLPreInitializationEvent event) {
         super.preInit(event);
 
-        MinecraftForge.EVENT_BUS.register(new TooltipHandler());
         KeyInputHandler.registerKeyBindings();
     }
 

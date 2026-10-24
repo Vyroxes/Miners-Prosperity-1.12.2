@@ -5,9 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.config.ModConfig;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class LadderClimbingHandler
 {
     private static final int SPEED_MODIFIER = 5;

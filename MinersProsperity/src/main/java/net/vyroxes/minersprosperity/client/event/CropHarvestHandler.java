@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.config.ModConfig;
 import net.vyroxes.minersprosperity.init.ModEnchantments;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class CropHarvestHandler
 {
     private static final CropBlacklist blacklist = new CropBlacklist(ModConfig.ENCHANTMENTS.farmersBlessingCropBlacklist);

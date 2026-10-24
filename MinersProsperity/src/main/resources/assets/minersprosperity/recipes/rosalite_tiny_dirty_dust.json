@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "A"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "dustDirtyRosalite"
+        }
+    },
+    "result": {
+        "item": "minersprosperity:rosalite_tiny_dirty_dust",
+        "count": 9
+    }
+}

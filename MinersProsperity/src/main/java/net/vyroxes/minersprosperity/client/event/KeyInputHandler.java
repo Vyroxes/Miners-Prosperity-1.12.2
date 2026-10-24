@@ -18,13 +18,15 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.init.ModEnchantments;
 import net.vyroxes.minersprosperity.network.NetworkHandler;
 import net.vyroxes.minersprosperity.item.backpack.ItemBackpackBase;
 import net.vyroxes.minersprosperity.integration.baubles.BaublesCompat;
 import org.lwjgl.input.Keyboard;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID, value = Side.CLIENT)
 public class KeyInputHandler
 {
     private static final KeyBinding toggleAutoCollectKey = new KeyBinding(

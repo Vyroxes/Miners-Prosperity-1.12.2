@@ -7,13 +7,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.config.ModConfig;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class FenceJumpHandler
 {
     protected static final AxisAlignedBB[] FENCE_WALL_AABBS = new AxisAlignedBB[]

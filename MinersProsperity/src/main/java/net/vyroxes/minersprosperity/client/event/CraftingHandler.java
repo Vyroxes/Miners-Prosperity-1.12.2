@@ -6,9 +6,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.items.ItemStackHandler;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.item.backpack.ItemBackpackBase;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class CraftingHandler
 {
 	@SubscribeEvent

@@ -55,6 +55,8 @@ public final class FurnaceRecipes {
 
         GameRegistry.addSmelting(new ItemStack(ModItems.CHARCOAL_DUST), new ItemStack(Items.COAL, 1, 1), 0.1F);
 
+        smelt(ModItems.GRAPHITE_DUST, ModItems.GRAPHITE, 0.1F);
+
         smelt(ModItems.COAL_DUST, Items.COAL, 0.1F);
         smelt(ModItems.GRAPHITE_DUST, ModItems.GRAPHITE, 0.1F);
         smelt(ModItems.COKE_DUST, ModItems.COKE, 0.1F);

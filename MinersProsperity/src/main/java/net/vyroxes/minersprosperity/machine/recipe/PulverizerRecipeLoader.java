@@ -158,6 +158,7 @@ public class PulverizerRecipeLoader
         defaultRecipes.add(createRecipe(null, null, "materialClay", 1, "minersprosperity:clay_dust", null, 1, 200, 20, 0.7f));
         defaultRecipes.add(createRecipe(null, null, "flint", 1, "minersprosperity:flint_dust", null, 1, 200, 20, 0.7f));
 
+        defaultRecipes.add(createRecipe(null, null, "gemGraphite", 1, "minersprosperity:graphite_dust", null, 1, 200, 20, 0.7f));
         defaultRecipes.add(createRecipe(null, null, "gemCharcoal", 1, "minersprosperity:charcoal_dust", null, 1, 200, 20, 0.7f));
         defaultRecipes.add(createRecipe(null, null, "gemCoal", 1, "minersprosperity:coal_dust", null, 1, 200, 20, 0.7f));
         defaultRecipes.add(createRecipe(null, null, "gemGraphite", 1, "minersprosperity:graphite_dust", null, 1, 200, 20, 0.7f));

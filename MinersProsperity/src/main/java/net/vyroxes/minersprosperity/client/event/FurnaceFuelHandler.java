@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.init.ModArmor;
 import net.vyroxes.minersprosperity.init.ModItems;
 import net.vyroxes.minersprosperity.init.ModTools;
@@ -12,7 +13,7 @@ import net.vyroxes.minersprosperity.init.ModTools;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class FurnaceFuelHandler
 {
     private static final Map<Item, Integer> FUEL_MAP = new HashMap<>();
@@ -41,8 +42,14 @@ public class FurnaceFuelHandler
         FUEL_MAP.put(Items.BED, 300);
         FUEL_MAP.put(Items.STICK, 150);
 
+
+        FUEL_MAP.put(ModItems.COAL_CHUNK, 400);
+        FUEL_MAP.put(ModItems.COAL_CLUMP, 500);
+        FUEL_MAP.put(ModItems.COAL_CONCENTRATE, 800);
         FUEL_MAP.put(ModItems.COAL_DUST, 1600);
+        FUEL_MAP.put(ModItems.DIRTY_COAL_DUST, 600);
         FUEL_MAP.put(ModItems.COAL_TINY_DUST, 175);
+        FUEL_MAP.put(ModItems.TINY_DIRTY_COAL_DUST, 65);
         FUEL_MAP.put(ModItems.COAL_GEAR, 1600);
         FUEL_MAP.put(ModItems.COAL_PLATE, 1600);
         FUEL_MAP.put(ModItems.COAL_ROD, 800);

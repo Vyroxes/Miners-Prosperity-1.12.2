@@ -21,24 +21,15 @@ public class UnrestrictedHandler
         if (player == null) return;
 
         ItemStack chestplate = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
-        boolean hasUnrestricted = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.UNRESTRICTED, chestplate) > 0;
 
-        if (!hasUnrestricted) return;
+        if (EnchantmentHelper.getEnchantmentLevel(ModEnchantments.UNRESTRICTED, chestplate) <= 0) return;
 
-        if (!player.onGround)
-        {
-            float oldSpeed = event.getOriginalSpeed();
-            float newSpeed = event.getNewSpeed();
+        float speed = event.getNewSpeed();
 
-            if (oldSpeed < newSpeed * 5F)
-            {
-                event.setNewSpeed(newSpeed * 5.0F);
-            }
-        }
+        if (!player.onGround) speed *= 5.0F;
 
-        if (player.isInsideOfMaterial(Material.WATER))
-        {
-            event.setNewSpeed(event.getNewSpeed() * 5.0F);
-        }
+        if (player.isInsideOfMaterial(Material.WATER) && !EnchantmentHelper.getAquaAffinityModifier(player)) speed *= 5.0F;
+
+        event.setNewSpeed(speed);
     }
 }

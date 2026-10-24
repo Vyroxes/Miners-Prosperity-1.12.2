@@ -13,12 +13,13 @@ import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.init.ModItems;
 
 import java.util.List;
 import java.util.Random;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public class GlassShardHandler
 {
     private static final Random rand = new Random();

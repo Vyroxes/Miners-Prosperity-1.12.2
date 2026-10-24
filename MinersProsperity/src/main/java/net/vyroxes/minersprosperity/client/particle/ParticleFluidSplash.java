@@ -12,9 +12,11 @@ import net.vyroxes.minersprosperity.fluid.FluidBase;
 
 public class ParticleFluidSplash extends ParticleFluidBase
 {
-    public ParticleFluidSplash(World world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite texture, FluidBase fluid)
+    public ParticleFluidSplash(World world, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, TextureAtlasSprite[] textures, FluidBase fluid)
     {
-        super(world, x, y, z, 0.0D, 0.0D, 0.0D, texture, fluid);
+        super(world, x, y, z, 0.0D, 0.0D, 0.0D, textures[0], fluid);
+
+        this.setParticleTexture(textures[this.rand.nextInt(textures.length)]);
 
         this.motionX *= 0.30000001192092896D;
         this.motionY = Math.random() * 0.20000000298023224D + 0.10000000149011612D;
