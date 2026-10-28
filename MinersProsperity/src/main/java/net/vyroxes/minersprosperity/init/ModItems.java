@@ -78,6 +78,8 @@ public class ModItems
 	public static final Item SPEED_UPGRADE = new ItemBase("speed_upgrade");
 	public static final Item ENERGY_UPGRADE = new ItemBase("energy_upgrade");
 	public static final Item XP_UPGRADE = new ItemBase("xp_upgrade");
+    public static final Item POWER_UPGRADE = new ItemBase("power_upgrade");
+    public static final Item EFFICIENCY_UPGRADE = new ItemBase("efficiency_upgrade");
 
 	//BACKPACKS
 	public static final Item BACKPACK = configurable(new ItemBackpack("backpack", BackpackTier.BASIC), () -> ModConfig.ITEMS.enableBackpacks);

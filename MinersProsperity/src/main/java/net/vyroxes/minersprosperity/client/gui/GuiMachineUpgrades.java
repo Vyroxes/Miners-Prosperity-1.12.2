@@ -11,10 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.inventory.container.ContainerUpgrades;
-import net.vyroxes.minersprosperity.tile.TileEntityAlloyFurnace;
-import net.vyroxes.minersprosperity.tile.TileEntityElectricFurnace;
-import net.vyroxes.minersprosperity.tile.TileEntityMachine;
-import net.vyroxes.minersprosperity.tile.TileEntityMetalPress;
+import net.vyroxes.minersprosperity.tile.*;
 import net.vyroxes.minersprosperity.gui.GuiHandler;
 import net.vyroxes.minersprosperity.network.NetworkHandler;
 import java.util.List;
@@ -24,6 +21,7 @@ public class GuiMachineUpgrades extends GuiContainer
 {
 	private static final ResourceLocation GUI_ELEMENTS = new ResourceLocation(Tags.MODID, "textures/gui/gui_elements.png");
 	private static final ResourceLocation MACHINE_UPGRADES = new ResourceLocation(Tags.MODID, "textures/gui/machine_upgrades.png");
+    private static final ResourceLocation GENERATOR_UPGRADES = new ResourceLocation(Tags.MODID, "textures/gui/generator_upgrades.png");
 	private final TileEntityMachine tileEntity;
 
 	public GuiMachineUpgrades(InventoryPlayer player, TileEntityMachine tileEntity)
@@ -57,6 +55,7 @@ public class GuiMachineUpgrades extends GuiContainer
 			if (tileEntity instanceof TileEntityAlloyFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityMetalPress) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.METAL_PRESS.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityElectricFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ELECTRIC_FURNACE.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityPulverizer) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.PULVERIZER.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
 	}
@@ -91,7 +90,7 @@ public class GuiMachineUpgrades extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		this.mc.getTextureManager().bindTexture(MACHINE_UPGRADES);
+        this.mc.getTextureManager().bindTexture(this.tileEntity.getUpgradeSlotCount() == 3 ? GENERATOR_UPGRADES: MACHINE_UPGRADES);
         this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 	}
 
@@ -105,6 +104,7 @@ public class GuiMachineUpgrades extends GuiContainer
 			if (tileEntity instanceof TileEntityAlloyFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityMetalPress) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.METAL_PRESS.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityElectricFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ELECTRIC_FURNACE.ordinal(), this.tileEntity.getPos());
+			else if (tileEntity instanceof TileEntityPulverizer) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.PULVERIZER.ordinal(), this.tileEntity.getPos());
 		}
 	}
 }

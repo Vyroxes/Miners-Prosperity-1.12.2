@@ -13,31 +13,19 @@ import org.jetbrains.annotations.NotNull;
 public class ContainerUpgrades extends Container
 {
     private final TileEntityMachine tileEntity;
-    private final int inputs;
 
     public ContainerUpgrades(InventoryPlayer playerInventory, TileEntityMachine tileEntity)
     {
         this.tileEntity = tileEntity;
         IItemHandler handler = this.tileEntity.getCustomItemStackHandler();
-        this.inputs = this.tileEntity.getCustomItemStackHandler().getInputSlots();
+        int upgrades = this.tileEntity.getUpgradeSlotCount();
+        int startX = 50 + (4 - upgrades) * 10;
 
-        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 4 : 3, 50, 35));
-        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 5 : 4, 70, 35));
-        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 6 : 5, 90, 35));
-        this.addSlotToContainer(new SlotItemHandler(handler, inputs > 1 ? 7 : 6, 110, 35));
+        for (int i = 0; i < upgrades; i++) this.addSlotToContainer(new SlotItemHandler(handler, this.tileEntity.getUpgradeSlotId(i), startX + i * 20, 35));
 
-        for (int i = 0; i < 3; ++i)
-        {
-            for(int j = 0; j < 9; ++j)
-            {
-                this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
+        for (int i = 0; i < 3; ++i) for(int j = 0; j < 9; ++j) this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
-        for (int k = 0; k < 9; ++k)
-        {
-            this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
-        }
+        for (int k = 0; k < 9; ++k) this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
     }
 
     @Override
@@ -49,71 +37,55 @@ public class ContainerUpgrades extends Container
     @Override
     public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer playerIn, int index)
     {
-        ItemStack itemstack = ItemStack.EMPTY;
+        if (index < 0 || index >= this.inventorySlots.size()) return ItemStack.EMPTY;
+
         Slot slot = this.inventorySlots.get(index);
+        if (!slot.getHasStack()) return ItemStack.EMPTY;
 
-        if (slot != null && slot.getHasStack())
+        ItemStack stack = slot.getStack();
+        ItemStack original = stack.copy();
+
+        int upgrades = this.tileEntity.getUpgradeSlotCount();
+        int hotbarStart = upgrades + 27;
+        int inventoryEnd = hotbarStart + 9;
+
+        if (index < upgrades)
         {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (index <= 3)
-            {
-                if (!this.mergeItemStack(itemstack1, 4, 40, false))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (index <= 39 && this.tileEntity.getCustomItemStackHandler().isUpgradeItemValid(itemstack1) != -1)
-            {
-                int id = this.tileEntity.getCustomItemStackHandler().isUpgradeItemValid(itemstack1);
-
-                if (!this.mergeItemStack(itemstack1, id, id+1, false))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (index <= 30)
-            {
-                if (!this.mergeItemStack(itemstack1, 31, 40, false))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (index <= 39)
-            {
-                if (!this.mergeItemStack(itemstack1, 4, 31, false))
-                {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (!this.mergeItemStack(itemstack1, 4, 40, false))
+            if (!this.mergeItemStack(stack, upgrades, inventoryEnd, false))
             {
                 return ItemStack.EMPTY;
             }
+        }
+        else
+        {
+            int upgradeIndex = this.tileEntity.getCustomItemStackHandler().isUpgradeItemValid(stack);
 
-            if (itemstack1.isEmpty())
+            if (upgradeIndex >= 0)
             {
-                slot.putStack(ItemStack.EMPTY);
+                if (!this.mergeItemStack(stack, upgradeIndex, upgradeIndex + 1, false))
+                {
+                    return ItemStack.EMPTY;
+                }
             }
-            else
+            else if (index < hotbarStart)
             {
-                slot.onSlotChanged();
+                if (!this.mergeItemStack(stack, hotbarStart, inventoryEnd, false))
+                {
+                    return ItemStack.EMPTY;
+                }
             }
-
-            if (itemstack1.getCount() == itemstack.getCount())
+            else if (!this.mergeItemStack(stack, upgrades, hotbarStart, false))
             {
                 return ItemStack.EMPTY;
-            }
-
-            ItemStack itemstack2 = slot.onTake(playerIn, itemstack1);
-
-            if (index == 0)
-            {
-                playerIn.dropItem(itemstack2, false);
             }
         }
 
-        return itemstack;
+        if (stack.getCount() == original.getCount()) return ItemStack.EMPTY;
+
+        if (stack.isEmpty()) slot.putStack(ItemStack.EMPTY);
+        else slot.onSlotChanged();
+
+        slot.onTake(playerIn, stack);
+        return original;
     }
 }

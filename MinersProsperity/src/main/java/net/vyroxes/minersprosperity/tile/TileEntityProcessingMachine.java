@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.block.machine.BlockMachine;
+
 import java.util.function.Supplier;
 
 public abstract class TileEntityProcessingMachine extends TileEntityMachine

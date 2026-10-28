@@ -59,9 +59,8 @@ public class TileEntityPulverizer extends TileEntityProcessingMachine
 
         int speedUpgradesCount = this.getUpgradeCount(MachineUpgradeType.SPEED);
         int baseTotalCookTime = recipe.totalCookTime;
-        int totalCookTimeModifier = (baseTotalCookTime - baseTotalCookTime / 25) / 8;
 
-        return baseTotalCookTime - totalCookTimeModifier * speedUpgradesCount;
+        return Math.max(1, Math.round(baseTotalCookTime * (1.0F - 0.9F * speedUpgradesCount / 8)));
     }
 
     private int calculateInputsCount()
@@ -112,25 +111,20 @@ public class TileEntityPulverizer extends TileEntityProcessingMachine
         PulverizerRecipe.Recipe recipe = this.getRecipe();
         if (recipe == null) return 0;
 
-        int machineUpgradesCount = this.calculateInputsCount();
+        int quantity = this.calculateInputsCount();
+        if (quantity <= 0) return 0;
+
         int speedUpgradesCount = this.getUpgradeCount(MachineUpgradeType.SPEED);
         int energyUpgradesCount = this.getUpgradeCount(MachineUpgradeType.ENERGY);
 
-        int baseTotalCookTime = recipe.totalCookTime;
-        int totalCookTimeModifier = (baseTotalCookTime - baseTotalCookTime / 25) / 8;
-        int totalCookTime = baseTotalCookTime - totalCookTimeModifier * speedUpgradesCount;
-
+        int totalCookTime = this.calculateTotalCookTime();
         if (totalCookTime <= 0) return 0;
 
-        int baseEnergyUsage = recipe.energyUsage;
-        float energyUsageModifier = (float) (baseEnergyUsage * baseTotalCookTime * 5 - baseEnergyUsage * baseTotalCookTime) / 8;
-        float energyUsage = (energyUsageModifier * speedUpgradesCount + baseEnergyUsage * baseTotalCookTime) / totalCookTime;
-        float energyModifier = (energyUsage - energyUsage / 10) / 8;
-        float machineUpgradesModifier = 1.0F;
+        double speedModifier = 1.0 + 4.0 * speedUpgradesCount / 8;
+        double energyModifier = 1.0 - 0.5 * energyUpgradesCount / 8;
+        double processEnergy = (double) recipe.energyUsage * recipe.totalCookTime * speedModifier * energyModifier * quantity;
 
-        if (machineUpgradesCount > 1) machineUpgradesModifier += (float) machineUpgradesCount * 2 / 10;
-
-        return (int) ((energyUsage - energyModifier * energyUpgradesCount) * machineUpgradesModifier);
+        return (int) Math.ceil(processEnergy / totalCookTime);
     }
 
     @Override
@@ -161,7 +155,7 @@ public class TileEntityPulverizer extends TileEntityProcessingMachine
 
         int experienceUpgrades = this.getUpgradeCount(MachineUpgradeType.EXPERIENCE);
         float experienceModifier = 1.0F + (float) experienceUpgrades / 10.0F;
-        int experience = (int) (experienceModifier * recipe.experience * ((float) 1000 / ModConfig.MACHINES.mbToXpRatio));
+        int experience = (int) (experienceModifier * recipe.experience * quantity * ((float) 1000 / ModConfig.MACHINES.mbToXpRatio));
 
         CustomFluidTank experienceTank = this.getExperienceTank();
         if (experienceTank != null && experienceTank.getFluidAmount() + experience > experienceTank.getCapacity() && handler.getSlotOutputMode(this.getExperienceTankStateId()) == SlotState.SlotOutputMode.DEFAULT) return false;
@@ -196,7 +190,7 @@ public class TileEntityPulverizer extends TileEntityProcessingMachine
 
         int experienceUpgrades = this.getUpgradeCount(MachineUpgradeType.EXPERIENCE);
         float experienceModifier = 1.0F + (float) experienceUpgrades / 10.0F;
-        int experience = (int) (experienceModifier * recipe.experience * ((float) 1000 / ModConfig.MACHINES.mbToXpRatio));
+        int experience = (int) (experienceModifier * recipe.experience * quantity * ((float) 1000 / ModConfig.MACHINES.mbToXpRatio));
 
         SidedIngredientHandler handler = this.getSidedHandler(EnumFacing.UP);
         if (handler == null) return;

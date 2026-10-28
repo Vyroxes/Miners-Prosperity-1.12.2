@@ -1,20 +1,26 @@
 package net.vyroxes.minersprosperity.machine.upgrade;
 
+import net.minecraft.item.Item;
+import net.vyroxes.minersprosperity.init.ModItems;
+
 public enum MachineUpgradeType {
-    MACHINE(0),
-    SPEED(1),
-    ENERGY(2),
-    EXPERIENCE(3);
+    MACHINE,
+    SPEED,
+    ENERGY,
+    EXPERIENCE,
+    POWER,
+    EFFICIENCY;
 
-    private final int index;
-
-    MachineUpgradeType(int index)
+    public Item getItem()
     {
-        this.index = index;
-    }
-
-    public int getIndex()
-    {
-        return this.index;
+        return switch (this)
+        {
+            case MACHINE -> ModItems.MACHINE_UPGRADE;
+            case SPEED -> ModItems.SPEED_UPGRADE;
+            case ENERGY -> ModItems.ENERGY_UPGRADE;
+            case EXPERIENCE -> ModItems.XP_UPGRADE;
+            case POWER -> ModItems.POWER_UPGRADE;
+            case EFFICIENCY -> ModItems.EFFICIENCY_UPGRADE;
+        };
     }
 }

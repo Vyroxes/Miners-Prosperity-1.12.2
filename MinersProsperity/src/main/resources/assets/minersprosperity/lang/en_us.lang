@@ -221,6 +221,8 @@ item.machine_upgrade.name=Machine Upgrade
 item.speed_upgrade.name=Speed Upgrade
 item.energy_upgrade.name=Energy Upgrade
 item.xp_upgrade.name=XP Upgrade
+item.power_upgrade.name=Power Upgrade
+item.efficiency_upgrade.name=Efficiency Upgrade
 
 #BACKPACKS
 item.backpack.name=Backpack

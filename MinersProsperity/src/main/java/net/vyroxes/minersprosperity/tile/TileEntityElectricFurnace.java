@@ -43,9 +43,8 @@ public class TileEntityElectricFurnace extends TileEntityProcessingMachine
     {
         int speedUpgradesCount = this.getUpgradeCount(MachineUpgradeType.SPEED);
         int baseTotalCookTime = ModConfig.MACHINES.electricFurnaceBaseCookTime;
-        int totalCookTimeModifier = (baseTotalCookTime - baseTotalCookTime / 25) / 8;
 
-        return baseTotalCookTime - totalCookTimeModifier * speedUpgradesCount;
+        return Math.max(1, Math.round(baseTotalCookTime * (1.0F - 0.9F * speedUpgradesCount / 8)));
     }
 
     private int calculateInputsCount()
@@ -89,25 +88,21 @@ public class TileEntityElectricFurnace extends TileEntityProcessingMachine
     @Override
     protected int calculateEnergyUsage()
     {
-        int machineUpgradesCount = this.calculateInputsCount();
+        int quantity = this.calculateInputsCount();
+        if (quantity <= 0) return 0;
+
         int speedUpgradesCount = this.getUpgradeCount(MachineUpgradeType.SPEED);
         int energyUpgradesCount = this.getUpgradeCount(MachineUpgradeType.ENERGY);
 
         int baseTotalCookTime = ModConfig.MACHINES.electricFurnaceBaseCookTime;
-        int totalCookTimeModifier = (baseTotalCookTime - baseTotalCookTime / 25) / 8;
-        int totalCookTime = baseTotalCookTime - totalCookTimeModifier * speedUpgradesCount;
-
-        if (totalCookTime <= 0) return 0;
-
         int baseEnergyUsage = ModConfig.MACHINES.electricFurnaceBaseEnergyUsage;
-        float energyUsageModifier = (float) (baseEnergyUsage * baseTotalCookTime * 5 - baseEnergyUsage * baseTotalCookTime) / 8;
-        float energyUsage = (energyUsageModifier * speedUpgradesCount + baseEnergyUsage * baseTotalCookTime) / totalCookTime;
-        float energyModifier = (energyUsage - energyUsage / 10) / 8;
-        float machineUpgradesModifier = 1;
+        int totalCookTime = this.calculateTotalCookTime();
 
-        if (machineUpgradesCount > 1) machineUpgradesModifier += (float) machineUpgradesCount * 2 / 10;
+        double speedModifier = 1.0 + 4.0 * speedUpgradesCount / 8;
+        double energyModifier = 1.0 - 0.5 * energyUpgradesCount / 8;
+        double processEnergy = (double) baseEnergyUsage * baseTotalCookTime * speedModifier * energyModifier * quantity;
 
-        return (int) ((energyUsage - energyModifier * energyUpgradesCount) * machineUpgradesModifier);
+        return (int) Math.ceil(processEnergy / totalCookTime);
     }
 
     @Override
@@ -135,7 +130,7 @@ public class TileEntityElectricFurnace extends TileEntityProcessingMachine
 
         int experienceUpgrades = this.getUpgradeCount(MachineUpgradeType.EXPERIENCE);
         float experienceModifier = 1.0F + (float) experienceUpgrades / 10.0F;
-        int experience = (int) (experienceModifier * FurnaceRecipes.instance().getSmeltingExperience(result) * ((float) 1000 / ModConfig.MACHINES.mbToXpRatio));
+        int experience = (int) (experienceModifier * FurnaceRecipes.instance().getSmeltingExperience(result) * quantity * (1000.0F / ModConfig.MACHINES.mbToXpRatio));
 
         CustomFluidTank experienceTank = this.getExperienceTank();
         if (experienceTank != null && experienceTank.getFluidAmount() + experience > experienceTank.getCapacity() && sidedIngredientHandler.getSlotOutputMode(this.getExperienceTankStateId()) == SlotState.SlotOutputMode.DEFAULT) return false;
@@ -168,7 +163,7 @@ public class TileEntityElectricFurnace extends TileEntityProcessingMachine
 
         int experienceUpgrades = this.getUpgradeCount(MachineUpgradeType.EXPERIENCE);
         float experienceModifier = 1.0F + (float) experienceUpgrades / 10.0F;
-        int experience = (int) (experienceModifier * FurnaceRecipes.instance().getSmeltingExperience(result) * ((float) 1000 / ModConfig.MACHINES.mbToXpRatio));
+        int experience = (int) (experienceModifier * FurnaceRecipes.instance().getSmeltingExperience(result) * quantity * (1000.0F / ModConfig.MACHINES.mbToXpRatio));
 
         SidedIngredientHandler sidedIngredientHandler = this.getSidedHandler(EnumFacing.UP);
         if (sidedIngredientHandler == null) return;

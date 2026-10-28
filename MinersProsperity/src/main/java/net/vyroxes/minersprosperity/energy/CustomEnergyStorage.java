@@ -74,16 +74,17 @@ public class CustomEnergyStorage implements IEnergyStorage
         return Math.max(this.energyStored - energy, 0);
     }
 
-    public int setEnergyUpgraded(int count, boolean simulate)
+    public int setEnergyUpgraded(int count, boolean simulate, boolean processingMachine)
     {
         if (!simulate)
         {
-            this.maxEnergyStored = this.maxEnergyStoredModifier * count + this.baseMaxEnergyStored;
-            this.maxReceive = this.maxReceiveModifier * count + this.baseMaxReceive;
-            this.maxExtract = this.maxExtractModifier * count + this.baseMaxExtract;
+            this.maxEnergyStored = processingMachine ? (int) Math.round(this.baseMaxEnergyStored * (1.0 + 24.0 * count / 8.0)) : this.maxEnergyStoredModifier * count + this.baseMaxEnergyStored;
+            this.maxReceive = processingMachine ? (int) Math.round(this.baseMaxReceive * (1.0 + 61.5 * count / 8.0)) : this.maxReceiveModifier * count + this.baseMaxReceive;
+            this.maxExtract = processingMachine ? (int) Math.round(this.baseMaxExtract * (1.0 + 61.5 * count / 8.0)) : this.maxExtractModifier * count + this.baseMaxExtract;
 
             if (this.energyStored > this.maxEnergyStored) this.energyStored = this.maxEnergyStored;
         }
+
         return this.maxEnergyStoredModifier * count + this.baseMaxEnergyStored;
     }
 

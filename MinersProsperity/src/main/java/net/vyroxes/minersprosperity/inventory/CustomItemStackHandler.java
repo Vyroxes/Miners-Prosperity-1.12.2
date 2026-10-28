@@ -10,10 +10,8 @@ import net.vyroxes.minersprosperity.init.ModItems;
 import net.vyroxes.minersprosperity.machine.recipe.AlloyFurnaceRecipe;
 import net.vyroxes.minersprosperity.machine.recipe.MetalPressRecipe;
 import net.vyroxes.minersprosperity.machine.recipe.PulverizerRecipe;
-import net.vyroxes.minersprosperity.tile.TileEntityAlloyFurnace;
-import net.vyroxes.minersprosperity.tile.TileEntityElectricFurnace;
-import net.vyroxes.minersprosperity.tile.TileEntityMetalPress;
-import net.vyroxes.minersprosperity.tile.TileEntityPulverizer;
+import net.vyroxes.minersprosperity.machine.upgrade.MachineUpgradeType;
+import net.vyroxes.minersprosperity.tile.*;
 import org.jetbrains.annotations.NotNull;
 
 public class CustomItemStackHandler extends ItemStackHandler
@@ -120,31 +118,25 @@ public class CustomItemStackHandler extends ItemStackHandler
 
     public boolean isUpgradeItemValid(int slot, ItemStack stack)
     {
-        int upgradeSlotIndex = slot - (this.inputSlots + this.energySlots + this.outputSlots);
-        switch (upgradeSlotIndex)
-        {
-            case 0:
-                if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.MACHINE_UPGRADE))) return true;
-                break;
-            case 1:
-                if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.SPEED_UPGRADE))) return true;
-                break;
-            case 2:
-                if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.ENERGY_UPGRADE))) return true;
-                break;
-            case 3:
-                if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.XP_UPGRADE))) return true;
-        }
+        if (!(this.tile instanceof TileEntityMachine machine) || stack.isEmpty()) return false;
 
-        return false;
+        int index = slot - (this.inputSlots + this.energySlots + this.outputSlots);
+        MachineUpgradeType type = machine.getUpgradeType(index);
+
+        return type != null && stack.getItem() == type.getItem();
     }
 
     public int isUpgradeItemValid(ItemStack stack)
     {
-        if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.MACHINE_UPGRADE))) return 0;
-        if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.SPEED_UPGRADE))) return 1;
-        if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.ENERGY_UPGRADE))) return 2;
-        if (ItemStack.areItemsEqual(stack, new ItemStack(ModItems.XP_UPGRADE))) return 3;
+        if (!(this.tile instanceof TileEntityMachine machine) || stack.isEmpty()) return -1;
+
+        for (int i = 0; i < this.upgradeSlots; i++)
+        {
+            MachineUpgradeType type = machine.getUpgradeType(i);
+
+            if (type != null && stack.getItem() == type.getItem()) return i;
+        }
+
         return -1;
     }
 }

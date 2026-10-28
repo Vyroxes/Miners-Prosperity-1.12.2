@@ -52,7 +52,6 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
     protected final int experienceTankIndex;
     protected final SidedIngredientHandler[] sidedIngredientHandlers;
     protected final CustomItemStackHandler customItemStackHandler;
-    protected boolean fluidXpInitialized = false;
     protected int cookTime;
     protected int totalCookTime;
     protected String customName;
@@ -212,10 +211,6 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         return this.slotLayout.getEnergySlot(index);
     }
 
-    /*
-     * Zostawione dla kompatybilności ze starym kodem.
-     * Zwraca pierwszy energy slot.
-     */
     public int getEnergySlotId()
     {
         if (this.slotLayout.getEnergyCount() == 0) return -1;
@@ -233,13 +228,28 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         return this.slotLayout.getUpgradeSlot(index);
     }
 
+    @Nullable
+    public MachineUpgradeType getUpgradeType(int index)
+    {
+        if (index < 0 || index >= this.getUpgradeSlotCount()) return null;
+
+        return switch (index)
+        {
+            case 0 -> MachineUpgradeType.MACHINE;
+            case 1 -> MachineUpgradeType.SPEED;
+            case 2 -> MachineUpgradeType.ENERGY;
+            case 3 -> MachineUpgradeType.EXPERIENCE;
+            default -> null;
+        };
+    }
+
     public int getUpgradeSlotId(MachineUpgradeType type)
     {
         if (type == null) return -1;
 
-        if (type.getIndex() >= this.slotLayout.getUpgradeCount()) return -1;
+        for (int i = 0; i < this.getUpgradeSlotCount(); i++) if (this.getUpgradeType(i) == type) return this.slotLayout.getUpgradeSlot(i);
 
-        return this.slotLayout.getUpgradeSlot(type.getIndex());
+        return -1;
     }
 
     public int[] getInputSlotIds()
@@ -398,7 +408,7 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
 
         int upgrades = this.getUpgradeCount(MachineUpgradeType.ENERGY);
 
-        if (this.storage.getEnergyStored() != this.storage.setEnergyUpgraded(upgrades, true)) this.storage.setEnergyUpgraded(upgrades, false);
+        this.storage.setEnergyUpgraded(upgrades, false, this instanceof TileEntityProcessingMachine);
     }
 
     protected boolean canMachineOperate()

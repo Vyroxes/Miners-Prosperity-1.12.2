@@ -36,6 +36,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.vyroxes.minersprosperity.init.ModEnchantments;
+import net.vyroxes.minersprosperity.init.ModItems;
 import net.vyroxes.minersprosperity.item.backpack.ItemBackpackBase;
 import java.util.*;
 
@@ -149,6 +150,11 @@ public class VacuumHandler
         EntityPlayer player = event.getPlayer();
 
         if (player == null || event.getWorld().isRemote || !hasVacuum(player)) return;
+
+        ItemStack mainhand = player.getHeldItemMainhand();
+        ItemStack offhand = player.getHeldItemOffhand();
+
+        if ((!mainhand.isEmpty() && mainhand.getItem() == ModItems.MACHINE_RELOCATOR) || (!offhand.isEmpty() && offhand.getItem() == ModItems.MACHINE_RELOCATOR)) return;
 
         World world = event.getWorld();
         BlockPos pos = event.getPos();
