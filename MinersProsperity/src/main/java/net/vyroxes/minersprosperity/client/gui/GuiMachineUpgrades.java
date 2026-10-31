@@ -55,6 +55,8 @@ public class GuiMachineUpgrades extends GuiContainer
 			if (tileEntity instanceof TileEntityAlloyFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityMetalPress) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.METAL_PRESS.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityElectricFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ELECTRIC_FURNACE.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntitySolidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.SOLID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityLiquidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.LIQUID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
             else if (tileEntity instanceof TileEntityPulverizer) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.PULVERIZER.ordinal(), this.tileEntity.getPos());
 		}
 		this.initGui();
@@ -76,13 +78,14 @@ public class GuiMachineUpgrades extends GuiContainer
 	    }
 
 	    this.renderHoveredToolTip(mouseX, mouseY);
+	    GuiMachineTitle.drawTooltip(this.fontRenderer, Objects.requireNonNull(this.tileEntity.getDisplayName()).getUnformattedText(), this.xSize, this.guiLeft, this.guiTop, this.buttonList, mouseX, mouseY, this.width, this.height);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
 		String title = Objects.requireNonNull(this.tileEntity.getDisplayName()).getUnformattedText();
-		this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 4210752);
+		GuiMachineTitle.draw(this.fontRenderer, title, this.xSize, this.guiLeft, this.guiTop, this.buttonList);
 		this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 73, 4210752);
 	}
 	
@@ -104,6 +107,8 @@ public class GuiMachineUpgrades extends GuiContainer
 			if (tileEntity instanceof TileEntityAlloyFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ALLOY_FURNACE.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityMetalPress) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.METAL_PRESS.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityElectricFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ELECTRIC_FURNACE.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntitySolidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.SOLID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityLiquidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.LIQUID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityPulverizer) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.PULVERIZER.ordinal(), this.tileEntity.getPos());
 		}
 	}

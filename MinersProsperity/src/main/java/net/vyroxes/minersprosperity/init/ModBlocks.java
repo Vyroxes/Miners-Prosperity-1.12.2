@@ -9,12 +9,15 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.vyroxes.minersprosperity.MinersProsperity;
 import net.vyroxes.minersprosperity.Tags;
+import net.vyroxes.minersprosperity.config.ModConfig;
 import net.vyroxes.minersprosperity.block.*;
 import net.vyroxes.minersprosperity.block.chest.BlockCustomChest;
 import net.vyroxes.minersprosperity.block.chest.ItemBlockCustomChest;
 import net.vyroxes.minersprosperity.block.machine.*;
 import net.vyroxes.minersprosperity.block.chest.ChestTier;
 import net.vyroxes.minersprosperity.machine.SolarPanelTier;
+import net.vyroxes.minersprosperity.machine.FluidTankTier;
+import net.vyroxes.minersprosperity.machine.EnergyStorageTier;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -72,6 +75,10 @@ public class ModBlocks {
 	public static final Block METAL_PRESS = new BlockMachineMetalPress("metal_press");
 	public static final Block ELECTRIC_FURNACE = new BlockMachineElectricFurnace("electric_furnace");
 
+	public static final Block SOLID_FUEL_GENERATOR = configurable(new BlockMachineSolidFuelGenerator("solid_fuel_generator"), () -> ModConfig.MACHINES.enableSolidFuelGenerator);
+
+	public static final Block LIQUID_FUEL_GENERATOR = configurable(new BlockMachineLiquidFuelGenerator("liquid_fuel_generator"), () -> ModConfig.MACHINES.enableLiquidFuelGenerator);
+
 	//SOLAR PANELS
 	public static final Block BASIC_SOLAR_PANEL = new BlockMachineSolarPanel("basic_solar_panel", SolarPanelTier.BASIC);
 	public static final Block IMPROVED_SOLAR_PANEL = new BlockMachineSolarPanel("improved_solar_panel", SolarPanelTier.IMPROVED);
@@ -80,6 +87,25 @@ public class ModBlocks {
 	public static final Block ULTIMATE_SOLAR_PANEL = new BlockMachineSolarPanel("ultimate_solar_panel", SolarPanelTier.ULTIMATE);
 	public static final Block SUPREME_SOLAR_PANEL = new BlockMachineSolarPanel("supreme_solar_panel", SolarPanelTier.SUPREME);
 	public static final Block CREATIVE_SOLAR_PANEL = new BlockMachineSolarPanel("creative_solar_panel", SolarPanelTier.CREATIVE);
+
+
+	//FLUID TANKS
+	public static final Block BASIC_FLUID_TANK = configurable(new BlockMachineFluidTank("basic_fluid_tank", FluidTankTier.BASIC), () -> ModConfig.MACHINES.enableFluidTanks);
+	public static final Block IMPROVED_FLUID_TANK = configurable(new BlockMachineFluidTank("improved_fluid_tank", FluidTankTier.IMPROVED), () -> ModConfig.MACHINES.enableFluidTanks);
+	public static final Block ADVANCED_FLUID_TANK = configurable(new BlockMachineFluidTank("advanced_fluid_tank", FluidTankTier.ADVANCED), () -> ModConfig.MACHINES.enableFluidTanks);
+	public static final Block ELITE_FLUID_TANK = configurable(new BlockMachineFluidTank("elite_fluid_tank", FluidTankTier.ELITE), () -> ModConfig.MACHINES.enableFluidTanks);
+	public static final Block ULTIMATE_FLUID_TANK = configurable(new BlockMachineFluidTank("ultimate_fluid_tank", FluidTankTier.ULTIMATE), () -> ModConfig.MACHINES.enableFluidTanks);
+	public static final Block SUPREME_FLUID_TANK = configurable(new BlockMachineFluidTank("supreme_fluid_tank", FluidTankTier.SUPREME), () -> ModConfig.MACHINES.enableFluidTanks);
+	public static final Block CREATIVE_FLUID_TANK = configurable(new BlockMachineFluidTank("creative_fluid_tank", FluidTankTier.CREATIVE), () -> ModConfig.MACHINES.enableFluidTanks);
+
+
+	public static final Block BASIC_ENERGY_STORAGE = configurable(new BlockMachineEnergyStorage("basic_energy_storage", EnergyStorageTier.BASIC), () -> ModConfig.MACHINES.enableEnergyStorages);
+	public static final Block IMPROVED_ENERGY_STORAGE = configurable(new BlockMachineEnergyStorage("improved_energy_storage", EnergyStorageTier.IMPROVED), () -> ModConfig.MACHINES.enableEnergyStorages);
+	public static final Block ADVANCED_ENERGY_STORAGE = configurable(new BlockMachineEnergyStorage("advanced_energy_storage", EnergyStorageTier.ADVANCED), () -> ModConfig.MACHINES.enableEnergyStorages);
+	public static final Block ELITE_ENERGY_STORAGE = configurable(new BlockMachineEnergyStorage("elite_energy_storage", EnergyStorageTier.ELITE), () -> ModConfig.MACHINES.enableEnergyStorages);
+	public static final Block ULTIMATE_ENERGY_STORAGE = configurable(new BlockMachineEnergyStorage("ultimate_energy_storage", EnergyStorageTier.ULTIMATE), () -> ModConfig.MACHINES.enableEnergyStorages);
+	public static final Block SUPREME_ENERGY_STORAGE = configurable(new BlockMachineEnergyStorage("supreme_energy_storage", EnergyStorageTier.SUPREME), () -> ModConfig.MACHINES.enableEnergyStorages);
+	public static final Block CREATIVE_ENERGY_STORAGE = configurable(new BlockMachineEnergyStorage("creative_energy_storage", EnergyStorageTier.CREATIVE), () -> ModConfig.MACHINES.enableEnergyStorages);
 
 	//ORES
 	public static final Block HALITE_ORE = new BlockOres("halite_ore", 1, 2.0F, 3.0F, ModItems.SALT, false, false);

@@ -8,5 +8,6 @@ public final class WorldGeneration {
     public static void register() {
         GameRegistry.registerWorldGenerator(new WorldGenCustomOres(), 0);
         GameRegistry.registerWorldGenerator(new WorldGenResin(), 0);
+        GameRegistry.registerWorldGenerator(new WorldGenCrudeOil(), 1);
     }
 }

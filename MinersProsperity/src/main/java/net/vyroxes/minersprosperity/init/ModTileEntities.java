@@ -15,6 +15,10 @@ public final class ModTileEntities
         if (ModConfig.MACHINES.enablePulverizer) register(TileEntityPulverizer.class, "pulverizer");
         if (ModConfig.MACHINES.enableMetalPress) register(TileEntityMetalPress.class, "metal_press");
         if (ModConfig.MACHINES.enableElectricFurnace) register(TileEntityElectricFurnace.class, "electric_furnace");
+        if (ModConfig.MACHINES.enableSolidFuelGenerator) register(TileEntitySolidFuelGenerator.class, "solid_fuel_generator");
+        if (ModConfig.MACHINES.enableLiquidFuelGenerator) register(TileEntityLiquidFuelGenerator.class, "liquid_fuel_generator");
+        if (ModConfig.MACHINES.enableFluidTanks) register(TileEntityFluidTank.class, "fluid_tank");
+        if (ModConfig.MACHINES.enableEnergyStorages) register(TileEntityEnergyStorage.class, "energy_storage");
         if (ModConfig.MACHINES.enableSolarPanels) register(TileEntitySolarPanel.class, "solar_panel");
         if (ModConfig.BLOCKS.enableCustomChests) register(TileEntityCustomChest.class, "chest");
     }

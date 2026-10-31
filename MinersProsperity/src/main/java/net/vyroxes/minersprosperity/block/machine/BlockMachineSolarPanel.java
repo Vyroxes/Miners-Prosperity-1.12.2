@@ -70,17 +70,17 @@ public class BlockMachineSolarPanel extends BlockMachine
 
         if (tier == SolarPanelTier.CREATIVE)
         {
-            tooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + ": " + TextFormatting.GRAY + I18n.format("gui.energy_infinite"));
+            tooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + TextFormatting.GRAY + ": " + I18n.format("gui.energy_infinite"));
         }
         else
         {
             if (energyGeneration >= 1000)
             {
-                tooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + ": " + TextFormatting.GRAY + formattedEnergyGeneration + " kFE");
+                tooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + TextFormatting.GRAY + ": " + formattedEnergyGeneration + " kFE/t");
             }
             else
             {
-                tooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + ": " + TextFormatting.GRAY + formattedEnergyGeneration + " FE");
+                tooltip.add(TextFormatting.AQUA + I18n.format("gui.energy_generation") + TextFormatting.GRAY + ": " + formattedEnergyGeneration + " FE/t");
             }
         }
     }

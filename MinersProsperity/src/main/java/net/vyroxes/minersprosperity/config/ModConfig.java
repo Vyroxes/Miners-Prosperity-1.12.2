@@ -528,6 +528,51 @@ public class ModConfig
 
     public static class WorldGeneration
     {
+        @Config.Name("Generate Crude Oil")
+        public boolean generateCrudeOil = true;
+        @Config.Name("Crude Oil Dimensions")
+        @Comment("Dimension IDs where natural crude oil generation is allowed. Only affects newly generated chunks.")
+        public int[] crudeOilDimensions = {0};
+        @Config.Name("Generate Surface Crude Oil")
+        public boolean generateSurfaceCrudeOil = true;
+        @Config.Name("Surface Crude Oil Rarity")
+        @Comment("One generation attempt per this many chunks on average. 1 means every chunk. Unsuitable terrain is skipped.")
+        @RangeInt(min = 1, max = 1000000)
+        public int surfaceCrudeOilRarity = 96;
+        @Config.Name("Surface Crude Oil Minimum Radius")
+        @RangeInt(min = 1, max = 6)
+        public int surfaceCrudeOilMinRadius = 2;
+        @Config.Name("Surface Crude Oil Maximum Radius")
+        @RangeInt(min = 1, max = 6)
+        public int surfaceCrudeOilMaxRadius = 3;
+        @Config.Name("Surface Crude Oil Depth")
+        @Comment("Maximum depth in blocks, including the surface layer.")
+        @RangeInt(min = 1, max = 6)
+        public int surfaceCrudeOilDepth = 2;
+        @Config.Name("Generate Underground Crude Oil")
+        public boolean generateUndergroundCrudeOil = true;
+        @Config.Name("Underground Crude Oil Rarity")
+        @Comment("One generation attempt per this many chunks on average. 1 means every chunk. Open caves and unsuitable terrain are skipped.")
+        @RangeInt(min = 1, max = 1000000)
+        public int undergroundCrudeOilRarity = 24;
+        @Config.Name("Underground Crude Oil Minimum Radius")
+        @RangeInt(min = 1, max = 6)
+        public int undergroundCrudeOilMinRadius = 3;
+        @Config.Name("Underground Crude Oil Maximum Radius")
+        @RangeInt(min = 1, max = 6)
+        public int undergroundCrudeOilMaxRadius = 6;
+        @Config.Name("Underground Crude Oil Vertical Radius")
+        @RangeInt(min = 1, max = 6)
+        public int undergroundCrudeOilVerticalRadius = 3;
+        @Config.Name("Underground Crude Oil Minimum Height")
+        @Comment("Minimum Y coordinate of the reservoir center.")
+        @RangeInt(min = 1, max = 254)
+        public int undergroundCrudeOilMinHeight = 12;
+        @Config.Name("Underground Crude Oil Maximum Height")
+        @Comment("Maximum Y coordinate of the reservoir center. Reservoirs must remain fully enclosed underground.")
+        @RangeInt(min = 1, max = 254)
+        public int undergroundCrudeOilMaxHeight = 48;
+
         @Config.Name("Generate Resin On Trees (WG)")
         @Comment("Whether to generate resin on spruce trees during world generation")
         public boolean generateResinOnTreesWG = true;
@@ -590,8 +635,20 @@ public class ModConfig
         @Config.Name("Electric Furnace Base Cook Time")
         @RangeInt(min = 1, max = 1000)
         public int electricFurnaceBaseCookTime = 200;
+        @Config.Name("Enable Solid Fuel Generator")
+        public boolean enableSolidFuelGenerator = true;
+        @Config.Name("Solid Fuel Generator Base Generation")
+        @Comment("Energy generated per furnace fuel tick in FE/t, before Power upgrades")
+        @RangeInt(min = 1, max = 1000)
+        public int solidFuelGeneratorBaseGeneration = 40;
+        @Config.Name("Enable Liquid Fuel Generator")
+        public boolean enableLiquidFuelGenerator = true;
         @Config.Name("Enable Solar Panels")
         public boolean enableSolarPanels = true;
+        @Config.Name("Enable Fluid Tanks")
+        public boolean enableFluidTanks = true;
+        @Config.Name("Enable Energy Storages")
+        public boolean enableEnergyStorages = true;
     }
 
     public static class Blocks

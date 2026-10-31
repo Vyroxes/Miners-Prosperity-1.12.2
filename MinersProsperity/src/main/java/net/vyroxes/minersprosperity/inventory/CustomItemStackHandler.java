@@ -3,6 +3,7 @@ package net.vyroxes.minersprosperity.inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.ItemStackHandler;
@@ -41,6 +42,12 @@ public class CustomItemStackHandler extends ItemStackHandler
         this.upgradeSlots = upgradeSlots;
     }
 
+    @Override
+    protected void onContentsChanged(int slot)
+    {
+        if (this.tile instanceof TileEntityFluidTank || this.tile instanceof TileEntityEnergyStorage) this.tile.markDirty();
+    }
+
     public int getInputSlots()
     {
         return this.inputSlots;
@@ -75,10 +82,14 @@ public class CustomItemStackHandler extends ItemStackHandler
             else if (tile instanceof TileEntityPulverizer) return PulverizerRecipe.getInstance().getLookupTable().isInputValid(stack);
             else if (tile instanceof TileEntityMetalPress) return MetalPressRecipe.getInstance().getLookupTable().isItemValid(this, slot, stack);
             else if (tile instanceof TileEntityElectricFurnace) return !FurnaceRecipes.instance().getSmeltingResult(stack).isEmpty();
+            else if (tile instanceof TileEntitySolidFuelGenerator) return TileEntityFurnace.getItemBurnTime(stack) > 0;
+            else if (tile instanceof TileEntityFluidTank) return ((TileEntityFluidTank) tile).isContainerValid(slot, stack);
+            else if (tile instanceof TileEntityLiquidFuelGenerator) return TileEntityLiquidFuelGenerator.isFluidContainer(stack);
             else return false;
         }
         else if (slot < this.inputSlots + this.energySlots)
         {
+            if (this.tile instanceof TileEntityEnergyStorage) return ((TileEntityEnergyStorage) this.tile).isEnergyItemValid(slot - this.inputSlots, stack);
             return isEnergyItemValid(stack);
         }
         else if (slot >= this.inputSlots + this.energySlots + this.outputSlots)

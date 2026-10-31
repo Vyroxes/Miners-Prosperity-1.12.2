@@ -147,6 +147,8 @@ public class ModItems
 	public static final Item DARK_STEEL_INGOT = new ItemBase("dark_steel_ingot");
 
 	//NUGGETS
+    public static final Item COAL_NUGGET = new ItemBase("coal_nugget");
+    public static final Item CHARCOAL_NUGGET = new ItemBase("charcoal_nugget");
 	public static final Item QUARTZ_NUGGET = new ItemBase("quartz_nugget");
 	public static final Item DIAMOND_NUGGET = new ItemBase("diamond_nugget");
 	public static final Item EMERALD_NUGGET = new ItemBase("emerald_nugget");
@@ -668,6 +670,8 @@ public class ModItems
 
     public static boolean isEnabled(Item item)
     {
+        if (item instanceof net.minecraft.item.ItemBlock) return ModBlocks.isEnabled(((net.minecraft.item.ItemBlock) item).getBlock());
+
         BooleanSupplier condition = ENABLE_CONDITIONS.get(item);
         return condition == null || condition.getAsBoolean();
     }

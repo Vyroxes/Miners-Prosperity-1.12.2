@@ -25,6 +25,7 @@ public class CustomEnergyStorage implements IEnergyStorage
         this.energyStored = Math.max(0 , Math.min(maxEnergyStored, energyStored));
         this.baseMaxEnergyStored = maxEnergyStored;
         this.baseMaxReceive = maxReceive;
+        this.baseMaxExtract = maxExtract;
         this.maxEnergyStoredModifier = (maxEnergyStored * 10 - maxEnergyStored)/8;
         this.maxReceiveModifier = (maxReceive * 10 - maxReceive)/8;
         this.maxExtractModifier = (maxExtract * 10 - maxExtract)/8;

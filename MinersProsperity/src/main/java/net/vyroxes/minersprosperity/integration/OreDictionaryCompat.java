@@ -139,6 +139,8 @@ public class OreDictionaryCompat
         OreDictionary.registerOre("nuggetAzure", ModItems.AZURE_NUGGET);
         OreDictionary.registerOre("nuggetRosalite", ModItems.ROSALITE_NUGGET);
         OreDictionary.registerOre("nuggetVerdite", ModItems.VERDITE_NUGGET);
+        OreDictionary.registerOre("nuggetCoal", ModItems.COAL_NUGGET);
+        OreDictionary.registerOre("nuggetCharcoal", ModItems.CHARCOAL_NUGGET);
         OreDictionary.registerOre("nuggetVoidium", ModItems.VOIDIUM_NUGGET);
         OreDictionary.registerOre("nuggetLuminosite", ModItems.LUMINOSITE_NUGGET);
 

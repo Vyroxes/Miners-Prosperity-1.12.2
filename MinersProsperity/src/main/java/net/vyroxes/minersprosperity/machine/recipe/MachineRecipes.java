@@ -7,5 +7,6 @@ public final class MachineRecipes {
         AlloyFurnaceRecipeLoader.loadFromJSON();
         PulverizerRecipeLoader.loadFromJSON();
         MetalPressRecipeLoader.loadFromJSON();
+        LiquidFuelGeneratorRecipeLoader.loadFromJSON();
     }
 }

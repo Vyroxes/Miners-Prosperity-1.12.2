@@ -59,7 +59,7 @@ public class GuiPulverizer extends GuiContainer
 
 		this.addButton(new GuiDefaultButton(1, guiLeft + 151, guiTop + 27, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 70, 0, 0,18, I18n.format("gui.configuration.name")));
 		this.addButton(new GuiDefaultButton(2, guiLeft + 151, guiTop + 48, 18, 18, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 88, 0, 0,18, I18n.format("gui.upgrades.name")));
-		GuiButton tankButton = this.addButton(new GuiDefaultButton(3, guiLeft + 128, guiTop + 30, 6, 26, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 238, 17, 0,0, ""));
+		GuiButton tankButton = this.addButton(new GuiDefaultButton(3, guiLeft + 128, guiTop + 30, 6, 26, new ResourceLocation(Tags.MODID, GUI_ELEMENTS.getPath()), 84, 72, 0,0, ""));
 		tankButton.enabled = this.tileEntity.getExperienceTank() != null && this.tileEntity.getFluidStored() >= 10;
 		this.addButton(tankButton);
 	}
@@ -189,13 +189,14 @@ public class GuiPulverizer extends GuiContainer
 		}
 
 	    this.renderHoveredToolTip(mouseX, mouseY);
+	    GuiMachineTitle.drawTooltip(this.fontRenderer, Objects.requireNonNull(this.tileEntity.getDisplayName()).getUnformattedText(), this.xSize, this.guiLeft, this.guiTop, this.buttonList, mouseX, mouseY, this.width, this.height);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
 		String title = Objects.requireNonNull(this.tileEntity.getDisplayName()).getUnformattedText();
-		this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 4210752);
+		GuiMachineTitle.draw(this.fontRenderer, title, this.xSize, this.guiLeft, this.guiTop, this.buttonList);
 		this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 73, 4210752);
 	}
 	

@@ -15,7 +15,13 @@ public final class EnergyFormatter
 
         Scale scale = getScale(capacity);
 
-        return FORMAT.format(stored / scale.divisor) + "/" + FORMAT.format(capacity / scale.divisor) + " " + scale.unit;
+        return FORMAT.format(stored / scale.divisor) + "/" + FORMAT.format(capacity / scale.divisor) + " " + scale.unit + " (" + percentage(stored, capacity) + ")";
+    }
+
+    public static String percentage(int value, int total)
+    {
+        long percent = total > 0 ? Math.max(0L, Math.min(100L, (long) value * 100 / total)) : 0L;
+        return percent + "%";
     }
 
     public static String usage(int energyPerTick, boolean creative)

@@ -1,0 +1,5 @@
+
+
+tile.solid_fuel_generator.name=Generator na paliwo stałe
+container.solid_fuel_generator=Generator na paliwo stałe
+gui.solid_fuel_generator.burn_time=Czas spalania: %.1f s

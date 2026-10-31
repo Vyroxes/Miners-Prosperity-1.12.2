@@ -10,6 +10,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundEvent;
@@ -95,6 +97,13 @@ public abstract class TileEntityMachine extends TileEntity implements ITickable
         this.customItemStackHandler = this.slotLayout.getTotalSlots() > 0 ? new CustomItemStackHandler(this, this.slotLayout.getInputCount(), this.slotLayout.getEnergyCount(), this.slotLayout.getOutputCount(), this.slotLayout.getUpgradeCount()) : null;
 
         this.sidedIngredientHandlers = builder.sidedIngredientHandlerBuilder != null ? builder.sidedIngredientHandlerBuilder.build(this) : null;
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
+    {
+        // State/facing changes must not replace the tile held by an open GUI.
+        return oldState.getBlock() != newState.getBlock();
     }
 
     public static class Builder

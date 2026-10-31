@@ -62,29 +62,52 @@ public class GuiMachineConfiguration extends GuiContainer
 		int xOffset = this.inputs > 1 ? 0 : 10;
 
 		this.buttonList.clear();
+        this.buttonToSlot.clear();
 
-		int[] inputSlots = tileEntity.getInputSlotIds();
+		int[] inputSlots = tileEntity instanceof TileEntityFluidTank ? new int[0] : tileEntity.getInputSlotIds();
 		for (int i = 0; i < inputSlots.length; i++) // Input Slots
 		{
-			this.addButton(new GuiDefaultButton(buttonId, guiLeft + 32 + xOffset + i * 20, guiTop + 34, 18, 18, GUI_ELEMENTS, 106, 32, 0, 18, this.inputs > 1 ? I18n.format("gui.input_" + (i + 1) + "_slot.name") : I18n.format("gui.input.name")));
+			this.addButton(new GuiDefaultButton(buttonId, guiLeft + (tileEntity instanceof TileEntityLiquidFuelGenerator ? 54 : tileEntity instanceof TileEntitySolidFuelGenerator ? 79 : 32 + xOffset + i * 20), guiTop + (tileEntity instanceof TileEntityLiquidFuelGenerator ? 25 : tileEntity instanceof TileEntitySolidFuelGenerator ? 43 : 34), 18, 18, GUI_ELEMENTS, 106, 32, 0, 18, this.inputs > 1 ? I18n.format("gui.input_" + (i + 1) + "_slot.name") : I18n.format("gui.input.name")));
 			buttonToSlot.put(buttonId, inputSlots[i]);
 			buttonId++;
 		}
 
 		int energySlotId = tileEntity.getEnergySlotId(); // Energy Slot
-		if (energySlotId >= 0) {
+		if (energySlotId >= 0 && !(tileEntity instanceof TileEntityEnergyStorage)) {
 			this.addButton(new GuiDefaultButton(buttonId, guiLeft + 7, guiTop + 52, 18, 18, GUI_ELEMENTS, 124, 32, 0, 18, I18n.format("gui.energy_slot.name")));
 			buttonToSlot.put(buttonId, energySlotId);
 			buttonId++;
 		}
 
-		int[] outputSlots = tileEntity.getOutputSlotIds();
+        if (tileEntity instanceof TileEntityEnergyStorage)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                this.addButton(new GuiDefaultButton(buttonId, guiLeft + 50 + i * 58, guiTop + 35, 18, 18, GUI_ELEMENTS, 124, 32, 0, 18, I18n.format(i == 0 ? "gui.energy_storage.discharge_item" : "gui.energy_storage.charge_item")));
+                buttonToSlot.put(buttonId++, tileEntity.getEnergySlotId(i));
+            }
+        }
+
+		int[] outputSlots = tileEntity instanceof TileEntityFluidTank ? new int[0] : tileEntity.getOutputSlotIds();
 		for (int i = 0; i < outputSlots.length; i++) // Output Slots
 		{
-			this.addButton(new GuiDefaultButton(buttonId, guiLeft + 110 - xOffset + i * 28, guiTop + 30, 26, 26, GUI_ELEMENTS, 142, 32, 0,26, this.outputs > 1 ? I18n.format("gui.output_" + (i + 1) + "_slot.name") : I18n.format("gui.output_slot.name")));
+			this.addButton(new GuiDefaultButton(buttonId, guiLeft + (tileEntity instanceof TileEntityLiquidFuelGenerator ? 54 : 110 - xOffset + i * 28), guiTop + (tileEntity instanceof TileEntityLiquidFuelGenerator ? 45 : 30), tileEntity instanceof TileEntityLiquidFuelGenerator ? 18 : 26, tileEntity instanceof TileEntityLiquidFuelGenerator ? 18 : 26, GUI_ELEMENTS, tileEntity instanceof TileEntityLiquidFuelGenerator ? 238 : 142, tileEntity instanceof TileEntityLiquidFuelGenerator ? 17 : 32, 0, tileEntity instanceof TileEntityLiquidFuelGenerator ? 18 : 26, this.outputs > 1 ? I18n.format("gui.output_" + (i + 1) + "_slot.name") : I18n.format("gui.output_slot.name")));
 			buttonToSlot.put(buttonId, outputSlots[i]);
 			buttonId++;
 		}
+
+        if (tileEntity instanceof TileEntityFluidTank)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                this.addButton(new GuiDefaultButton(buttonId, guiLeft + 50 + i * 58, guiTop + 25, 18, 18, GUI_ELEMENTS, 106, 32, 0, 18, I18n.format(i == 0 ? "gui.fluid_tank.empty_container" : "gui.fluid_tank.fill_container")));
+                buttonToSlot.put(buttonId++, tileEntity.getInputSlotId(i));
+                this.addButton(new GuiDefaultButton(buttonId, guiLeft + 50 + i * 58, guiTop + 45, 18, 18, GUI_ELEMENTS, 238, 17, 0, 18, I18n.format("gui.output_" + (i + 1) + "_slot.name")));
+                buttonToSlot.put(buttonId++, tileEntity.getOutputSlotId(i));
+            }
+            this.addButton(new GuiDefaultButton(buttonId, guiLeft + 79, guiTop + 25, 18, 38, GUI_ELEMENTS, 238, 174, 0, 38, I18n.format("gui.fluid")));
+            buttonToSlot.put(buttonId++, tileEntity.getFluidTankStateId(0));
+        }
 
 		int experienceTankStateId = tileEntity.getExperienceTankStateId();
 		if (experienceTankStateId >= 0) // XP Tank
@@ -96,11 +119,21 @@ public class GuiMachineConfiguration extends GuiContainer
 		}
 		else liquidExperienceTankId = -1;
 
+        if (tileEntity instanceof TileEntityLiquidFuelGenerator)
+        {
+            this.addButton(new GuiDefaultButton(buttonId, guiLeft + 103, guiTop + 25, 18, 38, GUI_ELEMENTS, 238, 174, 0, 38, I18n.format("gui.fluid")));
+            buttonToSlot.put(buttonId++, tileEntity.getFluidTankStateId(0));
+        }
+
 		int energyHandlerStateId = tileEntity.getEnergyHandlerStateId();
 		if (energyHandlerStateId >= 0) // Energy
 		{
 			energyId = buttonId;
-			this.addButton(new GuiDefaultButton(buttonId, guiLeft + 7, guiTop + 18, 18, 31, GUI_ELEMENTS, 48, 72, 18, 0, I18n.format("gui.energy.name"))); // Energy
+            if (tileEntity instanceof TileEntityEnergyStorage)
+            {
+                this.addButton(new GuiDefaultButton(buttonId, guiLeft + 79, guiTop + 25, 18, 38, GUI_ELEMENTS, 52, 140, 18, 0, I18n.format("gui.energy.name")));
+            }
+            else this.addButton(new GuiDefaultButton(buttonId, guiLeft + 7, guiTop + 18, 18, 31, GUI_ELEMENTS, 48, 72, 18, 0, I18n.format("gui.energy.name")));
 			buttonToSlot.put(buttonId, energyHandlerStateId);
 			buttonId++;
 		}
@@ -137,6 +170,10 @@ public class GuiMachineConfiguration extends GuiContainer
 			else if (tileEntity instanceof TileEntityPulverizer) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.PULVERIZER.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityMetalPress) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.METAL_PRESS.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityElectricFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ELECTRIC_FURNACE.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntitySolidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.SOLID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityLiquidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.LIQUID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityFluidTank) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.FLUID_TANK.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityEnergyStorage) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ENERGY_STORAGE.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntitySolarPanel) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.SOLAR_PANEL.ordinal(), this.tileEntity.getPos());
 			return;
 		}
@@ -146,7 +183,7 @@ public class GuiMachineConfiguration extends GuiContainer
 			for (EnumFacing face : EnumFacing.values())
 			{
 				SidedIngredientHandler handler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
-				for (int slot = 0; slot < handler.getStateCount(); slot++) handler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
+				for (int slot = 0; slot < Objects.requireNonNull(handler).getStateCount(); slot++) handler.setSlotMode(slot, SlotState.SlotMode.DISABLED);
 			}
 		}
 
@@ -155,7 +192,7 @@ public class GuiMachineConfiguration extends GuiContainer
 			for (EnumFacing face : EnumFacing.values())
 			{
 				SidedIngredientHandler handler = (SidedIngredientHandler) tileEntity.getSidedIngredientHandler(face);
-				for (int slot = 0; slot < handler.getStateCount(); slot++) handler.setSlotMode(slot, handler.getDefaultMode(slot));
+				for (int slot = 0; slot < Objects.requireNonNull(handler).getStateCount(); slot++) handler.setSlotMode(slot, handler.getDefaultMode(slot));
 			}
 		}
 
@@ -182,13 +219,14 @@ public class GuiMachineConfiguration extends GuiContainer
 		}
 
 		this.renderHoveredToolTip(mouseX, mouseY);
+		GuiMachineTitle.drawTooltip(this.fontRenderer, Objects.requireNonNull(this.tileEntity.getDisplayName()).getUnformattedText(), this.xSize, this.guiLeft, this.guiTop, this.buttonList, mouseX, mouseY, this.width, this.height);
 	}
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) 
 	{
 		String title = Objects.requireNonNull(this.tileEntity.getDisplayName()).getUnformattedText();
-		this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 4210752);
+		GuiMachineTitle.draw(this.fontRenderer, title, this.xSize, this.guiLeft, this.guiTop, this.buttonList);
 		this.fontRenderer.drawString(I18n.format("key.categories.inventory"), 8, 73, 4210752);
 	}
 	
@@ -196,6 +234,9 @@ public class GuiMachineConfiguration extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
         ResourceLocation MACHINE_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/machine_configuration_" + this.inputs + "_" + this.outputs + ".png");
+		if (tileEntity instanceof TileEntityLiquidFuelGenerator) MACHINE_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/machine_configuration_2_0.png");
+        if (tileEntity instanceof TileEntityFluidTank) MACHINE_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/machine_configuration_3_2.png");
+        if (tileEntity instanceof TileEntityEnergyStorage) MACHINE_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/machine_configuration_energy_storage.png");
 		if (tileEntity instanceof TileEntityMetalPress) MACHINE_CONFIGURATION = new ResourceLocation(Tags.MODID, "textures/gui/machine_configuration_" + this.inputs + "_" + this.outputs + "_2" + ".png");
 
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -203,6 +244,11 @@ public class GuiMachineConfiguration extends GuiContainer
 		int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+        if (tileEntity instanceof TileEntityFluidTank)
+        {
+            drawRect(i + 7, j + 18, i + 25, j + 70, 0xFFC6C6C6);
+            GlStateManager.color(1, 1, 1, 1);
+        }
 
 		this.mc.getTextureManager().bindTexture(GUI_ELEMENTS);
 		int l = this.getCookProgressScaled();
@@ -210,7 +256,7 @@ public class GuiMachineConfiguration extends GuiContainer
 		int textureY = 0;
 		if (tileEntity instanceof TileEntityAlloyFurnace) textureY = 69;
 		else if (tileEntity instanceof TileEntityMetalPress) textureY = 86;
-		this.drawTexturedModalRect(this.guiLeft + 78 - xOffset, this.guiTop + 35, 232, textureY, l + 1, 16);
+		if (!(tileEntity instanceof TileEntitySolidFuelGenerator) && !(tileEntity instanceof TileEntityLiquidFuelGenerator) && !(tileEntity instanceof TileEntityFluidTank) && !(tileEntity instanceof TileEntityEnergyStorage)) this.drawTexturedModalRect(this.guiLeft + 78 - xOffset, this.guiTop + 35, 232, textureY, l + 1, 16);
 	}
 
 	private int getCookProgressScaled()
@@ -231,6 +277,10 @@ public class GuiMachineConfiguration extends GuiContainer
 			if (tileEntity instanceof TileEntityPulverizer) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.PULVERIZER.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityMetalPress) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.METAL_PRESS.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntityElectricFurnace) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ELECTRIC_FURNACE.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntitySolidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.SOLID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityLiquidFuelGenerator) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.LIQUID_FUEL_GENERATOR.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityFluidTank) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.FLUID_TANK.ordinal(), this.tileEntity.getPos());
+            else if (tileEntity instanceof TileEntityEnergyStorage) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.ENERGY_STORAGE.ordinal(), this.tileEntity.getPos());
 			else if (tileEntity instanceof TileEntitySolarPanel) NetworkHandler.sendOpenGuiUpdate(GuiHandler.GuiTypes.SOLAR_PANEL.ordinal(), this.tileEntity.getPos());
 		}
 	}

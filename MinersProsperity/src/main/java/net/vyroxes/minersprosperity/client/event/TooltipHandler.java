@@ -8,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -23,6 +24,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.vyroxes.minersprosperity.client.gui.EnergyFormatter;
+import net.vyroxes.minersprosperity.client.gui.GuiAlloyFurnace;
+import net.vyroxes.minersprosperity.client.gui.GuiElectricFurnace;
+import net.vyroxes.minersprosperity.client.gui.GuiMetalPress;
+import net.vyroxes.minersprosperity.client.gui.GuiPulverizer;
+import net.vyroxes.minersprosperity.client.gui.GuiSolidFuelGenerator;
+import net.vyroxes.minersprosperity.client.gui.GuiLiquidFuelGenerator;
+import net.vyroxes.minersprosperity.tile.TileEntityMachine;
+import net.vyroxes.minersprosperity.block.machine.BlockMachine;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -33,6 +47,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.config.ModConfig;
 import net.vyroxes.minersprosperity.init.ModEnchantments;
+import net.vyroxes.minersprosperity.machine.upgrade.MachineUpgradeType;
 
 @Mod.EventBusSubscriber(modid = Tags.MODID, value = Side.CLIENT)
 public class TooltipHandler
@@ -65,6 +80,105 @@ public class TooltipHandler
     private static ResourceLocation icon(String name)
     {
         return new ResourceLocation(Tags.MODID, "textures/gui/" + name + ".png");
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onMachineProgressTooltip(GuiScreenEvent.DrawScreenEvent.Post event)
+    {
+        TileEntityMachine tile;
+        int progressX;
+        int progressY = 36;
+        int progressWidth = 21;
+        int progressHeight = 15;
+        boolean remaining = false;
+
+        if (event.getGui() instanceof GuiAlloyFurnace gui)
+        {
+            tile = gui.getTileEntity();
+            progressX = 79;
+        }
+        else if (event.getGui() instanceof GuiMetalPress gui)
+        {
+            tile = gui.getTileEntity();
+            progressX = 79;
+        }
+        else if (event.getGui() instanceof GuiElectricFurnace gui)
+        {
+            tile = gui.getTileEntity();
+            progressX = 69;
+        }
+        else if (event.getGui() instanceof GuiPulverizer gui)
+        {
+            tile = gui.getTileEntity();
+            progressX = 69;
+        }
+        else if (event.getGui() instanceof GuiLiquidFuelGenerator gui)
+        {
+            tile = gui.getTileEntity();
+            progressX = 80;
+            progressY = 36;
+            progressWidth = 16;
+            remaining = true;
+        }
+        else if (event.getGui() instanceof GuiSolidFuelGenerator gui)
+        {
+            tile = gui.getTileEntity();
+            progressX = 80;
+            progressY = 27;
+            progressWidth = 16;
+            remaining = true;
+        }
+        else return;
+
+        GuiContainer gui = (GuiContainer) event.getGui();
+        int mouseX = event.getMouseX();
+        int mouseY = event.getMouseY();
+        int x = mouseX - gui.getGuiLeft();
+        int y = mouseY - gui.getGuiTop();
+        if (x < progressX || x > progressX + progressWidth || y < progressY || y > progressY + progressHeight) return;
+
+        int total = tile.getTotalCookTime();
+        int value = remaining ? Math.max(0, total - tile.getCookTime()) : tile.getCookTime();
+        List<String> tooltip = new ArrayList<>();
+        boolean active = tile.getWorld() != null
+                && BlockMachine.getMachineState(tile.getWorld(), tile.getPos()) == BlockMachine.MachineState.ACTIVE
+                && total > 0
+                && (remaining ? tile.getEnergyGeneration() > 0 : tile.getCookTime() > 0 && tile.getEnergyUsage() > 0);
+
+        if (active) tooltip.add(TextFormatting.AQUA + EnergyFormatter.percentage(value, total));
+        if (Loader.isModLoaded("jei")) tooltip.add(I18n.format("jei.tooltip.show.recipes"));
+        if (tooltip.isEmpty()) return;
+
+        GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, gui.width, gui.height, -1, Minecraft.getMinecraft().fontRenderer);
+    }
+
+    @SubscribeEvent
+    public static void onUpgradeTooltip(ItemTooltipEvent event)
+    {
+        ItemStack stack = event.getItemStack();
+        if (stack.isEmpty()) return;
+
+        for (MachineUpgradeType type : MachineUpgradeType.values())
+        {
+            if (stack.getItem() != type.getItem()) continue;
+
+            String key = stack.getTranslationKey() + ".tooltip";
+            List<String> tooltip = event.getToolTip();
+            tooltip.add(TextFormatting.GRAY + I18n.format(key));
+
+            if (GuiScreen.isShiftKeyDown())
+            {
+                for (int line = 1; I18n.hasKey(key + "." + line); line++)
+                {
+                    tooltip.add(TextFormatting.GRAY + I18n.format(key + "." + line));
+                }
+
+                tooltip.add(TextFormatting.DARK_GRAY + I18n.format("tooltip.upgrade.limit"));
+            }
+            else tooltip.add(TextFormatting.DARK_GRAY + I18n.format("tooltip.upgrade.hold_shift"));
+
+            return;
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -82,6 +83,8 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
         setHardness(hardness);
         setResistance(resistance);
         this.guiTypes = guiTypes;
+        ModItems.ITEMS.removeIf(item -> item instanceof ItemBlock && ((ItemBlock) item).getBlock() == this);
+        ModItems.ITEMS.add(new ItemBlockMachine(this).setRegistryName(name));
 
         setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(STATE, MachineState.OFF));
     }
@@ -143,8 +146,9 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
             if (!worldIn.isRemote)
             {
                 ItemStack wrench = playerIn.getHeldItemMainhand();
+                TileEntity tileEntity = worldIn.getTileEntity(pos);
                 breakBlock(worldIn, pos, worldIn.getBlockState(pos));
-                harvestBlock(worldIn, playerIn, pos, worldIn.getBlockState(pos), worldIn.getTileEntity(pos), playerIn.getHeldItemMainhand());
+                harvestBlock(worldIn, playerIn, pos, worldIn.getBlockState(pos), tileEntity, playerIn.getHeldItemMainhand());
                 worldIn.setBlockToAir(pos);
                 wrench.damageItem(1, playerIn);
                 worldIn.playSound(null, pos, SoundEvents.BLOCK_METAL_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -289,6 +293,16 @@ public abstract class BlockMachine extends BlockBase implements ITileEntityProvi
             }
 
             for (String key : tileEntityData.getKeySet()) if (key.equals("Energy") || key.equals("FluidTanks") || key.equals("States")) tag.setTag(key, tileEntityData.getTag(key));
+            if (tileEntity instanceof TileEntityMachine machine)
+            {
+                if (machine.getEnergyStorage() != null) tag.setInteger("EnergyCapacity", machine.getMaxEnergyStored());
+                NBTTagList tanks = tag.getTagList("FluidTanks", 10);
+                for (int i = 0; i < Math.min(tanks.tagCount(), machine.getFluidTankCount()); i++)
+                {
+                    tanks.getCompoundTagAt(i).setInteger("Capacity", machine.getFluidTank(i).getCapacity());
+                }
+            }
+
 
             spawnAsEntity(worldIn, pos, blockStack);
         }

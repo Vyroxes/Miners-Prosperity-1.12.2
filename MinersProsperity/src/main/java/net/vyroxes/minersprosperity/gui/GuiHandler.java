@@ -31,7 +31,11 @@ public class GuiHandler implements IGuiHandler
         SOLAR_PANEL,
         BACKPACK,
         BACKPACK_CONFIGURATION,
-        CHEST;
+        CHEST,
+        SOLID_FUEL_GENERATOR,
+        LIQUID_FUEL_GENERATOR,
+        FLUID_TANK,
+        ENERGY_STORAGE;
 
         public static GuiTypes fromId(int id)
         {
@@ -55,6 +59,10 @@ public class GuiHandler implements IGuiHandler
             case PULVERIZER -> new ContainerPulverizer(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case METAL_PRESS -> new ContainerMetalPress(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case ELECTRIC_FURNACE -> new ContainerElectricFurnace(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case SOLID_FUEL_GENERATOR -> new ContainerSolidFuelGenerator(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case LIQUID_FUEL_GENERATOR -> new ContainerLiquidFuelGenerator(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case FLUID_TANK -> new ContainerFluidTank(player.inventory, (net.vyroxes.minersprosperity.tile.TileEntityFluidTank) Objects.requireNonNull(world.getTileEntity(pos)));
+            case ENERGY_STORAGE -> new ContainerEnergyStorage(player.inventory, (net.vyroxes.minersprosperity.tile.TileEntityEnergyStorage) Objects.requireNonNull(world.getTileEntity(pos)));
             case SOLAR_PANEL -> new ContainerSolarPanel(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case BACKPACK -> new ContainerBackpack(player.inventory, y == 1 ? getBackpackFromBaubles(player) : getBackpackFromHand(player), y == 1);
             case BACKPACK_CONFIGURATION -> new ContainerBackpackConfiguration(player.inventory, y == 1 ? getBackpackFromBaubles(player) : getBackpackFromHand(player), y == 1);
@@ -82,6 +90,14 @@ public class GuiHandler implements IGuiHandler
                     new GuiMetalPress(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case ELECTRIC_FURNACE ->
                     new GuiElectricFurnace(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case SOLID_FUEL_GENERATOR ->
+                    new GuiSolidFuelGenerator(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case LIQUID_FUEL_GENERATOR ->
+                    new GuiLiquidFuelGenerator(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
+            case FLUID_TANK ->
+                    new GuiFluidTank(player.inventory, (net.vyroxes.minersprosperity.tile.TileEntityFluidTank) Objects.requireNonNull(world.getTileEntity(pos)));
+            case ENERGY_STORAGE ->
+                    new GuiEnergyStorage(player.inventory, (net.vyroxes.minersprosperity.tile.TileEntityEnergyStorage) Objects.requireNonNull(world.getTileEntity(pos)));
             case SOLAR_PANEL ->
                     new GuiSolarPanel(player.inventory, (TileEntityMachine) Objects.requireNonNull(world.getTileEntity(pos)));
             case BACKPACK -> {

@@ -10,7 +10,9 @@ public class TOPCompat implements Function<ITheOneProbe, Void>
 
     @Override
     public Void apply(ITheOneProbe iTheOneProbe) {
-        iTheOneProbe.registerProvider(new TOPInfoProvider());
+        TOPInfoProvider provider = new TOPInfoProvider();
+        iTheOneProbe.registerProvider(provider);
+        iTheOneProbe.registerProbeConfigProvider(provider);
         return null;
     }
 

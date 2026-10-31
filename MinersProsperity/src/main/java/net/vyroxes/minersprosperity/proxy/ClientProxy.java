@@ -1,6 +1,10 @@
 package net.vyroxes.minersprosperity.proxy;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.Item;
+import net.vyroxes.minersprosperity.block.machine.ItemBlockEnergyStorage;
+import net.vyroxes.minersprosperity.block.machine.BlockMachineEnergyStorage;
+import net.vyroxes.minersprosperity.init.ModItems;
 import net.minecraft.client.particle.ParticleBubble;
 import net.minecraft.client.particle.ParticleSplash;
 import net.minecraft.client.particle.ParticleWaterWake;
@@ -14,6 +18,8 @@ import net.vyroxes.minersprosperity.Tags;
 import net.vyroxes.minersprosperity.client.event.KeyInputHandler;
 import net.vyroxes.minersprosperity.client.particle.FluidTintParticleFactory;
 import net.vyroxes.minersprosperity.client.render.MachineProgressTESR;
+import net.vyroxes.minersprosperity.client.render.FluidTankTESR;
+import net.vyroxes.minersprosperity.client.render.EnergyStorageTESR;
 import net.vyroxes.minersprosperity.client.render.RenderCustomChest;
 import net.vyroxes.minersprosperity.client.sound.MachineSoundManager;
 import net.vyroxes.minersprosperity.tile.*;
@@ -32,6 +38,12 @@ public class ClientProxy extends CommonProxy
         super.init(event);
 
         registerRenderers();
+        for (Item item : ModItems.ITEMS)
+        {
+            if (!(item instanceof ItemBlockEnergyStorage storage) || Item.REGISTRY.getNameForObject(item) == null) continue;
+            int color = ((BlockMachineEnergyStorage) storage.getBlock()).getTier().coreColor;
+            Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tint) -> tint == 0 ? color : 0xFFFFFF, item);
+        }
         registerFluidParticles();
     }
 
@@ -51,6 +63,10 @@ public class ClientProxy extends CommonProxy
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPulverizer.class, new MachineProgressTESR<TileEntityPulverizer>(new ResourceLocation(Tags.MODID, "textures/blocks/pulverizer_front_progress_bar.png"), 41, 4, 4, 10, 10));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityElectricFurnace.class, new MachineProgressTESR<TileEntityElectricFurnace>(new ResourceLocation(Tags.MODID, "textures/blocks/electric_furnace_front_progress_bar.png"), 41, 4, 2, 10, 3));
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMetalPress.class, new MachineProgressTESR<TileEntityMetalPress>(new ResourceLocation(Tags.MODID, "textures/blocks/metal_press_front_progress_bar.png"), 41, 4, 4, 10, 1));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySolidFuelGenerator.class, new MachineProgressTESR<TileEntitySolidFuelGenerator>(new ResourceLocation(Tags.MODID, "textures/blocks/solid_fuel_generator_front_progress_bar.png"), 41, 4, 2, 10, 3));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLiquidFuelGenerator.class, new MachineProgressTESR<TileEntityLiquidFuelGenerator>(new ResourceLocation(Tags.MODID, "textures/blocks/liquid_fuel_generator_front_progress_bar.png"), 41, 4, 4, 10, 1));
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFluidTank.class, new FluidTankTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityEnergyStorage.class, new EnergyStorageTESR());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCustomChest.class, new RenderCustomChest());
 	}
 

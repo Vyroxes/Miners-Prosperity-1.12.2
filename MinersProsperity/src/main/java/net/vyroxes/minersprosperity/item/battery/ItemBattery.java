@@ -56,6 +56,9 @@ public class ItemBattery extends ItemBase
     }
 
     @Override
+    public int getRGBDurabilityForDisplay(@NotNull ItemStack stack) { return 0xFF0000; }
+
+    @Override
     public double getDurabilityForDisplay(@NotNull ItemStack stack)
     {
         IEnergyStorage storage = getEnergyStorage(stack);
@@ -137,28 +140,7 @@ public class ItemBattery extends ItemBase
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate)
         {
-            if (getTierFromStack(stack) == BatteryTier.CREATIVE)
-            {
-                int missing = storage.getMaxEnergyStored() - storage.getEnergyStored();
-
-                if (simulate) return missing;
-
-                int receivedTotal = 0;
-
-                while (missing > 0)
-                {
-                    int received = storage.receiveEnergy(missing, false);
-
-                    if (received <= 0) break;
-
-                    receivedTotal += received;
-                    missing -= received;
-                }
-
-                if (receivedTotal > 0) syncEnergyToStack(stack, storage);
-
-                return receivedTotal;
-            }
+            if (getTierFromStack(stack) == BatteryTier.CREATIVE || maxReceive <= 0) return 0;
 
             int received = storage.receiveEnergy(maxReceive, simulate);
 
@@ -170,6 +152,8 @@ public class ItemBattery extends ItemBase
         @Override
         public int extractEnergy(int maxExtract, boolean simulate)
         {
+            if (maxExtract <= 0) return 0;
+            if (getTierFromStack(stack) == BatteryTier.CREATIVE) return Math.min(maxExtract, BatteryTier.CREATIVE.maxExtract);
             int extracted = storage.extractEnergy(maxExtract, simulate);
 
             if (!simulate && extracted > 0) syncEnergyToStack(stack, storage);
@@ -178,16 +162,16 @@ public class ItemBattery extends ItemBase
         }
 
         @Override
-        public int getEnergyStored() { return storage.getEnergyStored(); }
+        public int getEnergyStored() { return getTierFromStack(stack) == BatteryTier.CREATIVE ? BatteryTier.CREATIVE.capacity : storage.getEnergyStored(); }
 
         @Override
-        public int getMaxEnergyStored() { return storage.getMaxEnergyStored(); }
+        public int getMaxEnergyStored() { return getTierFromStack(stack) == BatteryTier.CREATIVE ? BatteryTier.CREATIVE.capacity : storage.getMaxEnergyStored(); }
 
         @Override
-        public boolean canExtract() { return storage.canExtract(); }
+        public boolean canExtract() { return getTierFromStack(stack) == BatteryTier.CREATIVE || storage.canExtract(); }
 
         @Override
-        public boolean canReceive() { return storage.canReceive(); }
+        public boolean canReceive() { return getTierFromStack(stack) != BatteryTier.CREATIVE && storage.canReceive(); }
     }
 
     @Override
@@ -195,8 +179,7 @@ public class ItemBattery extends ItemBase
     {
         if (this.isInCreativeTab(tab))
         {
-            ItemStack empty = new ItemStack(this);
-            items.add(empty);
+            if (this.tier != BatteryTier.CREATIVE) items.add(new ItemStack(this));
 
             ItemStack full = new ItemStack(this);
             IEnergyStorage energy = full.getCapability(CapabilityEnergy.ENERGY, null);

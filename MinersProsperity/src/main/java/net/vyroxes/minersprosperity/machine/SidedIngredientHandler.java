@@ -769,14 +769,15 @@ public class SidedIngredientHandler implements IItemHandler, IFluidHandler, IEne
 
             if (fluid == null || fluid.amount <= 0) continue;
 
-            FluidStack simulated = fluid.copy();
+            FluidStack simulated = tanks[i].drainInternal(fluid.amount, false);
+            if (simulated == null || simulated.amount <= 0) continue;
 
             int accepted = fluidHandler.fill(simulated, false);
 
             if (accepted <= 0) continue;
 
             FluidStack toSend = fluid.copy();
-            toSend.amount = Math.min(accepted, fluid.amount);
+            toSend.amount = Math.min(accepted, simulated.amount);
 
             int actuallyAccepted = fluidHandler.fill(toSend, true);
 

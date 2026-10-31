@@ -46,6 +46,8 @@ public class FurnaceFuelHandler
         FUEL_MAP.put(ModItems.COAL_CHUNK, 400);
         FUEL_MAP.put(ModItems.COAL_CLUMP, 500);
         FUEL_MAP.put(ModItems.COAL_CONCENTRATE, 800);
+        FUEL_MAP.put(ModItems.COAL_NUGGET, 175);
+        FUEL_MAP.put(ModItems.CHARCOAL_NUGGET, 175);
         FUEL_MAP.put(ModItems.COAL_DUST, 1600);
         FUEL_MAP.put(ModItems.DIRTY_COAL_DUST, 600);
         FUEL_MAP.put(ModItems.COAL_TINY_DUST, 175);

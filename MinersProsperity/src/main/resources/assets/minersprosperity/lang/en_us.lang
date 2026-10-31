@@ -195,7 +195,7 @@ item.ultimate_circuit_board.name=Ultimate Circuit Board
 item.supreme_circuit_board.name=Supreme Circuit Board
 
 #BATTERIES
-item.basic_battery.name=Battery
+item.basic_battery.name=Basic Battery
 item.improved_battery.name=Improved Battery
 item.advanced_battery.name=Advanced Battery
 item.elite_battery.name=Elite Battery
@@ -223,6 +223,33 @@ item.energy_upgrade.name=Energy Upgrade
 item.xp_upgrade.name=XP Upgrade
 item.power_upgrade.name=Power Upgrade
 item.efficiency_upgrade.name=Efficiency Upgrade
+
+#UPGRADE DESCRIPTIONS
+tooltip.upgrade.hold_shift=Hold Shift for details.
+tooltip.upgrade.limit=Maximum: 8 upgrades per slot.
+item.machine_upgrade.tooltip=Processes more recipe sets at the same time.
+item.machine_upgrade.tooltip.1=Up to 10 recipe sets per process.
+item.machine_upgrade.tooltip.2=Energy cost scales with the number of sets.
+item.machine_upgrade.tooltip.3=For processing machines.
+item.speed_upgrade.tooltip=Speeds up processing at a higher energy cost.
+item.speed_upgrade.tooltip.1=Up to 10x speed and 5x energy per recipe.
+item.speed_upgrade.tooltip.2=For processing machines.
+item.energy_upgrade.tooltip=Increases energy capacity and transfer limits.
+item.energy_upgrade.tooltip.1=Machines: up to 25x capacity and 62.5x input.
+item.energy_upgrade.tooltip.2=Machines: up to 50 percent lower energy use.
+item.energy_upgrade.tooltip.3=Generators: up to 10x capacity and output.
+item.energy_upgrade.tooltip.4=Does not increase generator fuel efficiency.
+item.xp_upgrade.tooltip=Increases experience gained from processing.
+item.xp_upgrade.tooltip.1=Adds 10 percent experience per upgrade.
+item.xp_upgrade.tooltip.2=Maximum bonus: 80 percent.
+item.xp_upgrade.tooltip.3=For processing machines.
+item.power_upgrade.tooltip=Increases generator power and fuel consumption.
+item.power_upgrade.tooltip.1=Up to 10x energy production and fuel use.
+item.power_upgrade.tooltip.2=Total energy per fuel item stays the same.
+item.efficiency_upgrade.tooltip=Increases the energy obtained from fuel.
+item.efficiency_upgrade.tooltip.1=Adds 6.25 percent fuel duration per upgrade.
+item.efficiency_upgrade.tooltip.2=Maximum bonus: 50 percent.
+item.efficiency_upgrade.tooltip.3=Takes effect when the next fuel item starts.
 
 #BACKPACKS
 item.backpack.name=Backpack
@@ -290,6 +317,8 @@ item.cobaltsteel_ingot.name=Cobaltsteel Ingot
 item.dark_steel_ingot.name=Dark Steel Ingot
 
 #NUGGETS
+item.coal_nugget.name=Coal Nugget
+item.charcoal_nugget.name=Charcoal Nugget
 item.quartz_nugget.name=Nether Quartz Nugget
 item.diamond_nugget.name=Diamond Nugget
 item.emerald_nugget.name=Emerald Nugget
@@ -1089,3 +1118,52 @@ enchantment.lightning=Lightning
 enchantment.minersprosperity.lightning.desc=Causes additional lightning damage when used to attack a mob.
 enchantment.bloodthirst=Bloodthirst
 enchantment.minersprosperity.bloodthirst.desc=Heals the player and grants Absorption based on damage dealt.
+
+tile.solid_fuel_generator.name=Solid Fuel Generator
+container.solid_fuel_generator=Solid Fuel Generator
+gui.solid_fuel_generator.burn_time=Burn time: %.1f s
+
+gui.jei.category.material_tree=Material Tree
+
+tile.liquid_fuel_generator.name=Liquid Fuel Generator
+container.liquid_fuel_generator=Liquid Fuel Generator
+gui.liquid_fuel_generator.amount=Fuel: %s mB
+
+jei.liquid_fuel_generator.input_occupied=Empty the generator input slot first.
+jei.liquid_fuel_generator.missing_container=No bucket or fluid container with this fluid in your inventory.
+
+tile.basic_fluid_tank.name=Basic Fluid Tank
+container.basic_fluid_tank=Basic Fluid Tank
+tile.improved_fluid_tank.name=Improved Fluid Tank
+container.improved_fluid_tank=Improved Fluid Tank
+tile.advanced_fluid_tank.name=Advanced Fluid Tank
+container.advanced_fluid_tank=Advanced Fluid Tank
+tile.elite_fluid_tank.name=Elite Fluid Tank
+container.elite_fluid_tank=Elite Fluid Tank
+tile.ultimate_fluid_tank.name=Ultimate Fluid Tank
+container.ultimate_fluid_tank=Ultimate Fluid Tank
+tile.supreme_fluid_tank.name=Supreme Fluid Tank
+container.supreme_fluid_tank=Supreme Fluid Tank
+tile.creative_fluid_tank.name=Creative Fluid Tank
+container.creative_fluid_tank=Creative Fluid Tank
+gui.fluid_transfer=Fluid Transfer
+gui.fluid_tank.empty_container=Empty containers into the tank
+gui.fluid_tank.fill_container=Fill containers from the tank
+tooltip.fluid_tank.creative=Add a fluid to create an infinite supply of it.
+gui.fluid_empty=Empty
+tile.basic_energy_storage.name=Basic Energy Storage
+container.basic_energy_storage=Basic Energy Storage
+tile.improved_energy_storage.name=Improved Energy Storage
+container.improved_energy_storage=Improved Energy Storage
+tile.advanced_energy_storage.name=Advanced Energy Storage
+container.advanced_energy_storage=Advanced Energy Storage
+tile.elite_energy_storage.name=Elite Energy Storage
+container.elite_energy_storage=Elite Energy Storage
+tile.ultimate_energy_storage.name=Ultimate Energy Storage
+container.ultimate_energy_storage=Ultimate Energy Storage
+tile.supreme_energy_storage.name=Supreme Energy Storage
+container.supreme_energy_storage=Supreme Energy Storage
+tile.creative_energy_storage.name=Creative Energy Storage
+container.creative_energy_storage=Creative Energy Storage
+gui.energy_storage.discharge_item=Discharge items into the energy storage
+gui.energy_storage.charge_item=Charge items from the energy storage
