@@ -1,0 +1,6 @@
+{
+  "parent": "minersprosperity:block/energy_storage_inventory",
+  "textures": {
+    "all": "minersprosperity:blocks/ultimate_energy_storage"
+  }
+}

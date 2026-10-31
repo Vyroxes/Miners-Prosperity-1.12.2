@@ -1,0 +1,41 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:multi-layer",
+    "textures": {
+      "all": "minersprosperity:blocks/basic_energy_storage"
+    },
+    "custom": {
+      "base": "minersprosperity:basic_energy_storage#base",
+      "Cutout": "minersprosperity:basic_energy_storage#frame",
+      "Translucent": "minersprosperity:basic_energy_storage#glass"
+    }
+  },
+  "variants": {
+    "inventory": [
+      {
+        "model": "minersprosperity:energy_storage_inventory"
+      }
+    ],
+    "base": {
+      "model": "minersprosperity:energy_storage_base"
+    },
+    "frame": {
+      "model": "minersprosperity:basic_energy_storage"
+    },
+    "glass": {
+      "model": "minersprosperity:energy_storage_glass"
+    },
+    "state": {
+      "off": {},
+      "powered": {},
+      "active": {}
+    },
+    "facing": {
+      "north": {},
+      "south": {},
+      "east": {},
+      "west": {}
+    }
+  }
+}

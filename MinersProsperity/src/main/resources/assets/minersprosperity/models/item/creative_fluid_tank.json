@@ -1,0 +1,6 @@
+{
+  "parent": "minersprosperity:block/fluid_tank_inventory",
+  "textures": {
+    "all": "minersprosperity:blocks/creative_fluid_tank"
+  }
+}

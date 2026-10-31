@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "AAA",
+        "AAA",
+        "AAA"
+    ],
+    "key": {
+        "A": {
+            "type": "forge:ore_dict",
+            "ore": "nuggetCoal"
+        }
+    },
+    "result": {
+        "item": "minecraft:coal",
+        "data": 0,
+        "count": 1
+    }
+}

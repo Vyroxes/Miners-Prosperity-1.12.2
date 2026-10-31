@@ -1,0 +1,6 @@
+{
+  "parent": "minersprosperity:block/fluid_tank_frame",
+  "textures": {
+    "all": "minersprosperity:blocks/advanced_fluid_tank"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "forge:multi-layer",
+    "textures": {
+      "all": "minersprosperity:blocks/ultimate_fluid_tank"
+    },
+    "custom": {
+      "base": "minersprosperity:ultimate_fluid_tank#base",
+      "Cutout": "minersprosperity:ultimate_fluid_tank#frame",
+      "Translucent": "minersprosperity:ultimate_fluid_tank#glass"
+    }
+  },
+  "variants": {
+    "inventory": [
+      {
+        "model": "minersprosperity:fluid_tank_inventory"
+      }
+    ],
+    "base": {
+      "model": "minersprosperity:fluid_tank_base"
+    },
+    "frame": {
+      "model": "minersprosperity:ultimate_fluid_tank"
+    },
+    "glass": {
+      "model": "minersprosperity:fluid_tank_glass"
+    },
+    "state": {
+      "off": {},
+      "powered": {},
+      "active": {}
+    },
+    "facing": {
+      "north": {},
+      "south": {},
+      "east": {},
+      "west": {}
+    }
+  }
+}

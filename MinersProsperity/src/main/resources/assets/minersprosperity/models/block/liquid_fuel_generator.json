@@ -1,0 +1,9 @@
+{
+	"parent": "minersprosperity:block/machine",
+	"textures":
+	{
+		"up": "minersprosperity:blocks/liquid_fuel_generator_top",
+		"front": "#front",
+		"side": "minersprosperity:blocks/liquid_fuel_generator_side"
+	}
+}

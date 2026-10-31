@@ -1,0 +1,6 @@
+{
+  "parent": "minersprosperity:block/energy_storage_frame",
+  "textures": {
+    "all": "minersprosperity:blocks/basic_energy_storage"
+  }
+}
